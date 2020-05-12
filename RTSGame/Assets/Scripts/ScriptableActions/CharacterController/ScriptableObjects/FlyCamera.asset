@@ -19,8 +19,8 @@ MonoBehaviour:
   SecondaryActionName: 
   AnimatorValName: 
   AnimatorEventName: 
-  MaxSpeed: 10
-  Acceleration: 20
+  MaxSpeed: 100
+  Acceleration: 200
   AccelerationCurve:
     serializedVersion: 2
     m_Curve:
@@ -45,7 +45,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  Deceleration: 40
+  Deceleration: 400
   DecelerationCurve:
     serializedVersion: 2
     m_Curve:

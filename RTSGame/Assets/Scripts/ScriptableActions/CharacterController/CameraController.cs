@@ -12,6 +12,7 @@ namespace ScriptableActions.Character
         [Tooltip("The game object to focus on")] public Transform ObjectToFocusOn = null;
         [Tooltip("The object to rotate (ObjectToFocusOn and this will both be rotated)")] public Transform ObjectToRotate = null;
         [Tooltip("The offset from the player the camera should use")] public Vector3 CameraOffset = Vector3.zero;
+        [Tooltip("The starting rotation of the camera on the x and y axis")] public Vector2 StartAngle;
         [Tooltip("Layers to ignore when repositioning camera")] public LayerMask IgnoreLayers;
         [Space]
         [Header("Camera Distance")]
@@ -122,6 +123,12 @@ namespace ScriptableActions.Character
             rotatePlayerInput.Bind(PlayerInput, RotateActionName, true);
 
             raycastLayers = ~IgnoreLayers;
+
+            // Set initial angle
+            lookDirection = StartAngle;
+            lookDirection.x = Mathf.Clamp(lookDirection.x, MinVerticalLookAngle, MaxVerticalLookAngle);
+
+            CalcCameraPosition(Vector3.forward);
         }
 
         public void UpdateCamera()
