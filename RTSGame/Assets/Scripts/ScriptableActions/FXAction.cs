@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Pixelplacement;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -102,7 +103,7 @@ namespace ScriptableActions
         {
             if (fxInst)
             {
-                iTween.ScaleTo(fxInst, fxInst.transform.localScale * scale, time);
+                Tween.LocalScale(fxInst.transform, fxInst.transform.localScale * scale, time, 0);
             }
         }
     }

@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using System;
 using UnityEngine.UI;
+using Pixelplacement;
+
 public class Health : MonoBehaviour
 {
     public enum DamageState
@@ -152,7 +154,7 @@ public class Health : MonoBehaviour
     public void Die()
     {
         // Scale the GameObject down to desired size and then destroy it
-        iTween.ScaleTo(gameObject, transform.localScale * DeathEndScale, DeathScaleTime);
+        Tween.LocalScale(transform, transform.localScale * DeathEndScale, DeathScaleTime, 0);
 
         if (DeathFX)
         {
