@@ -15,7 +15,7 @@ MonoBehaviour:
   Icon: {fileID: 0}
   Description: 
   ActionName: 
-  PrimaryActionName: Walk
+  PrimaryActionName: Arrows
   SecondaryActionName: 
   AnimatorValName: 
   AnimatorEventName: 

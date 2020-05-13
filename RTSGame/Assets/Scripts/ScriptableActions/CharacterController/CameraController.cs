@@ -22,7 +22,7 @@ namespace ScriptableActions.Character
         [Tooltip("Colliding distance offset")] public float CollidingDistanceOffsset = 0.5f;
         [Space]
         [Header("Sensitivity Settings")]
-        [Tooltip("Multiplier for how quickly the player can look around (x is horizontal speed, y is vertical speed, z is zoom speed")] public Vector3 Sensitivity = Vector3.zero;
+        [Tooltip("Multiplier for how quickly the player can look around (x is horizontal speed, y is vertical speed, z is how much zoom to add per press of the zoom button")] public Vector3 Sensitivity = Vector3.zero;
         [Tooltip("Multiplier to look sensitivity for when using a Gamepad")] public float GamepadSensitivityMultiplier = 10;
         [Tooltip("How quickly the character will face the camera's forward")] public float CharacterRotationSpeed = 10;
         [Tooltip("How quickly the camera will zoom in and out")] public float ZoomSpeed = 10;
