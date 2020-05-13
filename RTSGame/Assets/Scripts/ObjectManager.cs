@@ -22,7 +22,7 @@ public class ObjectManager : MonoBehaviour
     {
         ObjectDictionary = new Dictionary<string, GameObject>(2 * ObjectList.Count);
 
-        StaticHelper.LoopListForEach(ObjectList, (KeyPair pair) => { ObjectDictionary.Add(pair.Key, pair.Value); });
+        Helper.LoopListForEach(ObjectList, (KeyPair pair) => { ObjectDictionary.Add(pair.Key, pair.Value); });
     }
 
     public GameObject GetPosition(string objectName)

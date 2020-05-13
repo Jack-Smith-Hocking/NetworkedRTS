@@ -10,16 +10,16 @@ namespace RTS_System
 {
     public class Mod_ResourceManager : MonoBehaviour
     {
-        public class ResourceCache
+        public class Mod_ResourceCache
         {
             public int ResourceValue { get; private set; } = 0;
             
             public Action<int> OnValueChanged = null;
-
+                
             private TextMeshProUGUI resourceText = null;
 
-            public ResourceCache() { }
-            public ResourceCache(TextMeshProUGUI text, string resourceName)
+            public Mod_ResourceCache() { }
+            public Mod_ResourceCache(TextMeshProUGUI text, string resourceName)
             {
                 resourceText = text;
 
@@ -58,8 +58,8 @@ namespace RTS_System
 
         public static Mod_ResourceManager Instance = null;
 
-        [Tooltip("The prefab to display resources with, should have an Image and a TextMeshProUGUI")] public GameObject ResourcePrefab = null;
-        [Tooltip("The canvas object that will manage all of the ResourcePrefabs spawned")] public GameObject ResourceOwner = null;
+        [Tooltip("The prefab to display resources with, should have an Image and a TextMeshProUGUI")] public GameObject ResourceUIPrefab = null;
+        [Tooltip("The canvas object that will manage all of the ResourceUIPrefabs spawned")] public GameObject ResourceUIOwner = null;
 
         [Tooltip("All of the resources in the game")] public List<Mod_Resource> Resources = new List<Mod_Resource>();
 
@@ -67,7 +67,7 @@ namespace RTS_System
         private Image resourceImage = null;
         private TextMeshProUGUI resourceText = null;
 
-        private Dictionary<Mod_Resource, ResourceCache> resourceCaches = new Dictionary<Mod_Resource, ResourceCache>();
+        private Dictionary<Mod_Resource, Mod_ResourceCache> resourceCaches = new Dictionary<Mod_Resource, Mod_ResourceCache>();
         
         // Start is called before the first frame update
         void Start()
@@ -78,7 +78,7 @@ namespace RTS_System
             // If this is the singleton then set up resources
             if (Instance.Equals(this))
             {
-                ResourceCache cache = null;
+                Mod_ResourceCache cache = null;
 
                 // Loop through all the resources in the game and spawn prefabs for them
                 foreach (Mod_Resource resource in Resources)
@@ -90,12 +90,12 @@ namespace RTS_System
                     // Add the resource to the dictionary if it isn't there already
                     else
                     {
-                        cache = new ResourceCache();
+                        cache = new Mod_ResourceCache();
 
                         // Instantiate prefab and get the Text and Image components from it
-                        if (ResourcePrefab && ResourceOwner)
+                        if (ResourceUIPrefab && ResourceUIOwner)
                         {
-                            resourcePrefab = Instantiate(ResourcePrefab, ResourceOwner.transform);
+                            resourcePrefab = Instantiate(ResourceUIPrefab, ResourceUIOwner.transform);
                             resourcePrefab.name = $"Resource ({resource.ResourceName})";
 
                             resourceText = resourcePrefab.GetComponentInChildren<TextMeshProUGUI>();
@@ -103,9 +103,12 @@ namespace RTS_System
 
                             if (resourceText)
                             {
-                                cache = new ResourceCache(resourceText, resource.ResourceName);
+                                cache = new Mod_ResourceCache(resourceText, resource.ResourceName);
                             }
-                            if (resourceImage) resourceImage.sprite = resource.ResourceIcon;
+                            if (resourceImage)
+                            {
+                                resourceImage.sprite = resource.ResourceIcon;
+                            }
                         }
 
                         // Set the initial value of the cache

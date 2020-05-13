@@ -1,9 +1,8 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using UnityEngine.InputSystem;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Binds and unbinds actions to inputs
@@ -47,7 +46,7 @@ public class BoundInput
                 if (tempVal > val) val = tempVal;
             };
 
-            StaticHelper.LoopListForEach<InputAction>(otherBoundInputs, loopAction);
+            Helper.LoopListForEach<InputAction>(otherBoundInputs, loopAction);
 
             return val;
         }
@@ -59,7 +58,7 @@ public class BoundInput
             bool val = false;
             if (InputAction != null) val = InputAction.ReadValue<float>() >= 0.01f;
 
-            StaticHelper.LoopListForEach<InputAction>(otherBoundInputs, (InputAction action) => { if (!val) val = action.ReadValue<float>() >= 0.01f; }, () => { return val; });
+            Helper.LoopListForEach<InputAction>(otherBoundInputs, (InputAction action) => { if (!val) val = action.ReadValue<float>() >= 0.01f; }, () => { return val; });
 
             return val;
         }
@@ -80,7 +79,7 @@ public class BoundInput
                 if (tempVal.y > val.y) val.y = tempVal.y;
             };
 
-            StaticHelper.LoopListForEach<InputAction>(otherBoundInputs, loopAction);
+            Helper.LoopListForEach<InputAction>(otherBoundInputs, loopAction);
 
             return val;
         }
@@ -155,10 +154,10 @@ public class BoundInput
     {
         // Remove all of the actions from any previous bindings
         Unbind(InputAction);
-        StaticHelper.LoopListForEach<InputAction>(otherBoundInputs, (InputAction action) => { Unbind(action); });
+        Helper.LoopListForEach<InputAction>(otherBoundInputs, (InputAction action) => { Unbind(action); });
     }
 }
-public static class StaticHelper
+public static class Helper
 {
     /// <summary>
     /// Loop through a list of type T (For Each Loop) and execute an action on each element
@@ -187,7 +186,7 @@ public static class StaticHelper
     /// <typeparam name="T">The type of data being worked with</typeparam>
     /// <param name="loopList">The list to affect</param>
     /// <param name="loopAction">The action to perform on each element of the list</param>
-    /// <param name="breakOut">An optional Func<bool> that will determine any break conditions for the loop</bool></param>
+    /// <param name="breakOut">An optional Func<bool> that will determine any break conditions for the loop</param>
     public static void LoopListFor<T>(List<T> loopList, Action<T> loopAction, Func<bool> breakOut = null)
     {
         if (loopList != null && loopAction != null)
@@ -243,5 +242,30 @@ public static class StaticHelper
         }
 
         return navHit.position;
+    }
+
+    /// <summary>
+    /// Get the distance between two GameObjects
+    /// </summary>
+    /// <param name="objOne">First object</param>
+    /// <param name="objTwo">Second object</param>
+    /// <returns>Returns -1 if either object is null</returns>
+    public static float Distance(GameObject objOne, GameObject objTwo)
+    {
+        if (!objOne || !objTwo) return -1;
+
+        return Distance(objOne.transform, objTwo.transform);
+    }
+    /// <summary>
+    /// Get the distance between two Transforms
+    /// </summary>
+    /// <param name="transOne">First object</param>
+    /// <param name="transTwo">Second object</param>
+    /// <returns>Returns -1 if either object is null</returns>
+    public static float Distance(Transform transOne, Transform transTwo)
+    {
+        if (!transOne || !transTwo) return -1;
+
+        return Vector3.Distance(transOne.position, transTwo.position);
     }
 }

@@ -113,7 +113,7 @@ public class Spawner : MonoBehaviour
             if (SpawningOnNavMesh)
             {
                 // Get a random point on a NavMesh
-                randPoint = StaticHelper.RandomNavSphere(transform.position, Mathf.Abs(dist), -1);
+                randPoint = Helper.RandomNavSphere(transform.position, Mathf.Abs(dist), -1);
             }
         }
         else
