@@ -9,6 +9,11 @@ namespace AI_System
         [Tooltip("An icon to be displayed for this Action wherever visual representation is necessary")] public Sprite ActionIcon = null;
         [Tooltip("A description for this Action to be displayed whenever one is necessary")] public string ActionDescription;
 
+        public virtual void InitialiseAction(AIAgent agent)
+        {
+
+        }
+
         public virtual bool ExecuteAction(AIAgent agent)
         {
             return (agent != null);

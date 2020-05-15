@@ -1,16 +1,19 @@
-﻿using ScriptableActions;
+﻿using Pixelplacement;
+using Selector_Systen;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Assertions.Must;
 
 namespace AI_System
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class AIAgent : MonoBehaviour
+    public class AIAgent : MonoBehaviour, Selector_Systen.ISelectable
     {
         public NavMeshAgent NavAgent = null;
+        [Space]
+        public MoveToPoint MoveAction = null;
+        [Space]
         public List<AIAction> PossibleActions = new List<AIAction>();
 
         public Transform CurrentTarget /*{ get; set; } */= null;
@@ -25,6 +28,11 @@ namespace AI_System
             for (int i = 0; i < PossibleActions.Count; i++)
             {
                 PossibleActions[i] = Instantiate(PossibleActions[i]);
+            }
+
+            if (MoveAction)
+            {
+                MoveAction = Instantiate(MoveAction);
             }
 
             if (AIManager.Instance)
@@ -50,6 +58,12 @@ namespace AI_System
             AIAction highestAction = null;
             float highestEvaluation = 0;
 
+            if (currentAction)
+            {
+                highestAction = currentAction;
+                highestEvaluation = currentAction.EvaluateAction(this);
+            }
+
             foreach (AIAction action in PossibleActions)
             {
                 float evaluateVal = action.EvaluateAction(this);
@@ -71,20 +85,59 @@ namespace AI_System
             {
                 return;
             }
+            if (currentAction && currentAction.Equals(action))
+            {
+                return;
+            }
 
             if (!currentAction)
             {
                 currentAction = action;
-                currentAction.EnterAction(this);
-                currentAction.ExecuteAction(this);
             }
-            else if (currentAction && !currentAction.Equals(action))
+            else
             {
                 currentAction.ExitAction(this);
                 currentAction = action;
+            }
+
+            currentAction.EnterAction(this);
+            currentAction.ExecuteAction(this);
+        }
+
+        #region ISelectable
+        public void OnHover()
+        {
+        }
+
+        public void OnSelect()
+        {
+        }
+
+        public void OnDeselect()
+        {
+        }
+
+        public void OnExecute()
+        {
+            if (Selector.Instance && MoveAction)
+            {
+                if (!Selector.Instance.AddToPath)
+                {
+                    MoveAction.CurrentTargets.Clear();
+                }
+                
+                MoveAction.CurrentTargets.Add(Selector.Instance.SelectedPoint);
+
+                if (currentAction)
+                {
+                    currentAction.ExitAction(this);
+                }
+
+                currentAction = MoveAction;
                 currentAction.EnterAction(this);
                 currentAction.ExecuteAction(this);
             }
         }
     }
+    #endregion
 }

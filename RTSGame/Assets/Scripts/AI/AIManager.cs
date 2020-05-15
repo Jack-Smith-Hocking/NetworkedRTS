@@ -6,6 +6,7 @@ using UnityEngine;
 namespace AI_System
 {
     public class AIManager : MonoBehaviour
+
     {
         public static AIManager Instance = null;
 
@@ -65,12 +66,18 @@ namespace AI_System
 
         void UpdateEvaluations()
         {
-            if (currentCount >= SceneAI.Count) currentCount = 0;
+            if (currentCount >= SceneAI.Count)
+            {
+                currentCount = 0;
+            }
 
             float mod = ((float)EvalUpdatePercentage / 100f);
             currentCount += SceneAI.Count * mod;
 
-            if (currentCount == 0) currentCount = SceneAI.Count;
+            if (currentCount == 0)
+            {
+                currentCount = SceneAI.Count;
+            }
 
             // Loop through and update all the AI
             for (int i = 0; i < currentCount; i++)
