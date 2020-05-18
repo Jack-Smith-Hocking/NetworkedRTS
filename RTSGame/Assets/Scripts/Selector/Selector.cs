@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Editor;
 
 namespace Selector_Systen
 {
@@ -12,19 +13,16 @@ namespace Selector_Systen
         [System.Serializable]
         public class SelectorInput
         {
-            public string InputName = "New Input";
-            public AIAction InputAction = null;
+            public string SelectorInputName;
+            public InputActionReference InputAction = null;
+            public AIAction Action = null;
         }
-
         public static Selector Instance = null;
 
-        public PlayerInput PlayerInput;
-        public LayerMask MovementLayer;
-
         [Space]
-        public string MainSelectButton = "LeftMouseClick";
-        public string MultiSelectInput = "LeftCtr";
-        public string ActionQueueInput = "LeftShift";
+        public InputActionReference MainSelectButton;
+        public InputActionReference MultiSelectInput;
+        public InputActionReference ActionQueueInput;
         [Space]
 
         [Space]
@@ -33,8 +31,6 @@ namespace Selector_Systen
 
         public AIAction CurrentAction = null;
         public Vector3 SelectedPoint;
-        public bool SetPoint = false;
-        public bool AddToPath = false;
         public bool AddToActionList = false;
 
         public float DragDelay = 0.1f;
@@ -71,9 +67,9 @@ namespace Selector_Systen
 
             foreach (SelectorInput s in SelectorInputs)
             {
-                if (s.InputAction)
+                if (s.Action)
                 {
-                    s.InputAction = Instantiate(s.InputAction);
+                    s.Action = Instantiate(s.Action);
                 }
 
                 InitialiseInputs(s);
@@ -81,10 +77,10 @@ namespace Selector_Systen
 
             selectInput.PerformedActions += Select;
             selectInput.CancelledActions += Select;
-            selectInput.Bind(PlayerInput, MainSelectButton);
+            selectInput.Bind(MainSelectButton);
 
-            multiSelectInput.Bind(PlayerInput, MultiSelectInput);
-            actionQueueInput.Bind(PlayerInput, ActionQueueInput);
+            multiSelectInput.Bind(MultiSelectInput);
+            actionQueueInput.Bind(ActionQueueInput);
         }
 
         void InitialiseInputs(SelectorInput selection)
@@ -94,10 +90,10 @@ namespace Selector_Systen
             BoundInput binding = new BoundInput();
             binding.PerformedActions += (InputAction.CallbackContext cc) =>
             {
-                ExecuteSelected(selection.InputAction);
+                ExecuteSelected(selection.Action);
             };
 
-            binding.Bind(PlayerInput, selection.InputName);
+            binding.Bind(selection.InputAction);
 
             boundInputs.Add(binding);
         }
@@ -105,6 +101,11 @@ namespace Selector_Systen
         void Select(InputAction.CallbackContext cc)
         {
             bool isDown = cc.ReadValueAsButton();
+
+            if (multiSelectInput.CurrentBoolVal == false)
+            {
+                ClearSelection();
+            }
 
             if (isDown)
             {
@@ -114,11 +115,6 @@ namespace Selector_Systen
             else
             {
                 endPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-
-                if (multiSelectInput.CurrentBoolVal == false)
-                {
-                    ClearSelection();
-                }
 
                 highlightedObjects.Clear();
 
@@ -135,14 +131,21 @@ namespace Selector_Systen
 
         private void Update()
         {
-            SetMaterial(highlightedObjects, NormalMat);
+            Helper.SetMaterials(highlightedObjects, NormalMat);
+
+            foreach (GameObject obj in highlightedObjects)
+            {
+                if (selectedObjects.Contains(obj))
+                {
+                    Helper.SetMaterial(obj, SelectedMat);
+                }
+            }
             highlightedObjects.Clear();
 
             RaycastHit rayHit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
             {
-
-                if (!selectedObjects.Contains(rayHit.collider.gameObject) && Helper.ObjectInMonoList<AIAgent>(AIManager.Instance.SceneAI, rayHit.collider.gameObject))
+                if (Helper.ObjectInMonoList<AIAgent>(AIManager.Instance.SceneAI, rayHit.collider.gameObject))
                 {
                     rayHit.collider.gameObject.GetComponent<Renderer>().material = HighlightedMat;
                     highlightedObjects.Add(rayHit.collider.gameObject);
@@ -153,7 +156,7 @@ namespace Selector_Systen
             {
                 endPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
                 highlightedObjects.AddRange(GetObjectsInArea());
-                SetMaterial(highlightedObjects, HighlightedMat);
+                Helper.SetMaterials(highlightedObjects, HighlightedMat);
             }
 
         }
@@ -179,22 +182,32 @@ namespace Selector_Systen
             selectables.AddRange(currentSelectables);
         }
 
-        void SelectSingle()
+        void SelectSingle(bool toggleOff = true)
         {
             RaycastHit rayHit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
             {
-                AddSelected(rayHit.collider.gameObject);
+                if (Helper.ObjectInMonoList<AIAgent>(AIManager.Instance.SceneAI, rayHit.collider.gameObject))
+                {
+                    if (toggleOff && selectedObjects.Contains(rayHit.collider.gameObject))
+                    {
+                        ClearFromSelected(rayHit.collider.gameObject);
+                    }
+                    else
+                    {
+                        AddSelected(rayHit.collider.gameObject);
+                    }
+                }
             }
 
-            SetMaterial(selectedObjects, SelectedMat);
+            Helper.SetMaterials(selectedObjects, SelectedMat);
         }
         void SelectMultiple()
         {
             Helper.LoopListForEach<GameObject>(GetObjectsInArea(), (GameObject obj) => { AddSelected(obj); });
-            SelectSingle();
+            SelectSingle(false);
 
-            SetMaterial(selectedObjects, SelectedMat);
+            Helper.SetMaterials(selectedObjects, SelectedMat);
         }
         List<GameObject> GetObjectsInArea()
         {
@@ -219,35 +232,32 @@ namespace Selector_Systen
             return objs;
         }
 
-        void SetMaterial(List<GameObject> list, Material mat)
-        {
-            Renderer rend = null;
-            Helper.LoopListForEach<GameObject>(list, (GameObject obj) =>
-                {
-                    if (!Helper.ObjectInMonoList(AIManager.Instance.SceneAI, obj)) return;
-
-                    rend = obj.GetComponent<Renderer>();
-                    if (rend)
-                    {
-                        rend.material = mat;
-                    }
-                }
-            );
-        }
-
         void ClearSelection()
         {
-            foreach (GameObject obj in selectedObjects)
-            {
-                selectables.AddRange(obj.GetComponentsInChildren<ISelectable>());
-            }
-
             Helper.LoopListForEach<ISelectable>(selectables, (ISelectable selectable) => { selectable.OnDeselect(); });
 
-            SetMaterial(selectedObjects, NormalMat);
+            Helper.SetMaterials(selectedObjects, NormalMat);
 
             selectables.Clear();
             selectedObjects.Clear();
+        }
+        void ClearFromSelected(GameObject obj)
+        {
+            if (obj == null) return;
+
+            Helper.SetMaterial(obj, NormalMat);
+
+            currentSelectables.Clear();
+            currentSelectables.AddRange(obj.GetComponentsInChildren<ISelectable>());
+            foreach (ISelectable s in currentSelectables)
+            {
+                s.OnDeselect();
+
+                selectables.Remove(s);
+            }
+
+            currentSelectables.Clear();
+            selectedObjects.Remove(obj);
         }
 
         void ExecuteSelected(AIAction action)

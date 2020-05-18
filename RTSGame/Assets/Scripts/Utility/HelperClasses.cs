@@ -86,6 +86,7 @@ public class BoundInput
     }
     #endregion
 
+    #region Bind
     /// <summary>
     /// Bind an action to an InputAction on the passed in PlayerInput with the name 'actionName', remember to bind actions to "PerformedActions" and "CancelledActions" before calling this
     /// </summary>
@@ -105,36 +106,8 @@ public class BoundInput
         {
             // Get the InputAction of name 'actionName' from the playerInput
             InputAction tempAction = playerInput.currentActionMap.FindAction(actionName, false);
-            if (tempAction == null)
-            {
-                DebugManager.WarningMessage($"There was an issue attempting to bind input '{actionName}', Error Code: {BindCode.INVALID_ACTION.ToString()}");
-                return BindCode.INVALID_ACTION;
-            }
 
-            // If the InputAction was successfully obtained continue
-            if (InputAction != null && deleteOldBindings)
-            {
-                UnbindAll();
-
-                otherBoundInputs.Clear();
-
-                bindCode = BindCode.RE_BIND_SUCCEEDED;
-            }
-            else if (InputAction != null && !deleteOldBindings)
-            {
-                // If we don't want to delete the old bindings, this will add an alternate binding 
-                otherBoundInputs.Add(InputAction);
-
-                bindCode = BindCode.RE_BIND_SUCCEEDED;
-            }
-
-            InputAction = tempAction;
-
-            if (InputAction != null)
-            {
-                InputAction.performed += PerformedActions;
-                InputAction.canceled += CancelledActions;
-            }
+            bindCode = Bind(tempAction, deleteOldBindings);
         }
 
 
@@ -146,6 +119,63 @@ public class BoundInput
         return bindCode;
     }
 
+    public BindCode Bind(InputActionReference actionRef, bool deleteOldBindings = true)
+    {
+        if (actionRef == null)
+        {
+            DebugManager.WarningMessage($"There was an issue attempting to bind input, Error Code: {BindCode.INVALID_ACTION.ToString()}");
+
+            return BindCode.INVALID_ACTION;
+        }
+
+        return Bind(actionRef.action, deleteOldBindings);
+    }
+
+    public BindCode Bind(InputAction action, bool deleteOldBindings = true)
+    {
+        BindCode bindCode = BindCode.SUCCESS;
+
+        if (action == null)
+        {
+            DebugManager.WarningMessage($"There was an issue attempting to bind input, Error Code: {BindCode.INVALID_ACTION.ToString()}");
+            return BindCode.INVALID_ACTION;
+        }
+
+        // If the InputAction was successfully obtained continue
+        if (InputAction != null && deleteOldBindings)
+        {
+            UnbindAll();
+
+            otherBoundInputs.Clear();
+
+            bindCode = BindCode.RE_BIND_SUCCEEDED;
+        }
+        else if (InputAction != null && !deleteOldBindings)
+        {
+            // If we don't want to delete the old bindings, this will add an alternate binding 
+            otherBoundInputs.Add(InputAction);
+
+            bindCode = BindCode.RE_BIND_SUCCEEDED;
+        }
+
+        InputAction = action;
+
+        if (InputAction != null)
+        {
+            InputAction.performed += PerformedActions;
+            InputAction.canceled += CancelledActions;
+        }
+
+        return bindCode;
+    }
+    #endregion 
+    public void Unbind(InputActionReference inputAction)
+    {
+        if (inputAction)
+        {
+            Unbind(inputAction.action);
+        }
+    }
     public void Unbind(InputAction inputAction)
     {
         if (inputAction != null)
@@ -163,6 +193,9 @@ public class BoundInput
 }
 public static class Helper
 {
+    public static Renderer CurrentTempRenderer = null;
+    public static MonoBehaviour CurrentTempMono = null;
+
     /// <summary>
     /// Loop through a list of type T (For Each Loop) and execute an action on each element
     /// </summary>
@@ -260,12 +293,11 @@ public static class Helper
         if (obj == null) return false;
 
         bool inList = false;
-        MonoBehaviour mb = null;
 
         if (monoList != null && monoList.Count > 0)
         {
-            mb = monoList[0] as MonoBehaviour;
-            if (!mb)
+            CurrentTempMono = monoList[0] as MonoBehaviour;
+            if (!CurrentTempMono)
             { 
                 return false;
             }
@@ -278,10 +310,10 @@ public static class Helper
         Helper.LoopListForEach<T>(monoList, 
         (T mono) => // LoopAction
         {
-            mb = mono as MonoBehaviour;
-            if (mb)
+            CurrentTempMono = mono as MonoBehaviour;
+            if (CurrentTempMono)
             {
-                if(mb.gameObject.Equals(obj))
+                if(CurrentTempMono.gameObject.Equals(obj))
                 {
                     inList = true;
                 }
@@ -316,4 +348,33 @@ public static class Helper
 
         return Vector3.Distance(transOne.position, transTwo.position);
     }
+
+    #region SetMaterials
+    public static void SetMaterials(List<Renderer> list, Material mat, Func<bool> breakOut = null)
+    {
+        Helper.LoopListForEach<Renderer>(list, (Renderer rend) => { SetMaterial(rend, mat); }, breakOut);
+    }
+    public static void SetMaterial(Renderer rend, Material mat)
+    {
+        if (!rend) return;
+
+        rend.material = mat;
+    }
+
+    public static void SetMaterials(List<GameObject> list, Material mat, Func<bool> breakOut = null)
+    {
+        Helper.LoopListForEach<GameObject>(list, (GameObject obj) => { SetMaterial(obj, mat); }, breakOut);
+    }
+    public static void SetMaterial(GameObject obj, Material mat)
+    {
+        if (!obj) return;
+
+        CurrentTempRenderer = obj.GetComponent<Renderer>();
+        if (CurrentTempRenderer)
+        {
+            CurrentTempRenderer.material = mat;
+            CurrentTempRenderer = null;
+        }
+    }
+    #endregion
 }

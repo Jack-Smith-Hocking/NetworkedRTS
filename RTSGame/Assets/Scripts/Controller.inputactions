@@ -132,6 +132,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "P",
+                    "type": "Button",
+                    "id": "6be25b8d-bb14-44f2-ae12-b20401224ae4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -440,6 +448,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "LeftCtr",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9ea290db-f1b9-4af0-9da1-144e94d65734",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "P",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
