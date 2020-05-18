@@ -23,5 +23,9 @@ namespace AI_System
         {
 
         }
+        public virtual void SelectionAction()
+        {
+
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -87,7 +88,7 @@ public class BoundInput
     #endregion
 
     /// <summary>
-    /// Bind an action to an InputAction on the passed in PlayerInput with the name 'actionName'
+    /// Bind an action to an InputAction on the passed in PlayerInput with the name 'actionName', remember to bind actions to "PerformedActions" and "CancelledActions" before calling this
     /// </summary>
     /// <param name="playerInput">The PlayerInput to get input for</param>
     /// <param name="actionName">The name of the action in the control map</param>
@@ -105,7 +106,11 @@ public class BoundInput
         {
             // Get the InputAction of name 'actionName' from the playerInput
             InputAction tempAction = playerInput.currentActionMap.FindAction(actionName, false);
-            if (tempAction == null) return BindCode.INVALID_ACTION;
+            if (tempAction == null)
+            {
+                DebugManager.WarningMessage($"There was an issue attempting to bind input '{actionName}', Error Code: {BindCode.INVALID_ACTION.ToString()}");
+                return BindCode.INVALID_ACTION;
+            }
 
             // If the InputAction was successfully obtained continue
             if (InputAction != null && deleteOldBindings)
@@ -136,7 +141,7 @@ public class BoundInput
 
         if (bindCode != BindCode.SUCCESS && bindCode != BindCode.RE_BIND_SUCCEEDED)
         {
-            Debug.LogWarning($"There was an error attempting to rebind action '{actionName}', error code: {bindCode}");
+            DebugManager.WarningMessage($"There was an error attempting to rebind action '{actionName}', error code: {bindCode}");
         }
 
         return bindCode;
@@ -242,6 +247,50 @@ public static class Helper
         }
 
         return navHit.position;
+    }
+
+    /// <summary>
+    /// Will loop (For Each) through a list and see if the GameObject is in it. Ensure the list is a list of MonoBehavioours, checks are in place to reject anything else
+    /// </summary>
+    /// <typeparam name="T">The type of list, will need to be a MonoBehaviour or child of a MonoBehaviour</typeparam>
+    /// <param name="monoList">TThe list to check in</param>
+    /// <param name="obj">The GameObject to check for</param>
+    /// <returns>Returns true if the GameObject is in the list</returns>
+    public static bool ObjectInMonoList<T>(List<T> monoList, GameObject obj)
+    {
+        if (obj == null) return false;
+
+        bool inList = false;
+        MonoBehaviour mb = null;
+
+        if (monoList != null && monoList.Count > 0)
+        {
+            mb = monoList[0] as MonoBehaviour;
+            if (!mb)
+            { 
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+
+        Helper.LoopListForEach<T>(monoList, 
+        (T mono) => // LoopAction
+        {
+            mb = mono as MonoBehaviour;
+            if (mb)
+            {
+                if(mb.gameObject.Equals(obj))
+                {
+                    inList = true;
+                }
+            }
+        }, 
+        () => { return inList; }); // BreakOut action
+
+        return inList;
     }
 
     /// <summary>

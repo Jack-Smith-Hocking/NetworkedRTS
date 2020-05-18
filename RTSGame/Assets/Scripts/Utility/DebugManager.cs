@@ -54,6 +54,6 @@ public class DebugManager : MonoBehaviour
     {
         if (DebugInstance && !DebugInstance.ShowLogs) return;
 
-        Debug.Log(message);
+        DebugManager.LogMessage(message);
     }
 }

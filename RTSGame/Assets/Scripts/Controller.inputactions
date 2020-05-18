@@ -124,6 +124,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "LeftCtr",
+                    "type": "Button",
+                    "id": "17113bd5-802c-4583-922a-b5810140ec00",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -423,6 +431,17 @@
                     "action": "Arrows",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "18ca3b9e-56ee-4472-92a5-d2dfe026d73b",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftCtr",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

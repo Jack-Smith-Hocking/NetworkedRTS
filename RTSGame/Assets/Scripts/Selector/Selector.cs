@@ -1,31 +1,66 @@
 ﻿using AI_System;
-using ScriptableActions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Rendering.Universal;
 using UnityEngine;
-using UnityEngine.Rendering;
+using UnityEngine.InputSystem;
 
 namespace Selector_Systen
 {
     public class Selector : MonoBehaviour
     {
+        [System.Serializable]
+        public class SelectorInput
+        {
+            public string InputName = "New Input";
+            public AIAction InputAction = null;
+        }
+
         public static Selector Instance = null;
 
+        public PlayerInput PlayerInput;
         public LayerMask MovementLayer;
 
+        [Space]
+        public string MainSelectButton = "LeftMouseClick";
+        public string MultiSelectInput = "LeftCtr";
+        public string ActionQueueInput = "LeftShift";
+        [Space]
+
+        [Space]
+        public List<SelectorInput> SelectorInputs = new List<SelectorInput>();
+        [Space]
+
+        public AIAction CurrentAction = null;
         public Vector3 SelectedPoint;
         public bool SetPoint = false;
         public bool AddToPath = false;
+        public bool AddToActionList = false;
 
         public float DragDelay = 0.1f;
         private float currentDragTime = 0;
 
+        [Space]
+        public Material NormalMat;
+        public Material HighlightedMat;
+        public Material SelectedMat;
+        [Space]
+
         private List<ISelectable> selectables = new List<ISelectable>();
+        private List<ISelectable> currentSelectables = new List<ISelectable>();
+
         private List<GameObject> selectedObjects = new List<GameObject>();
+        private List<GameObject> highlightedObjects = new List<GameObject>();
 
         private Vector3 startPos;
         private Vector3 endPos;
+
+        private List<BoundInput> boundInputs = new List<BoundInput>();
+
+        private BoundInput selectInput = new BoundInput();
+        private BoundInput multiSelectInput = new BoundInput();
+        private BoundInput actionQueueInput = new BoundInput();
 
         // Start is called before the first frame update
         void Start()
@@ -34,27 +69,59 @@ namespace Selector_Systen
             {
                 Instance = this;
             }
+
+            foreach (SelectorInput s in SelectorInputs)
+            {
+                InitialiseInputs(s);
+            }
+
+            selectInput.PerformedActions += Select;
+            selectInput.CancelledActions += Select;
+            selectInput.Bind(PlayerInput, MainSelectButton);
+
+            multiSelectInput.Bind(PlayerInput, MultiSelectInput);
+            actionQueueInput.Bind(PlayerInput, ActionQueueInput);
         }
 
-        private void Update()
+        void InitialiseInputs(SelectorInput selection)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (selection == null) return;
+
+            selection.InputAction = Instantiate(selection.InputAction);
+
+            BoundInput binding = new BoundInput();
+            binding.PerformedActions += (InputAction.CallbackContext cc) =>
+            {
+                ExecuteSelected(selection.InputAction);
+            };
+
+            binding.Bind(PlayerInput, selection.InputName);
+
+            boundInputs.Add(binding);
+        }
+
+        void Select(InputAction.CallbackContext cc)
+        {
+            bool isDown = cc.ReadValueAsButton();
+
+            if (isDown)
             {
                 startPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
                 currentDragTime = Time.time;
             }
-            if (Input.GetMouseButtonUp(0))
+            else
             {
                 endPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
 
-                if (Input.GetKey(KeyCode.LeftControl) == false)
+                if (multiSelectInput.CurrentBoolVal == false)
                 {
                     ClearSelection();
                 }
 
+                highlightedObjects.Clear();
+
                 if (Time.time - currentDragTime >= DragDelay)
                 {
-                
                     SelectMultiple();
                 }
                 else
@@ -62,21 +129,31 @@ namespace Selector_Systen
                     SelectSingle();
                 }
             }
+        }
 
-            if (selectedObjects.Count > 0)
+        private void Update()
+        {
+            SetMaterial(highlightedObjects, NormalMat);
+            highlightedObjects.Clear();
+
+            RaycastHit rayHit;
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
             {
-                if (Input.GetMouseButtonDown(1))
-                {
-                    AddToPath = Input.GetKey(KeyCode.LeftShift);
 
-                    RaycastHit rayHit;
-                    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit, Mathf.Infinity, MovementLayer))
-                    {
-                        SelectedPoint = rayHit.point;
-                        Helper.LoopListForEach<ISelectable>(selectables, (ISelectable selectable) => { selectable.OnExecute(); });
-                    }
+                if (!selectedObjects.Contains(rayHit.collider.gameObject) && Helper.ObjectInMonoList<AIAgent>(AIManager.Instance.SceneAI, rayHit.collider.gameObject))
+                {
+                    rayHit.collider.gameObject.GetComponent<Renderer>().material = HighlightedMat;
+                    highlightedObjects.Add(rayHit.collider.gameObject);
                 }
             }
+
+            if (selectInput.CurrentBoolVal)
+            {
+                endPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+                highlightedObjects.AddRange(GetObjectsInArea());
+                SetMaterial(highlightedObjects, HighlightedMat);
+            }
+
         }
 
         public void AddSelected(GameObject selected)
@@ -86,8 +163,18 @@ namespace Selector_Systen
                 return;
             }
 
+            if (selectedObjects.Contains(selected))
+            {
+                return;
+            }
+
             selectedObjects.Add(selected);
-            selectables.AddRange(selected.GetComponentsInChildren<ISelectable>());
+            
+            currentSelectables.Clear();
+            currentSelectables.AddRange(selected.GetComponentsInChildren<ISelectable>());
+            Helper.LoopListForEach<ISelectable>(currentSelectables, (ISelectable selectable) => { selectable.OnSelect(); });
+
+            selectables.AddRange(currentSelectables);
         }
 
         void SelectSingle()
@@ -98,11 +185,20 @@ namespace Selector_Systen
                 AddSelected(rayHit.collider.gameObject);
             }
 
-            Helper.LoopListForEach<ISelectable>(selectables, (ISelectable selectable) => { selectable.OnSelect(); });
+            SetMaterial(selectedObjects, SelectedMat);
         }
         void SelectMultiple()
         {
+            Helper.LoopListForEach<GameObject>(GetObjectsInArea(), (GameObject obj) => { AddSelected(obj); });
+            SelectSingle();
+
+            SetMaterial(selectedObjects, SelectedMat);
+        }
+        List<GameObject> GetObjectsInArea()
+        {
             Rect selectRect = new Rect(startPos.x, startPos.y, (endPos.x - startPos.x), (endPos.y - startPos.y));
+
+            List<GameObject> objs = new List<GameObject>();
 
             GameObject agent = null;
             foreach (AIAgent agentAI in AIManager.Instance.SceneAI)
@@ -113,12 +209,28 @@ namespace Selector_Systen
                 {
                     if (selectRect.Contains(Camera.main.WorldToViewportPoint(agent.transform.position), true))
                     {
-                        AddSelected(agent);
+                        objs.Add(agent);
                     }
                 }
             }
 
-            Helper.LoopListForEach<ISelectable>(selectables, (ISelectable selectable) => { selectable.OnSelect(); });
+            return objs;
+        }
+
+        void SetMaterial(List<GameObject> list, Material mat)
+        {
+            Renderer rend = null;
+            Helper.LoopListForEach<GameObject>(list, (GameObject obj) =>
+                {
+                    if (!Helper.ObjectInMonoList(AIManager.Instance.SceneAI, obj)) return;
+
+                    rend = obj.GetComponent<Renderer>();
+                    if (rend)
+                    {
+                        rend.material = mat;
+                    }
+                }
+            );
         }
 
         void ClearSelection()
@@ -130,8 +242,23 @@ namespace Selector_Systen
 
             Helper.LoopListForEach<ISelectable>(selectables, (ISelectable selectable) => { selectable.OnDeselect(); });
 
+            SetMaterial(selectedObjects, NormalMat);
+
             selectables.Clear();
             selectedObjects.Clear();
+        }
+
+        void ExecuteSelected(AIAction action)
+        {
+            if (action == null) return;
+
+            CurrentAction = Instantiate(action);
+
+            AddToActionList = actionQueueInput.CurrentBoolVal;
+
+            CurrentAction.SelectionAction();
+
+            Helper.LoopListForEach<ISelectable>(selectables, (ISelectable selectable) => { selectable.OnExecute(); });
         }
     }
 }

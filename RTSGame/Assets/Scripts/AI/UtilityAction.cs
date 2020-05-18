@@ -22,5 +22,10 @@ namespace AI_System
         {
             return 0;
         }
+
+        public virtual bool HasActionCompleted(AIAgent agent)
+        {
+            return false;
+        }
     }
 }

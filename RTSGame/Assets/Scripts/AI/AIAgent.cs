@@ -18,7 +18,7 @@ namespace AI_System
 
         public Transform CurrentTarget /*{ get; set; } */= null;
 
-        private AIAction currentAction = null;
+        private List<AIAction> currentActions = new List<AIAction>();
 
         // Start is called before the first frame update
         IEnumerator Start()
@@ -43,14 +43,26 @@ namespace AI_System
 
         public void UpdateAction()
         {
-            if (currentAction)
+            if (currentActions.Count > 0)
             {
-                currentAction.UpdateAction(this);
+                currentActions[0].UpdateAction(this);
+
+                if (currentActions[0].HasActionCompleted(this))
+                {
+                    currentActions[0].ExitAction(this);
+                    currentActions.RemoveAt(0);
+                 
+                    if (currentActions.Count > 0)
+                    {
+                        currentActions[0].EnterAction(this);
+                        currentActions[0].ExecuteAction(this);
+                    }
+                }
             }
         }
         public void EvaluateActions()
         {
-            SetCurrentAction(GetBestAction());
+            SetCurrentAction(GetBestAction(), false);
         }
 
         public AIAction GetBestAction()
@@ -58,10 +70,10 @@ namespace AI_System
             AIAction highestAction = null;
             float highestEvaluation = 0;
 
-            if (currentAction)
+            if (currentActions.Count > 0)
             {
-                highestAction = currentAction;
-                highestEvaluation = currentAction.EvaluateAction(this);
+                highestAction = currentActions[0];
+                highestEvaluation = currentActions[0].EvaluateAction(this);
             }
 
             foreach (AIAction action in PossibleActions)
@@ -79,29 +91,39 @@ namespace AI_System
             return highestAction;
         }
 
-        public void SetCurrentAction(AIAction action, bool overrideAction = false)
+        public void SetCurrentAction(AIAction action, bool addToList)
         {
             if (!action)
             {
                 return;
             }
-            if (currentAction && currentAction.Equals(action))
+            if (currentActions.Count > 0 && currentActions[0].Equals(action))
             {
                 return;
             }
 
-            if (!currentAction)
+            if (currentActions.Count == 0)
             {
-                currentAction = action;
+                currentActions.Add(action);
+                addToList = false;
+            }
+            else if (addToList)
+            {
+                currentActions.Add(action);
             }
             else
             {
-                currentAction.ExitAction(this);
-                currentAction = action;
+                currentActions[0].ExitAction(this);
+                currentActions.Clear();
+
+                currentActions.Add(action);
             }
 
-            currentAction.EnterAction(this);
-            currentAction.ExecuteAction(this);
+            if (!addToList)
+            {
+                currentActions[0].EnterAction(this);
+                currentActions[0].ExecuteAction(this);
+            }
         }
 
         #region ISelectable
@@ -119,23 +141,15 @@ namespace AI_System
 
         public void OnExecute()
         {
-            if (Selector.Instance && MoveAction)
+            if (Selector.Instance)
             {
-                if (!Selector.Instance.AddToPath)
+                AIAction newAction = Selector.Instance.CurrentAction;
+                if (newAction)
                 {
-                    MoveAction.CurrentTargets.Clear();
-                }
-                
-                MoveAction.CurrentTargets.Add(Selector.Instance.SelectedPoint);
-
-                if (currentAction)
-                {
-                    currentAction.ExitAction(this);
+                    newAction = Instantiate(newAction);
                 }
 
-                currentAction = MoveAction;
-                currentAction.EnterAction(this);
-                currentAction.ExecuteAction(this);
+                SetCurrentAction(newAction, Selector.Instance.AddToActionList);
             }
         }
     }

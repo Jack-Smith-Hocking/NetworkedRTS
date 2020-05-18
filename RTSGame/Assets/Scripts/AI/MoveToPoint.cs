@@ -20,16 +20,23 @@ namespace AI_System
                 {
                     CurrentTargets.RemoveAt(0);
 
-                    if (CurrentTargets.Count == 0)
-                    {
-                        CurrentTargets.Add(agent.transform.position);
-                    }
-
                     ExecuteAction(agent);
                 }
             }
 
             return 0.0f;
+        }
+
+        public override bool HasActionCompleted(AIAgent agent)
+        {
+            if (!agent) return true;
+
+            if (CurrentTargets.Count == 0 || Vector3.Distance(agent.transform.position, CurrentTargets[0]) <= StoppingAccuracy)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public override bool ExecuteAction(AIAgent agent)
@@ -62,6 +69,16 @@ namespace AI_System
             if (!agent || !agent.NavAgent) return;
 
             agent.NavAgent.ResetPath();
+        }
+
+        public override void SelectionAction()
+        {
+            RaycastHit rayHit;
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
+            {
+                CurrentTargets.Clear();
+                CurrentTargets.Add(rayHit.point);
+            }
         }
     }
 }
