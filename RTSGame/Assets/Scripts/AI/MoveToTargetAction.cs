@@ -8,51 +8,62 @@ namespace AI_System
     [CreateAssetMenu(fileName = "New MoveToAction", menuName = "ScriptableObject/RTS/AI/MoveToTarget")]
     public class MoveToTargetAction : AIAction
     {
+        public MoveToPointAction MoveAction;
+        public float MaxFollowDistance = 0;
+        public float TargetFollowDistance = 0;
         public Transform CurrentTarget = null;
-        public float DetectionDistance = 5;
-
-        private MoveToPoint moveAction;
-
-        private void OnEnable()
-        {
-            moveAction = MoveToPoint.CreateInstance(typeof(MoveToPoint)) as MoveToPoint;
-        }
 
         public override void InitialiseAction(AIAgent agent)
         {
-            if (moveAction)
+            if (MoveAction)
             {
-                moveAction = Instantiate(moveAction);
-                moveAction.InitialiseAction(agent);
+                MoveAction = Instantiate(MoveAction);
+                MoveAction.InitialiseAction(agent);
             }
+        }
+        public override bool HasActionCompleted(AIAgent agent)
+        {
+            return (CurrentTarget && Vector3.Distance(CurrentTarget.transform.position, agent.transform.position) >= MaxFollowDistance);
+        }
+
+        public override float UpdateAction(AIAgent agent)
+        {
+            bool outsideTargetRange = Vector3.Distance(agent.transform.position, CurrentTarget.transform.position) >= TargetFollowDistance;
+
+            if (MoveAction && CurrentTarget && outsideTargetRange)
+            { 
+                MoveAction.CurrentTargets.Clear();
+                MoveAction.CurrentTargets.Add(CurrentTarget.position);
+
+                MoveAction.ExecuteAction(agent);
+                MoveAction.UpdateAction(agent);
+            }
+            
+            if (!outsideTargetRange)
+            {
+                agent.NavAgent.ResetPath();
+            }
+
+            return 0.0f;
         }
 
         public override bool ExecuteAction(AIAgent agent)
         {
-            return (moveAction && moveAction.ExecuteAction(agent));
+            return (MoveAction && MoveAction.ExecuteAction(agent));
         }
 
         public override float EvaluateAction(AIAgent agent)
         {
             if (!agent || !CurrentTarget) return 0.0f;
 
-            if (moveAction)
+            if (MoveAction)
             {
-                moveAction.CurrentTargets.Clear();
-                moveAction.CurrentTargets.Add(CurrentTarget.position);
+                MoveAction.CurrentTargets.Clear();
+                MoveAction.CurrentTargets.Add(CurrentTarget.position);
             }
 
             float dist = Helper.Distance(agent.transform, CurrentTarget);
             float returnVal = 0;
-
-            if (dist > DetectionDistance)
-            {
-                returnVal = DetectionDistance / dist;
-            }
-            else if (dist < DetectionDistance)
-            {
-                returnVal = 1 - (dist / DetectionDistance);
-            }
 
             return returnVal;
         }
@@ -63,10 +74,10 @@ namespace AI_System
 
             agent.NavAgent.ResetPath();
 
-            if (moveAction && CurrentTarget)
+            if (MoveAction && CurrentTarget)
             {
-                moveAction.CurrentTargets.Clear();
-                moveAction.CurrentTargets.Add(CurrentTarget.position);
+                MoveAction.CurrentTargets.Clear();
+                MoveAction.CurrentTargets.Add(CurrentTarget.position);
             }
         }
         public override void ExitAction(AIAgent agent)
@@ -75,6 +86,15 @@ namespace AI_System
 
             agent.NavAgent.ResetPath();
             CurrentTarget = null;
+        }
+
+        public override void SelectionAction(AIAgent agent)
+        {
+            RaycastHit rayHit;
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
+            {
+                CurrentTarget = rayHit.collider.transform;
+            }
         }
     }
 }

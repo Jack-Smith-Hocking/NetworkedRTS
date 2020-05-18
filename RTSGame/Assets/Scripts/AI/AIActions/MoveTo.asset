@@ -14,4 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
-  DetectionDistance: 5
+  MoveAction: {fileID: 11400000, guid: 8fc7dbc3430b1ef4299246d7fd443b37, type: 2}
+  MaxFollowDistance: 1000
+  TargetFollowDistance: 20
+  CurrentTarget: {fileID: 0}

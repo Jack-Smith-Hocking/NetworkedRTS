@@ -6,7 +6,7 @@ using UnityEngine.AI;
 namespace AI_System
 {
     [CreateAssetMenu(fileName = "New MoveToAction", menuName = "ScriptableObject/RTS/AI/MoveToPoint")]
-    public class MoveToPoint : AIAction
+    public class MoveToPointAction : AIAction
     {
         public List<Vector3> CurrentTargets = new List<Vector3>();
         public float StoppingAccuracy = 1; 
@@ -71,7 +71,7 @@ namespace AI_System
             agent.NavAgent.ResetPath();
         }
 
-        public override void SelectionAction()
+        public override void SelectionAction(AIAgent agent)
         {
             RaycastHit rayHit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))

@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Rendering.Universal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -72,6 +71,11 @@ namespace Selector_Systen
 
             foreach (SelectorInput s in SelectorInputs)
             {
+                if (s.InputAction)
+                {
+                    s.InputAction = Instantiate(s.InputAction);
+                }
+
                 InitialiseInputs(s);
             }
 
@@ -86,8 +90,6 @@ namespace Selector_Systen
         void InitialiseInputs(SelectorInput selection)
         {
             if (selection == null) return;
-
-            selection.InputAction = Instantiate(selection.InputAction);
 
             BoundInput binding = new BoundInput();
             binding.PerformedActions += (InputAction.CallbackContext cc) =>
@@ -255,8 +257,6 @@ namespace Selector_Systen
             CurrentAction = Instantiate(action);
 
             AddToActionList = actionQueueInput.CurrentBoolVal;
-
-            CurrentAction.SelectionAction();
 
             Helper.LoopListForEach<ISelectable>(selectables, (ISelectable selectable) => { selectable.OnExecute(); });
         }

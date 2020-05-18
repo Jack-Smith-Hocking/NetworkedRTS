@@ -23,7 +23,7 @@ namespace AI_System
         {
 
         }
-        public virtual void SelectionAction()
+        public virtual void SelectionAction(AIAgent agent)
         {
 
         }

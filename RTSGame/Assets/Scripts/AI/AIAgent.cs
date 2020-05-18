@@ -11,14 +11,9 @@ namespace AI_System
     public class AIAgent : MonoBehaviour, Selector_Systen.ISelectable
     {
         public NavMeshAgent NavAgent = null;
-        [Space]
-        public MoveToPoint MoveAction = null;
-        [Space]
         public List<AIAction> PossibleActions = new List<AIAction>();
 
-        public Transform CurrentTarget /*{ get; set; } */= null;
-
-        private List<AIAction> currentActions = new List<AIAction>();
+        public List<AIAction> currentActions = new List<AIAction>();
 
         // Start is called before the first frame update
         IEnumerator Start()
@@ -28,11 +23,6 @@ namespace AI_System
             for (int i = 0; i < PossibleActions.Count; i++)
             {
                 PossibleActions[i] = Instantiate(PossibleActions[i]);
-            }
-
-            if (MoveAction)
-            {
-                MoveAction = Instantiate(MoveAction);
             }
 
             if (AIManager.Instance)
@@ -147,9 +137,11 @@ namespace AI_System
                 if (newAction)
                 {
                     newAction = Instantiate(newAction);
-                }
+                    newAction.InitialiseAction(this);
+                    newAction.SelectionAction(this);
 
-                SetCurrentAction(newAction, Selector.Instance.AddToActionList);
+                    SetCurrentAction(newAction, Selector.Instance.AddToActionList);
+                }
             }
         }
     }
