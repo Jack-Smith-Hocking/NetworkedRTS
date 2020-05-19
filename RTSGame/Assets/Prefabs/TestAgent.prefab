@@ -14,8 +14,9 @@ GameObject:
   - component: {fileID: 589809938}
   - component: {fileID: 589809936}
   - component: {fileID: 589809937}
+  - component: {fileID: 1906695737}
   m_Layer: 0
-  m_Name: BlockPrototype04x04x04
+  m_Name: TestAgent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -133,6 +134,32 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1906695737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e892ee89d205fb44ae369d8cd2843ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Agent: {fileID: 0}
+  SelectionInputs:
+  - SelectorInputName: Patrol
+    InputAction: {fileID: -7676185889050136016, guid: b995a5cde5930cc47a278e015840fdd7,
+      type: 3}
+    Action: {fileID: 11400000, guid: a61560db775ad6d44a27c2bbd528cb80, type: 2}
+  - SelectorInputName: MoveToPoint
+    InputAction: {fileID: 7869239680367066317, guid: b995a5cde5930cc47a278e015840fdd7,
+      type: 3}
+    Action: {fileID: 11400000, guid: 8fc7dbc3430b1ef4299246d7fd443b37, type: 2}
+  - SelectorInputName: MoveToTarget
+    InputAction: {fileID: -5801330800459790725, guid: b995a5cde5930cc47a278e015840fdd7,
+      type: 3}
+    Action: {fileID: 11400000, guid: a249c87f6a986e84e9031372df5e1d3b, type: 2}
 --- !u!1 &485748326
 GameObject:
   m_ObjectHideFlags: 0

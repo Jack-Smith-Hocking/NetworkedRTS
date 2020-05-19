@@ -329,24 +329,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
---- !u!1 &117388460 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: ab33e6080ae416b4d899f39fa8951b98,
-    type: 3}
-  m_PrefabInstance: {fileID: 2131309542}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &117388461
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 117388460}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f568543cabe75f84ba43150e72853024, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &148636436
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -809,8 +791,6 @@ MonoBehaviour:
     Action: {fileID: 11400000, guid: a249c87f6a986e84e9031372df5e1d3b, type: 2}
   CurrentAction: {fileID: 0}
   SelectedPoint: {x: 0, y: 0, z: 0}
-  SetPoint: 0
-  AddToPath: 0
   AddToActionList: 0
   DragDelay: 0.1
   NormalMat: {fileID: 2100000, guid: 1032d41f900276c40a9dd24f55b7d420, type: 2}
@@ -1829,24 +1809,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &1866985544 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100000, guid: ab33e6080ae416b4d899f39fa8951b98,
-    type: 3}
-  m_PrefabInstance: {fileID: 555683252}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1866985545
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1866985544}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bd1695bb9df98f4c85a1b207985b241, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1968072347
 PrefabInstance:
   m_ObjectHideFlags: 0

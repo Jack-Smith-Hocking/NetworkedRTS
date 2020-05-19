@@ -1,32 +1,20 @@
-﻿using AI_System;
+﻿using Action_System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Editor;
 
 namespace Selector_Systen
 {
     public class Selector : MonoBehaviour
     {
-        [System.Serializable]
-        public class SelectorInput
-        {
-            public string SelectorInputName;
-            public InputActionReference InputAction = null;
-            public AIAction Action = null;
-        }
         public static Selector Instance = null;
 
         [Space]
         public InputActionReference MainSelectButton;
         public InputActionReference MultiSelectInput;
         public InputActionReference ActionQueueInput;
-        [Space]
-
-        [Space]
-        public List<SelectorInput> SelectorInputs = new List<SelectorInput>();
         [Space]
 
         public AIAction CurrentAction = null;
@@ -51,8 +39,6 @@ namespace Selector_Systen
         private Vector3 startPos;
         private Vector3 endPos;
 
-        private List<BoundInput> boundInputs = new List<BoundInput>();
-
         private BoundInput selectInput = new BoundInput();
         private BoundInput multiSelectInput = new BoundInput();
         private BoundInput actionQueueInput = new BoundInput();
@@ -65,16 +51,6 @@ namespace Selector_Systen
                 Instance = this;
             }
 
-            foreach (SelectorInput s in SelectorInputs)
-            {
-                if (s.Action)
-                {
-                    s.Action = Instantiate(s.Action);
-                }
-
-                InitialiseInputs(s);
-            }
-
             selectInput.PerformedActions += Select;
             selectInput.CancelledActions += Select;
             selectInput.Bind(MainSelectButton);
@@ -83,20 +59,6 @@ namespace Selector_Systen
             actionQueueInput.Bind(ActionQueueInput);
         }
 
-        void InitialiseInputs(SelectorInput selection)
-        {
-            if (selection == null) return;
-
-            BoundInput binding = new BoundInput();
-            binding.PerformedActions += (InputAction.CallbackContext cc) =>
-            {
-                ExecuteSelected(selection.Action);
-            };
-
-            binding.Bind(selection.InputAction);
-
-            boundInputs.Add(binding);
-        }
 
         void Select(InputAction.CallbackContext cc)
         {
@@ -131,6 +93,8 @@ namespace Selector_Systen
 
         private void Update()
         {
+            AddToActionList = actionQueueInput.CurrentBoolVal;
+
             Helper.SetMaterials(highlightedObjects, NormalMat);
 
             foreach (GameObject obj in highlightedObjects)
@@ -258,17 +222,6 @@ namespace Selector_Systen
 
             currentSelectables.Clear();
             selectedObjects.Remove(obj);
-        }
-
-        void ExecuteSelected(AIAction action)
-        {
-            if (action == null) return;
-
-            CurrentAction = Instantiate(action);
-
-            AddToActionList = actionQueueInput.CurrentBoolVal;
-
-            Helper.LoopListForEach<ISelectable>(selectables, (ISelectable selectable) => { selectable.OnExecute(); });
         }
     }
 }

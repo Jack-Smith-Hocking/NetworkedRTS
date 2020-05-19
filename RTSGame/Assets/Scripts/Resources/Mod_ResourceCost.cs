@@ -8,7 +8,10 @@ namespace RTS_System
     public class Mod_ResourceCost : ScriptableObject
     {
         public Mod_Resource ResourceType;
-        public int ResourceCost = 0;
+        [Min(0)] public int RawResourceCost = 0;
+        public bool DecreaseResources = true;
+
+        public int TrueResourceCost { get { return RawResourceCost * (DecreaseResources ? -1 : 1); } }
     }
 }
 

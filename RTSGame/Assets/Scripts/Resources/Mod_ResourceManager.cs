@@ -131,7 +131,7 @@ namespace RTS_System
         /// <param name="resource">The type of resource to add to</param>
         /// <param name="amount">The amount to add</param>
         /// <returns>Whether the amount was successfully added</returns>
-        bool AddResources(Mod_Resource resource, int amount)
+        public bool AddResources(Mod_Resource resource, int amount)
         {
             if (!resource) return false;
 
@@ -141,6 +141,34 @@ namespace RTS_System
             }
 
             return false;
+        }
+        public bool AddResources(Mod_ResourceCost resourceCost)
+        {
+            if (!resourceCost) return false;
+
+            if (resourceCaches.ContainsKey(resourceCost.ResourceType))
+            {
+                return resourceCaches[resourceCost.ResourceType].IncreaseValue(resourceCost.TrueResourceCost);
+            }
+
+            return false;
+        }
+
+        public bool CanAfford(Mod_ResourceCost resourceCost)
+        {
+            if (!resourceCost || !resourceCost.ResourceType) return false;
+
+            bool eval = false;
+
+            if (resourceCaches.ContainsKey(resourceCost.ResourceType))
+            {
+                if (resourceCaches[resourceCost.ResourceType].ResourceValue >= Mathf.Abs(resourceCost.RawResourceCost))
+                {
+                    eval = true;
+                }
+            }
+
+            return eval;
         }
     }
 }

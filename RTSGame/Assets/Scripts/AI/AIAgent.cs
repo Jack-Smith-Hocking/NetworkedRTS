@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace AI_System
+namespace Action_System
 {
     [RequireComponent(typeof(NavMeshAgent))]
     public class AIAgent : MonoBehaviour, Selector_Systen.ISelectable
@@ -116,6 +116,19 @@ namespace AI_System
             }
         }
 
+        public void AddAction(AIAction action, bool addToList)
+        {
+            AIAction newAction = action;
+            if (newAction)
+            {
+                newAction = Instantiate(newAction);
+                newAction.InitialiseAction(this);
+                newAction.SelectionAction(this);
+
+                SetCurrentAction(newAction, addToList);
+            }
+        }
+
         #region ISelectable
         public void OnHover()
         {
@@ -131,18 +144,6 @@ namespace AI_System
 
         public void OnExecute()
         {
-            if (Selector.Instance)
-            {
-                AIAction newAction = Selector.Instance.CurrentAction;
-                if (newAction)
-                {
-                    newAction = Instantiate(newAction);
-                    newAction.InitialiseAction(this);
-                    newAction.SelectionAction(this);
-
-                    SetCurrentAction(newAction, Selector.Instance.AddToActionList);
-                }
-            }
         }
     }
     #endregion

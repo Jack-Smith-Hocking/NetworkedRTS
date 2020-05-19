@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AI_System
+namespace Action_System
 {
     public class AIAction : UtilityAction
     {
@@ -10,11 +10,11 @@ namespace AI_System
         {
             return EvaluateAction(agent);
         }
-        public virtual float EvaluateAction(AIAgent agent)
-        {
-            return 0.0f;
-        }
 
+        public virtual bool ExecuteAction(AIAgent agent)
+        {
+            return (agent != null);
+        }
         public virtual void EnterAction(AIAgent agent)
         {
 

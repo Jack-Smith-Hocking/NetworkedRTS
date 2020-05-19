@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AI_System
+namespace Action_System
 {
     public class UtilityAction : ScriptableObject
     {
@@ -14,10 +14,6 @@ namespace AI_System
 
         }
 
-        public virtual bool ExecuteAction(AIAgent agent)
-        {
-            return (agent != null);
-        }
         public virtual float UpdateAction(AIAgent agent)
         {
             return 0;
@@ -26,6 +22,10 @@ namespace AI_System
         public virtual bool HasActionCompleted(AIAgent agent)
         {
             return false;
+        }
+        public virtual float EvaluateAction(AIAgent agent)
+        {
+            return 0.0f;
         }
     }
 }

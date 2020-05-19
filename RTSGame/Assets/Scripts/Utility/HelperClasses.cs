@@ -211,9 +211,9 @@ public static class Helper
             {
                 if (loopVal == null) continue;
 
-                if (breakOut != null && breakOut()) break;
-
                 loopAction?.Invoke(loopVal);
+
+                if (breakOut != null && breakOut()) break;
             }
         }
     }
@@ -236,9 +236,9 @@ public static class Helper
 
                 if (loopVal == null) continue;
 
-                if (breakOut != null && breakOut()) break;
-
                 loopAction?.Invoke(loopVal);
+
+                if (breakOut != null && breakOut()) break;
             }
         }
     }
