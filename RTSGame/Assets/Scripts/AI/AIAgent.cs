@@ -41,7 +41,7 @@ namespace Unit_System
                 {
                     currentActions[0].ExitAction(this);
                     currentActions.RemoveAt(0);
-                 
+
                     if (currentActions.Count > 0)
                     {
                         currentActions[0].EnterAction(this);
@@ -103,14 +103,14 @@ namespace Unit_System
             }
             else
             {
-                Helper.LoopList_ForEach<AIAction>(currentActions, (AIAction a) => 
-                { 
-                    if (!a.Equals(currentActions[0])) 
-                    { 
-                        a.CancelAction(this); 
-                    } 
+                Helper.LoopList_ForEach<AIAction>(currentActions, (AIAction a) =>
+                {
+                    if (!a.Equals(currentActions[0]))
+                    {
+                        a.CancelAction(this);
+                    }
                 });
-                
+
                 currentActions[0].ExitAction(this);
                 currentActions.Clear();
 
@@ -138,6 +138,8 @@ namespace Unit_System
         }
         private void OnDestroy()
         {
+            Helper.LoopList_ForEach<AIAction>(currentActions, (AIAction a) => { a.CancelAction(this); });
+
             if (AIManager.Instance)
             {
                 AIManager.Instance.SceneAI.Remove(this);
