@@ -79,6 +79,8 @@ namespace Unit_System
                 currentCount = SceneAI.Count;
             }
 
+            currentCount = Mathf.Clamp(currentCount, 0, SceneAI.Count);
+
             // Loop through and update all the AI
             for (int i = 0; i < currentCount; i++)
             {

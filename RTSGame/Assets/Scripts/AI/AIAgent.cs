@@ -128,6 +128,13 @@ namespace Unit_System
                 SetCurrentAction(newAction, addToList);
             }
         }
+        private void OnDestroy()
+        {
+            if (AIManager.Instance)
+            {
+                AIManager.Instance.SceneAI.Remove(this);
+            }
+        }
 
         #region ISelectable
         public void OnHover()

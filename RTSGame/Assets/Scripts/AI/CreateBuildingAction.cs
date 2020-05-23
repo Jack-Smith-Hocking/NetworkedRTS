@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using RTS_System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,7 +12,11 @@ namespace Unit_System
     {
         public MoveToPointAction MoveAction = null;
         public GameObject BuildingPrefab = null;
+        public ResourceConditional BuildingCost = null;
+        public float BuildTime = 0;
 
+        private bool attemptBuild = false;
+        private float currentBuildTime = 0;
         private GameObject building = null;
 
         public override void InitialiseAction(AIAgent agent)
@@ -31,14 +36,28 @@ namespace Unit_System
         {
             if (MoveAction)
             {
-                if (MoveAction.HasActionCompleted(agent))
+                if (MoveAction.HasActionCompleted(agent) && !attemptBuild)
                 {
-                    if (BuildingPrefab)
+                    currentBuildTime = Time.time + BuildTime;
+
+                    attemptBuild = true;
+
+                    if (BuildingCost)
                     {
-                        building = Instantiate(BuildingPrefab, MoveAction.CurrentTarget, Quaternion.identity);
+                        attemptBuild = BuildingCost.EvaluateConditional();
                     }
 
                     MoveAction.ExitAction(agent);
+                }
+
+                if (BuildingPrefab && Time.time >= currentBuildTime && attemptBuild)
+                {
+                    building = Instantiate(BuildingPrefab, MoveAction.CurrentTarget, Quaternion.identity);
+
+                    if (BuildingCost)
+                    {
+                        BuildingCost.AddResources();
+                    }
                 }
 
                 MoveAction.UpdateAction(agent);
