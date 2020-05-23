@@ -131,7 +131,7 @@ namespace RTS_System
         /// <param name="resource">The type of resource to add to</param>
         /// <param name="amount">The amount to add</param>
         /// <returns>Whether the amount was successfully added</returns>
-        public bool AddResources(Mod_Resource resource, int amount)
+        public bool AddResource(Mod_Resource resource, int amount)
         {
             if (!resource) return false;
 
@@ -142,7 +142,7 @@ namespace RTS_System
 
             return false;
         }
-        public bool AddResources(Mod_ResourceCost resourceCost)
+        public bool AddResource(Mod_ResourceCost resourceCost)
         {
             if (!resourceCost) return false;
 
@@ -154,7 +154,22 @@ namespace RTS_System
             return false;
         }
 
-        public bool CanAfford(Mod_ResourceCost resourceCost)
+        public bool AddResources(List<Mod_ResourceCost> resourceCosts)
+        {
+            bool canAfford = false;
+            Helper.LoopList_ForEach<Mod_ResourceCost>(resourceCosts, (Mod_ResourceCost rc) => { canAfford = CanAfford(rc); }, () => { return !canAfford; });
+
+            if (canAfford)
+            {
+                Helper.LoopList_ForEach<Mod_ResourceCost>(resourceCosts, (Mod_ResourceCost rc) => { AddResource(rc); });
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CanAfford(Mod_ResourceCost resourceCost, bool trueCost = true)
         {
             if (!resourceCost || !resourceCost.ResourceType) return false;
 
@@ -162,7 +177,20 @@ namespace RTS_System
 
             if (resourceCaches.ContainsKey(resourceCost.ResourceType))
             {
-                if (resourceCaches[resourceCost.ResourceType].ResourceValue >= Mathf.Abs(resourceCost.RawResourceCost))
+                int val = resourceCaches[resourceCost.ResourceType].ResourceValue;
+
+                if (trueCost)
+                {
+                    if (resourceCost.TrueResourceCost < 0)
+                    {
+                        eval = (val >= resourceCost.RawResourceCost);
+                    }
+                    else
+                    {
+                        eval = true;
+                    }
+                }
+                else
                 {
                     eval = true;
                 }

@@ -146,8 +146,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e892ee89d205fb44ae369d8cd2843ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectionInputs: []
   Agent: {fileID: 0}
+  SelectionInputs:
+  - SelectorInputName: Building
+    InputAction: {fileID: -2263483478407229778, guid: b995a5cde5930cc47a278e015840fdd7,
+      type: 3}
+    Action: {fileID: 11400000, guid: e02be8c54edf01d47a36f21a3a3fe90e, type: 2}
 --- !u!1 &485748326
 GameObject:
   m_ObjectHideFlags: 0

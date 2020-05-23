@@ -10,11 +10,12 @@ namespace Unit_System
     [CreateAssetMenu(fileName = "New CreateBuldingAction", menuName = "ScriptableObject/RTS/AI/CreateBuilding")]
     public class CreateBuildingAction : AIAction
     {
-        public MoveToPointAction MoveAction = null;
-        public GameObject BuildingPrefab = null;
-        public ResourceConditional BuildingCost = null;
-        public float BuildTime = 0;
+        [Tooltip("The action that will control moving, without this the unit won't move")] public MoveToPointAction MoveAction = null;
+        [Tooltip("The building to attempt to create")] public GameObject BuildingPrefab = null;
+        [Tooltip("Cost of the building")] public ResourceConditional BuildingCost = null;
+        [Tooltip("How long it will take to build")] public float BuildTime = 0;
 
+        private bool canAfford = true   ;
         private bool attemptBuild = false;
         private float currentBuildTime = 0;
         private GameObject building = null;
@@ -29,23 +30,19 @@ namespace Unit_System
         }
         public override bool HasActionCompleted(AIAgent agent)
         {
-            return (building != null);
+            return (building != null) && canAfford;
         }
 
         public override float UpdateAction(AIAgent agent)
         {
             if (MoveAction)
             {
+                // Check if has reached target
                 if (MoveAction.HasActionCompleted(agent) && !attemptBuild)
                 {
                     currentBuildTime = Time.time + BuildTime;
 
                     attemptBuild = true;
-
-                    if (BuildingCost)
-                    {
-                        attemptBuild = BuildingCost.EvaluateConditional();
-                    }
 
                     MoveAction.ExitAction(agent);
                 }
@@ -54,10 +51,7 @@ namespace Unit_System
                 {
                     building = Instantiate(BuildingPrefab, MoveAction.CurrentTarget, Quaternion.identity);
 
-                    if (BuildingCost)
-                    {
-                        BuildingCost.AddResources();
-                    }
+                    attemptBuild = false;
                 }
 
                 MoveAction.UpdateAction(agent);
@@ -97,10 +91,36 @@ namespace Unit_System
             }
 
             agent.NavAgent.ResetPath();
+
+            CancelAction(agent);
+        }
+
+        public override void CancelAction(AIAgent agent)
+        {
+            if (!agent) return;
+
+            if (canAfford && BuildingCost && building == null)
+            {
+                Helper.LoopList_ForEach<Mod_ResourceCost>(BuildingCost.ResourceCosts, (Mod_ResourceCost rc) =>
+                {
+                    Mod_ResourceManager.Instance.AddResource(rc.ResourceType, rc.TrueResourceCost * -1);
+                });
+            }
         }
 
         public override void SelectionAction(AIAgent agent)
         {
+            // Check if the building is affordable
+            if (BuildingCost)
+            {
+                canAfford = BuildingCost.EvaluateConditional();
+
+                if (canAfford)
+                {
+                    Mod_ResourceManager.Instance.AddResources(BuildingCost.ResourceCosts);
+                }
+            }
+
             if (MoveAction)
             {
                 MoveAction.SelectionAction(agent);

@@ -16,19 +16,4 @@ public class ResourceConditional : ConditionalAction
 
         return eval;
     }
-
-    public bool AddResources()
-    {
-        bool eval = false;
-        eval = EvaluateConditional();
-
-        if (!eval)
-        {
-            return eval;
-        }
-
-        Helper.LoopList_ForEach<Mod_ResourceCost>(ResourceCosts, (Mod_ResourceCost rc) => { Mod_ResourceManager.Instance.AddResources(rc); });
-
-        return eval;
-    }
 }

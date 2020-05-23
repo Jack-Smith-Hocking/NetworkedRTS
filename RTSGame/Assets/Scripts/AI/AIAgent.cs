@@ -103,6 +103,14 @@ namespace Unit_System
             }
             else
             {
+                Helper.LoopList_ForEach<AIAction>(currentActions, (AIAction a) => 
+                { 
+                    if (!a.Equals(currentActions[0])) 
+                    { 
+                        a.CancelAction(this); 
+                    } 
+                });
+                
                 currentActions[0].ExitAction(this);
                 currentActions.Clear();
 

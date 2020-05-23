@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5904a33bbe22dd3468bcc1cc7b791c0b, type: 3}
-  m_Name: TestResourceCon
+  m_Script: {fileID: 11500000, guid: 51246d4426ed8b14898172b42a758f76, type: 3}
+  m_Name: TestCost
   m_EditorClassIdentifier: 
-  ResourceCosts:
-  - {fileID: 11400000, guid: 2ce6001f6a97d504f85ccbe33ad15039, type: 2}
-  - {fileID: 11400000, guid: b9fe7341a0fd99f4582602d1f6abcddf, type: 2}
+  ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
+  RawResourceCost: 50
+  DecreaseResources: 1

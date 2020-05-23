@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Unit_System
 {
-    public class AIAction : UtilityAction
+    public abstract class AIAction : UtilityAction
     {
         public override float UpdateAction(AIAgent agent)
         {
@@ -23,6 +23,12 @@ namespace Unit_System
         {
 
         }
+
+        public virtual void CancelAction(AIAgent agent)
+        {
+
+        }
+
         public virtual void SelectionAction(AIAgent agent)
         {
 

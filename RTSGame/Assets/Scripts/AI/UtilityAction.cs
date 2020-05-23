@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Unit_System
 {
-    public class UtilityAction : ScriptableObject
+    public abstract class UtilityAction : ScriptableObject
     {
         [Tooltip("An icon to be displayed for this Action wherever visual representation is necessary")] public Sprite ActionIcon = null;
         [Tooltip("A description for this Action to be displayed whenever one is necessary")] public string ActionDescription;
