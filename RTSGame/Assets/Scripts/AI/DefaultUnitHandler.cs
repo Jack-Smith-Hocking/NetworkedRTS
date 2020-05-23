@@ -31,7 +31,7 @@ namespace Unit_System
         {
             Instance = this;
 
-            Helper.LoopList_ForEach<SelectorInput>(SelectionInputs, (SelectorInput s) => 
+            Helper.LoopList_ForEach<SelectorInput>(SelectionInputs, (SelectorInput s) =>
             {
                 AddPerformedAction(s, OnActionPerformed);
             });
@@ -50,7 +50,10 @@ namespace Unit_System
 
         void OnActionPerformed(SelectorInput s)
         {
-            Helper.LoopList_ForEach<AIAgent>(CurrentAgents, (AIAgent a) => { a.AddAction(s.Action, Selector.Instance.AddToActionList); });
+            Helper.LoopList_ForEach<AIAgent>(CurrentAgents, (AIAgent a) =>
+            {
+                a.AddAction(s.Action, Selector.Instance.AddToActionList);
+            });
         }
 
         public void BindAllDefaults()

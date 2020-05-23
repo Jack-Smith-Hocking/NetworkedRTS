@@ -32,8 +32,7 @@ namespace Unit_System
 
             if (MoveAction && CurrentTarget && outsideTargetRange)
             { 
-                MoveAction.CurrentTargets.Clear();
-                MoveAction.CurrentTargets.Add(CurrentTarget.position);
+                MoveAction.CurrentTarget = CurrentTarget.position;
 
                 MoveAction.ExecuteAction(agent);
                 MoveAction.UpdateAction(agent);
@@ -58,8 +57,7 @@ namespace Unit_System
 
             if (MoveAction)
             {
-                MoveAction.CurrentTargets.Clear();
-                MoveAction.CurrentTargets.Add(CurrentTarget.position);
+                MoveAction.CurrentTarget = CurrentTarget.position;
             }
 
             float dist = Helper.Distance(agent.transform, CurrentTarget);
@@ -76,8 +74,7 @@ namespace Unit_System
 
             if (MoveAction && CurrentTarget)
             {
-                MoveAction.CurrentTargets.Clear();
-                MoveAction.CurrentTargets.Add(CurrentTarget.position);
+                MoveAction.CurrentTarget = CurrentTarget.position;
             }
         }
         public override void ExitAction(AIAgent agent)

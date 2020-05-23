@@ -309,11 +309,11 @@ public static class Helper
     /// <returns>Returns true if the GameObject is in the list</returns>
     public static bool ObjectInMonoList<T>(List<T> monoList, GameObject obj)
     {
-        if (obj == null) return false;
+        if (obj == null && monoList != null) return false;
 
         bool inList = false;
 
-        if (monoList != null && monoList.Count > 0)
+        if (monoList.Count > 0)
         {
             CurrentTempMono = monoList[0] as MonoBehaviour;
             if (!CurrentTempMono)

@@ -8,22 +8,14 @@ namespace Unit_System
     [CreateAssetMenu(fileName = "New MoveToAction", menuName = "ScriptableObject/RTS/AI/MoveToPoint")]
     public class MoveToPointAction : AIAction
     {
-        public List<Vector3> CurrentTargets = new List<Vector3>();
-        public float StoppingAccuracy = 1; 
+        public Vector3 CurrentTarget;
+        public float StoppingAccuracy = 1;
         public float EvaluationValue = 0;
+
+        private Vector3 currentPos;
 
         public override float UpdateAction(AIAgent agent)
         {
-            if (agent.NavAgent && CurrentTargets.Count > 0)
-            {
-                if (Vector3.Distance(agent.transform.position, CurrentTargets[0]) <= StoppingAccuracy)
-                {
-                    CurrentTargets.RemoveAt(0);
-
-                    ExecuteAction(agent);
-                }
-            }
-
             return 0.0f;
         }
 
@@ -31,7 +23,7 @@ namespace Unit_System
         {
             if (!agent) return true;
 
-            if (CurrentTargets.Count == 0 || Vector3.Distance(agent.transform.position, CurrentTargets[0]) <= StoppingAccuracy)
+            if (Vector3.Distance(agent.transform.position, CurrentTarget) <= StoppingAccuracy)
             {
                 return true;
             }
@@ -43,9 +35,9 @@ namespace Unit_System
         {
             if (!base.ExecuteAction(agent)) return false;
 
-            if (agent.NavAgent && CurrentTargets.Count > 0)
+            if (agent.NavAgent)
             {
-                agent.NavAgent.SetDestination(CurrentTargets[0]);
+                agent.NavAgent.SetDestination(CurrentTarget);
             }
 
             return true;
@@ -76,8 +68,7 @@ namespace Unit_System
             RaycastHit rayHit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
             {
-                CurrentTargets.Clear();
-                CurrentTargets.Add(rayHit.point);
+                CurrentTarget = rayHit.point;
             }
         }
     }
