@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Action_System
+namespace Unit_System
 {
     public class UtilityAction : ScriptableObject
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Action_System
+namespace Unit_System
 {
     public class AIManager : MonoBehaviour
 
@@ -33,7 +33,7 @@ namespace Action_System
 
         private void Update()
         {
-            Helper.LoopListForEach<AIAgent>(SceneAI, (AIAgent agent) => { agent.UpdateAction(); });
+            Helper.LoopList_ForEach<AIAgent>(SceneAI, (AIAgent agent) => { agent.UpdateAction(); });
 
             if (EvalInUpdate)
             {

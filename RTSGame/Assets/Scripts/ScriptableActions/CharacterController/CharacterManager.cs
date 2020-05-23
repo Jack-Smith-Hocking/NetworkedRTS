@@ -206,7 +206,7 @@ namespace ScriptableActions.Character
             }
 
             // Update the Actions in CharacterActions
-            Helper.LoopListForEach<CharacterAction>(CharacterActions, (CharacterAction action) => { action.AnimatorCanUpdate = true; action.CanPerformAction = performActions; action.ActionUpdate(transform); });
+            Helper.LoopList_ForEach<CharacterAction>(CharacterActions, (CharacterAction action) => { action.AnimatorCanUpdate = true; action.CanPerformAction = performActions; action.ActionUpdate(transform); });
 
             UpdateMove();
         }
@@ -254,7 +254,7 @@ namespace ScriptableActions.Character
             if (RunAction) RunAction.UnbindInputs();
             if (JumpAction) JumpAction.UnbindInputs();
 
-            Helper.LoopListForEach(CharacterActions, (CharacterAction action) => { action.UnbindInputs(); });
+            Helper.LoopList_ForEach(CharacterActions, (CharacterAction action) => { action.UnbindInputs(); });
         }
     }
 }

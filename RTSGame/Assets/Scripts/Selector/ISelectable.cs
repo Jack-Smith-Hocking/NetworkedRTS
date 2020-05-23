@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Selector_Systen
+namespace Selector_System
 {
     public interface ISelectable
     {

@@ -1,11 +1,11 @@
-﻿using Action_System;
+﻿using Unit_System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Selector_Systen
+namespace Selector_System
 {
     public class Selector : MonoBehaviour
     {
@@ -17,7 +17,6 @@ namespace Selector_Systen
         public InputActionReference ActionQueueInput;
         [Space]
 
-        public AIAction CurrentAction = null;
         public Vector3 SelectedPoint;
         public bool AddToActionList = false;
 
@@ -141,7 +140,7 @@ namespace Selector_Systen
             
             currentSelectables.Clear();
             currentSelectables.AddRange(selected.GetComponentsInChildren<ISelectable>());
-            Helper.LoopListForEach<ISelectable>(currentSelectables, (ISelectable selectable) => { selectable.OnSelect(); });
+            Helper.LoopList_ForEach<ISelectable>(currentSelectables, (ISelectable selectable) => { selectable.OnSelect(); });
 
             selectables.AddRange(currentSelectables);
         }
@@ -168,7 +167,7 @@ namespace Selector_Systen
         }
         void SelectMultiple()
         {
-            Helper.LoopListForEach<GameObject>(GetObjectsInArea(), (GameObject obj) => { AddSelected(obj); });
+            Helper.LoopList_ForEach<GameObject>(GetObjectsInArea(), (GameObject obj) => { AddSelected(obj); });
             SelectSingle(false);
 
             Helper.SetMaterials(selectedObjects, SelectedMat);
@@ -198,7 +197,7 @@ namespace Selector_Systen
 
         void ClearSelection()
         {
-            Helper.LoopListForEach<ISelectable>(selectables, (ISelectable selectable) => { selectable.OnDeselect(); });
+            Helper.LoopList_ForEach<ISelectable>(selectables, (ISelectable selectable) => { selectable.OnDeselect(); });
 
             Helper.SetMaterials(selectedObjects, NormalMat);
 

@@ -703,6 +703,7 @@ GameObject:
   - component: {fileID: 550783355}
   - component: {fileID: 550783356}
   - component: {fileID: 550783357}
+  - component: {fileID: 550783358}
   m_Layer: 0
   m_Name: ResourceManager
   m_TagString: Untagged
@@ -776,20 +777,6 @@ MonoBehaviour:
     type: 3}
   ActionQueueInput: {fileID: -7048009427773694730, guid: b995a5cde5930cc47a278e015840fdd7,
     type: 3}
-  SelectorInputs:
-  - SelectorInputName: Patrol
-    InputAction: {fileID: -7676185889050136016, guid: b995a5cde5930cc47a278e015840fdd7,
-      type: 3}
-    Action: {fileID: 11400000, guid: a61560db775ad6d44a27c2bbd528cb80, type: 2}
-  - SelectorInputName: MoveToPoint
-    InputAction: {fileID: 7869239680367066317, guid: b995a5cde5930cc47a278e015840fdd7,
-      type: 3}
-    Action: {fileID: 11400000, guid: 8fc7dbc3430b1ef4299246d7fd443b37, type: 2}
-  - SelectorInputName: MoveToTarget
-    InputAction: {fileID: -5801330800459790725, guid: b995a5cde5930cc47a278e015840fdd7,
-      type: 3}
-    Action: {fileID: 11400000, guid: a249c87f6a986e84e9031372df5e1d3b, type: 2}
-  CurrentAction: {fileID: 0}
   SelectedPoint: {x: 0, y: 0, z: 0}
   AddToActionList: 0
   DragDelay: 0.1
@@ -811,6 +798,32 @@ MonoBehaviour:
   ShowErrors: 1
   ShowWarnings: 1
   ShowLogs: 0
+--- !u!114 &550783358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550783352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b3c13299530e2346b835aed489622b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentAgents: []
+  SelectionInputs:
+  - SelectorInputName: MoveToPoint
+    InputAction: {fileID: 7869239680367066317, guid: b995a5cde5930cc47a278e015840fdd7,
+      type: 3}
+    Action: {fileID: 11400000, guid: 8fc7dbc3430b1ef4299246d7fd443b37, type: 2}
+  - SelectorInputName: MoveToTarget
+    InputAction: {fileID: -5801330800459790725, guid: b995a5cde5930cc47a278e015840fdd7,
+      type: 3}
+    Action: {fileID: 11400000, guid: a249c87f6a986e84e9031372df5e1d3b, type: 2}
+  - SelectorInputName: Patrol
+    InputAction: {fileID: -7676185889050136016, guid: b995a5cde5930cc47a278e015840fdd7,
+      type: 3}
+    Action: {fileID: 11400000, guid: a61560db775ad6d44a27c2bbd528cb80, type: 2}
 --- !u!1001 &555683252
 PrefabInstance:
   m_ObjectHideFlags: 0

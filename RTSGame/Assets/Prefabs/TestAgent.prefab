@@ -146,20 +146,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e892ee89d205fb44ae369d8cd2843ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SelectionInputs: []
   Agent: {fileID: 0}
-  SelectionInputs:
-  - SelectorInputName: Patrol
-    InputAction: {fileID: -7676185889050136016, guid: b995a5cde5930cc47a278e015840fdd7,
-      type: 3}
-    Action: {fileID: 11400000, guid: a61560db775ad6d44a27c2bbd528cb80, type: 2}
-  - SelectorInputName: MoveToPoint
-    InputAction: {fileID: 7869239680367066317, guid: b995a5cde5930cc47a278e015840fdd7,
-      type: 3}
-    Action: {fileID: 11400000, guid: 8fc7dbc3430b1ef4299246d7fd443b37, type: 2}
-  - SelectorInputName: MoveToTarget
-    InputAction: {fileID: -5801330800459790725, guid: b995a5cde5930cc47a278e015840fdd7,
-      type: 3}
-    Action: {fileID: 11400000, guid: a249c87f6a986e84e9031372df5e1d3b, type: 2}
 --- !u!1 &485748326
 GameObject:
   m_ObjectHideFlags: 0

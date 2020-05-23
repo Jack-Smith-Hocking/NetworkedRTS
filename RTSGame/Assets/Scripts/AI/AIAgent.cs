@@ -1,14 +1,14 @@
 ﻿using Pixelplacement;
-using Selector_Systen;
+using Selector_System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Action_System
+namespace Unit_System
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    public class AIAgent : MonoBehaviour, Selector_Systen.ISelectable
+    public class AIAgent : MonoBehaviour, Selector_System.ISelectable
     {
         public NavMeshAgent NavAgent = null;
         public List<AIAction> PossibleActions = new List<AIAction>();

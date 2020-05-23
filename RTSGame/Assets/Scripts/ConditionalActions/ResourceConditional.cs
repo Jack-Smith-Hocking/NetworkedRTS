@@ -12,7 +12,7 @@ public class ResourceConditional : ConditionalAction
     {
         bool eval = false;
 
-        Helper.LoopListForEach<Mod_ResourceCost>(ResourceCosts, (Mod_ResourceCost rc) => { eval = Mod_ResourceManager.Instance.CanAfford(rc); }, () => { return !eval; });
+        Helper.LoopList_ForEach<Mod_ResourceCost>(ResourceCosts, (Mod_ResourceCost rc) => { eval = Mod_ResourceManager.Instance.CanAfford(rc); }, () => { return !eval; });
 
         return eval;
     }
@@ -27,7 +27,7 @@ public class ResourceConditional : ConditionalAction
             return eval;
         }
 
-        Helper.LoopListForEach<Mod_ResourceCost>(ResourceCosts, (Mod_ResourceCost rc) => { Mod_ResourceManager.Instance.AddResources(rc); });
+        Helper.LoopList_ForEach<Mod_ResourceCost>(ResourceCosts, (Mod_ResourceCost rc) => { Mod_ResourceManager.Instance.AddResources(rc); });
 
         return eval;
     }

@@ -2,87 +2,63 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Action_System;
-using Selector_Systen;
+using Selector_System;
 using System;
 
-[RequireComponent(typeof(AIAgent))]
-public class UnitHandler : MonoBehaviour, ISelectable
+namespace Unit_System
 {
-    [System.Serializable]
-    public class SelectorInput
+    [RequireComponent(typeof(AIAgent))]
+    public class UnitHandler : MonoBehaviour, ISelectable
     {
-        public string SelectorInputName;
-        public InputActionReference InputAction = null;
-        public AIAction Action = null;
+        public AIAgent Agent = null;
+        public List<SelectorInput> SelectionInputs = new List<SelectorInput>();
 
-        public BoundInput BoundInput = new BoundInput();
-    }
-
-    public AIAgent Agent = null;
-
-    public List<SelectorInput> SelectionInputs = new List<SelectorInput>();
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        if (!Agent) Agent = gameObject.GetComponent<AIAgent>();
-
-        Action<SelectorInput> loopAction = (SelectorInput s) =>
+        // Start is called before the first frame update
+        void Start()
         {
-            if (s.Action != null)
+            if (!Agent) Agent = gameObject.GetComponent<AIAgent>();
+
+            Helper.LoopList_ForEach<SelectorInput>(SelectionInputs, (SelectorInput s) => 
+            { 
+                DefaultUnitHandler.AddPerformedAction(s, PerformedAction); 
+            });
+        }
+
+        void PerformedAction(SelectorInput s)
+        {
+            if (s != null && s.Action != null)
             {
-                s.BoundInput.PerformedActions += (InputAction.CallbackContext cc) =>
-                {
-                    Agent.AddAction(s.Action, Selector.Instance.AddToActionList);
-                };
+                Agent.AddAction(s.Action, Selector.Instance.AddToActionList);
             }
-        };
+        }
 
-        Helper.LoopListForEach<SelectorInput>(SelectionInputs, loopAction);
-    }
-
-    public void BindInput(SelectorInput s)
-    {
-        if (s != null)
+        #region ISelectable
+        public void OnHover()
         {
-            s.BoundInput.Bind(s.InputAction);
+        }
+
+        public void OnSelect()
+        {
+            DefaultUnitHandler.BindAllInputs(SelectionInputs);
+
+            DefaultUnitHandler.Instance.CurrentAgents.Add(Agent);
+        }
+
+        public void OnDeselect()
+        {
+            DefaultUnitHandler.UnbindAllInputs(SelectionInputs);
+
+            DefaultUnitHandler.Instance.CurrentAgents.Remove(Agent);
+        }
+
+        public void OnExecute()
+        {
+        }
+        #endregion
+
+        private void OnDestroy()
+        {
+            DefaultUnitHandler.Instance.CurrentAgents.Remove(Agent);
         }
     }
-    public void BindAllInputs()
-    {
-        Helper.LoopListForEach<SelectorInput>(SelectionInputs, BindInput);
-    }
-
-    public void UnbindInput(SelectorInput s)
-    {
-        if (s != null)
-        {
-            s.BoundInput.Unbind(s.InputAction);
-        }
-    }
-    public void UnbindAllInputs()
-    {
-        Helper.LoopListForEach<SelectorInput>(SelectionInputs, UnbindInput);
-    }
-
-    #region ISelectable
-    public void OnHover()
-    {
-    }
-
-    public void OnSelect()
-    {
-        BindAllInputs();
-    }
-
-    public void OnDeselect()
-    {
-        UnbindAllInputs();
-    }
-
-    public void OnExecute()
-    {
-    }
-    #endregion
 }

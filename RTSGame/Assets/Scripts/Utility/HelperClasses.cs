@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -46,7 +47,7 @@ public class BoundInput
                 if (tempVal > val) val = tempVal;
             };
 
-            Helper.LoopListForEach<InputAction>(otherBoundInputs, loopAction);
+            Helper.LoopList_ForEach<InputAction>(otherBoundInputs, loopAction);
 
             return val;
         }
@@ -58,7 +59,7 @@ public class BoundInput
             bool val = false;
             if (InputAction != null) val = InputAction.ReadValue<float>() >= 0.01f;
 
-            Helper.LoopListForEach<InputAction>(otherBoundInputs, (InputAction action) => { if (!val) val = action.ReadValue<float>() >= 0.01f; }, () => { return val; });
+            Helper.LoopList_ForEach<InputAction>(otherBoundInputs, (InputAction action) => { if (!val) val = action.ReadValue<float>() >= 0.01f; }, () => { return val; });
 
             return val;
         }
@@ -79,7 +80,7 @@ public class BoundInput
                 if (tempVal.y > val.y) val.y = tempVal.y;
             };
 
-            Helper.LoopListForEach<InputAction>(otherBoundInputs, loopAction);
+            Helper.LoopList_ForEach<InputAction>(otherBoundInputs, loopAction);
 
             return val;
         }
@@ -188,7 +189,7 @@ public class BoundInput
     {
         // Remove all of the actions from any previous bindings
         Unbind(InputAction);
-        Helper.LoopListForEach<InputAction>(otherBoundInputs, (InputAction action) => { Unbind(action); });
+        Helper.LoopList_ForEach<InputAction>(otherBoundInputs, (InputAction action) => { Unbind(action); });
     }
 }
 public static class Helper
@@ -203,19 +204,28 @@ public static class Helper
     /// <param name="loopList">The list to affect</param>
     /// <param name="loopAction">The action to perform on each element of the list</param>
     /// <param name="breakOut">An optional Func<bool> that will determine any break conditions for the loop</bool></param>
-    public static void LoopListForEach<T>(List<T> loopList, Action<T> loopAction, Func<bool> breakOut = null)
+    /// <returns>Will return a list of null objects in the loopList, is cut short if the breakOut is triggered</returns>
+    public static List<T> LoopList_ForEach<T>(List<T> loopList, Action<T> loopAction, Func<bool> breakOut = null)
     {
+        List<T> nullObjs = new List<T>(loopList.Count);
+
         if (loopList != null && loopAction != null)
         {
             foreach (T loopVal in loopList)
             {
-                if (loopVal == null) continue;
+                if (loopVal == null)
+                {
+                    nullObjs.Add(loopVal);
+                    continue;
+                }
 
                 loopAction?.Invoke(loopVal);
 
                 if (breakOut != null && breakOut()) break;
             }
         }
+
+        return nullObjs;
     }
     /// <summary>
     /// Loop through a list of type T (For Loop) and execute an action on each element
@@ -224,8 +234,11 @@ public static class Helper
     /// <param name="loopList">The list to affect</param>
     /// <param name="loopAction">The action to perform on each element of the list</param>
     /// <param name="breakOut">An optional Func<bool> that will determine any break conditions for the loop</param>
-    public static void LoopListFor<T>(List<T> loopList, Action<T> loopAction, Func<bool> breakOut = null)
+    /// <returns>Will return a list of null objects in the loopList, is cut short if the breakOut is triggered</returns>
+    public static List<T> LoopList_For<T>(List<T> loopList, Action<T> loopAction, Func<bool> breakOut = null)
     {
+        List<T> nullObjs = new List<T>(loopList.Count);
+
         if (loopList != null && loopAction != null)
         {
             T loopVal = default;
@@ -234,13 +247,19 @@ public static class Helper
             {
                 loopVal = loopList[i];
 
-                if (loopVal == null) continue;
+                if (loopVal == null)
+                {
+                    nullObjs.Add(loopVal);
+                    continue;
+                }
 
                 loopAction?.Invoke(loopVal);
 
                 if (breakOut != null && breakOut()) break;
             }
         }
+
+        return nullObjs;
     }
 
     /// <summary>
@@ -307,7 +326,7 @@ public static class Helper
             return false;
         }
 
-        Helper.LoopListForEach<T>(monoList, 
+        Helper.LoopList_ForEach<T>(monoList, 
         (T mono) => // LoopAction
         {
             CurrentTempMono = mono as MonoBehaviour;
@@ -350,24 +369,50 @@ public static class Helper
     }
 
     #region SetMaterials
+    /// <summary>
+    /// Set the material of all Renderers in the list
+    /// </summary>
+    /// <param name="list">List of Renderers to update</param>
+    /// <param name="mat">The material to change to</param>
+    /// <param name="breakOut">A breakout function to stop changing materials</param>
     public static void SetMaterials(List<Renderer> list, Material mat, Func<bool> breakOut = null)
     {
-        Helper.LoopListForEach<Renderer>(list, (Renderer rend) => { SetMaterial(rend, mat); }, breakOut);
+        if (list == null || !mat) return;
+
+        Helper.LoopList_ForEach<Renderer>(list, (Renderer rend) => { SetMaterial(rend, mat); }, breakOut);
     }
+    /// <summary>
+    /// Set the material of a Renderer
+    /// </summary>
+    /// <param name="rend">Renderer to update</param>
+    /// <param name="mat">Material to update to</param>
     public static void SetMaterial(Renderer rend, Material mat)
     {
-        if (!rend) return;
+        if (!rend || !mat) return;
 
         rend.material = mat;
     }
 
+    /// <summary>
+    /// Set the material of all GameObjects in the list (only the first Renderer on the GameObject)
+    /// </summary>
+    /// <param name="list">List of GameObjects to update</param>
+    /// <param name="mat">The material to change to</param>
+    /// <param name="breakOut">A breakout function to stop changing materials</param>
     public static void SetMaterials(List<GameObject> list, Material mat, Func<bool> breakOut = null)
     {
-        Helper.LoopListForEach<GameObject>(list, (GameObject obj) => { SetMaterial(obj, mat); }, breakOut);
+        if (list == null || !mat) return;
+
+        Helper.LoopList_ForEach<GameObject>(list, (GameObject obj) => { SetMaterial(obj, mat); }, breakOut);
     }
+    /// <summary>
+    /// Set the material of a GameObject
+    /// </summary>
+    /// <param name="obj">GameObject to update</param>
+    /// <param name="mat">Material to update to</param>
     public static void SetMaterial(GameObject obj, Material mat)
     {
-        if (!obj) return;
+        if (!obj || !mat) return;
 
         CurrentTempRenderer = obj.GetComponent<Renderer>();
         if (CurrentTempRenderer)
