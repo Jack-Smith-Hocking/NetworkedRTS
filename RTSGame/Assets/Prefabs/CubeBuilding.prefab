@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1553255986604784433}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: CubeBuilding
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,6 +97,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2086879317144536005, guid: 1199475fd5f03f244b516e50c990c3d1,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 1032d41f900276c40a9dd24f55b7d420, type: 2}
     - target: {fileID: 3357149591582835654, guid: 1199475fd5f03f244b516e50c990c3d1,
         type: 3}
       propertyPath: m_Name

@@ -12,34 +12,50 @@ namespace RTS_System
     public struct Mod_ResourceValue
     {
         [Tooltip("Ease of use in inspector")] public string ListIdentifier;
-        public RTS_System.Mod_Resource ResourceType;
-        [Min(0)] public int RawCost;
+        [Tooltip("The type of resource that this relates to")] public RTS_System.Mod_Resource ResourceType;
+        [Tooltip("The value of the resource, whether it adds or subtracts depends on DecreaseResource")] [Min(0)] public int RawValue;
 
-        public int TrueCost
+        [Tooltip("True = Value will be subtracted from player total, false = add to player total")] public bool DecreaseResource;
+        
+        public int TrueValue
         {
             get
             {
-                return (RawCost * (DecreaseResource ? -1 : 1));
+                return (RawValue * (DecreaseResource ? -1 : 1));
             }
         }
 
-        public bool DecreaseResource;
-
+        /// <summary>
+        /// Whether or not the player can afford this
+        /// </summary>
+        /// <returns></returns>
         public bool CanAfford()
         {
-            return Mod_ResourceManager.Instance.CanAfford(ResourceType, TrueCost);
+            return Mod_ResourceManager.Instance.CanAfford(ResourceType, TrueValue);
         }
     }
 
     public class Mod_ResourceCache
     {
-        public int CurrentResourceValue { get; private set; } = 0;
-
+        /// <summary>
+        /// Gets invoked when the value of this Cache is changed
+        /// </summary>
         public Action<int> OnValueChanged = null;
 
+        /// <summary>
+        /// The current resource value, can't be externally set
+        /// </summary>
+        public int CurrentResourceValue { get; private set; } = 0;
+        
         private TextMeshProUGUI resourceText = null;
 
         public Mod_ResourceCache() { }
+
+        /// <summary>
+        /// Initialises a Mod_ResourcesCache with a text item
+        /// </summary>
+        /// <param name="text">The text to display the caches</param>
+        /// <param name="resourceName">Name of the resource to display</param>
         public Mod_ResourceCache(TextMeshProUGUI text, string resourceName)
         {
             resourceText = text;
@@ -60,6 +76,7 @@ namespace RTS_System
         /// <returns>Whether or not the amount was successfully added</returns>
         public bool IncreaseValue(int amount)
         {
+            // Checks whether the amount can be afforded
             if (CanAfford(amount))
             {
                 CurrentResourceValue += amount;
@@ -72,6 +89,11 @@ namespace RTS_System
             return false;
         }
 
+        /// <summary>
+        /// Whether the amount can be afforded for this cache
+        /// </summary>
+        /// <param name="amount">The amount to check</param>
+        /// <returns></returns>
         public bool CanAfford(int amount)
         {
             if (amount > 0)
@@ -176,18 +198,28 @@ namespace RTS_System
 
             return false;
         }
+        /// <summary>
+        /// Add a Mod_ResourceValue to its respective resource type
+        /// </summary>
+        /// <param name="resourceValue">Mod_ResourceValue to add</param>
+        /// <returns></returns>
         public bool AddResource(Mod_ResourceValue resourceValue)
         {
             if (!resourceValue.ResourceType) return false;
 
             if (resourceCaches.ContainsKey(resourceValue.ResourceType))
             {
-                return resourceCaches[resourceValue.ResourceType].IncreaseValue(resourceValue.TrueCost);
+                return resourceCaches[resourceValue.ResourceType].IncreaseValue(resourceValue.TrueValue);
             }
 
             return false;
         }
 
+        /// <summary>
+        /// Adds a list of Mod_ResourceValues to their respective caches
+        /// </summary>
+        /// <param name="resourceValues">Mod_ResourceValue to add</param>
+        /// <returns></returns>
         public bool AddResources(List<Mod_ResourceValue> resourceValues)
         {
             bool canAfford = false;
@@ -229,7 +261,7 @@ namespace RTS_System
         /// <returns></returns>
         public bool CanAfford(Mod_ResourceValue resourceValue, bool trueCost = true)
         {
-            return CanAfford(resourceValue.ResourceType, (trueCost ? resourceValue.TrueCost : resourceValue.RawCost));
+            return CanAfford(resourceValue.ResourceType, (trueCost ? resourceValue.TrueValue : resourceValue.RawValue));
         }
     }
 }

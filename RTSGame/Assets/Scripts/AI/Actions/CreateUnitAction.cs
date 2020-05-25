@@ -8,8 +8,8 @@ namespace Unit_System
     public class CreateUnitAction : AIAction
     {
         [Header("Unit Data")]
-        public CreateBuildingAction BuildAction = null;
-        public float MaxSpawnDist = 10;
+        [Tooltip("Data for creating units")] public CreateBuildingAction BuildAction = null;
+        [Tooltip("The max distance from the AIAgent this is working on that a unit can be spawned")] public float MaxSpawnDist = 10;
 
         private bool canCreateUnit = false;
 

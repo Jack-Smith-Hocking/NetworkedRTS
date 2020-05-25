@@ -10,9 +10,9 @@ namespace Unit_System
     [System.Serializable]
     public class SelectorInput
     {
-        public string SelectorInputName;
-        public InputActionReference InputAction = null;
-        public AIAction Action = null;
+        [Tooltip("Identifier for long inspector lists")] public string SelectorInputName;
+        [Tooltip("Input to bind to")] public InputActionReference InputAction = null;
+        [Tooltip("Action to perform on key press")] public AIAction Action = null;
 
         public BoundInput BoundInput = new BoundInput();
     }
@@ -20,9 +20,12 @@ namespace Unit_System
     public class DefaultUnitHandler : MonoBehaviour
     {
         public static DefaultUnitHandler Instance = null;
-
+        
+        /// <summary>
+        /// List of currently managed units, all these units will have access to the SelectionInputs list while they are selected
+        /// </summary>
         public List<UnitHandler> CurrentUnits = new List<UnitHandler>();
-        public List<SelectorInput> SelectionInputs = new List<SelectorInput>();
+        [Tooltip("List of actions that can be performed by all Units if they choose")] public List<SelectorInput> SelectionInputs = new List<SelectorInput>();
 
         private bool isBound = false;
 
@@ -73,6 +76,10 @@ namespace Unit_System
             }
         }
 
+        /// <summary>
+        /// Bind the PerformedActions of the SelectorInput to their InputAction
+        /// </summary>
+        /// <param name="s">SelectorInput to bind</param>
         public static void BindInput(SelectorInput s)
         {
             if (s != null)
@@ -80,11 +87,21 @@ namespace Unit_System
                 s.BoundInput.Bind(s.InputAction);
             }
         }
+
+        /// <summary>
+        /// Bind the PerformedActions of the SelectorInputs to their InputAction
+        /// </summary>
+        /// <param name="inputs">SelectorInput list to bind</param>
         public static void BindAllInputs(List<SelectorInput> inputs)
         {
             Helper.LoopList_ForEach<SelectorInput>(inputs, BindInput);
         }
 
+
+        /// <summary>
+        /// Unbind the PerformedActions of the SelectorInput to their InputAction
+        /// </summary>
+        /// <param name="s">SelectorInput to unbind</param>
         public static void UnbindInput(SelectorInput s)
         {
             if (s != null)
@@ -92,6 +109,10 @@ namespace Unit_System
                 s.BoundInput.Unbind(s.InputAction);
             }
         }
+        /// <summary>
+        /// Unbind the PerformedActions of the SelectorInputs to their InputAction
+        /// </summary>
+        /// <param name="inputs">SelectorInput list to unbind</param>
         public static void UnbindAllInputs(List<SelectorInput> inputs)
         {
             Helper.LoopList_ForEach<SelectorInput>(inputs, UnbindInput);

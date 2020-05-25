@@ -10,13 +10,10 @@ namespace Unit_System
     {
         [Header("Movement Data")]
         [Tooltip("Placement layers")] public LayerMask MovementLayers;
-        public Vector3 CurrentTarget;
-        public float StoppingAccuracy = 1;
+        [Tooltip("How far away from the target position the unit will stop")] public float StoppingAccuracy = 1;
         public float EvaluationValue = 0;
 
-        public Collider HitCollider { get; private set; } = null;
-
-        private Vector3 currentPos;
+        public Vector3 CurrentTarget;
 
         public override float UpdateAction(AIAgent agent)
         {
@@ -80,6 +77,7 @@ namespace Unit_System
             {
                 CurrentTarget = rayHit.point;
 
+                // Checks if the hit object is on the right layer
                 return Helper.IsInLayerMask(MovementLayers, rayHit.collider.gameObject.layer);
             }
 

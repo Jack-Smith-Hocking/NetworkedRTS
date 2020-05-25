@@ -18,6 +18,9 @@ namespace Unit_System
         [Tooltip("Cost of the building")] public ResourceConditional BuildingCost = null;
         [Tooltip("How long it will take to build")] public float BuildTime = 0;
 
+        /// <summary>
+        /// Whether this building can be afforded
+        /// </summary>
         public bool CanAfford { get; private set; } = false;
         public bool AttemptBuild { get; private set; } = false;
 
@@ -136,7 +139,7 @@ namespace Unit_System
             {
                 Helper.LoopList_ForEach<Mod_ResourceValue>(BuildingCost.ResourceCosts, (Mod_ResourceValue rc) =>
                 {
-                    Mod_ResourceManager.Instance.AddResource(rc.ResourceType, rc.TrueCost * -1);
+                    Mod_ResourceManager.Instance.AddResource(rc.ResourceType, rc.TrueValue * -1);
                 });
             }
 

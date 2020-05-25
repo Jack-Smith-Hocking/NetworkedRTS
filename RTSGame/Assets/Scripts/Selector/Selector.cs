@@ -13,16 +13,15 @@ namespace Selector_System
         public List<GameObject> SceneSelectables = new List<GameObject>();
 
         [Space]
-        public InputActionReference MainSelectButton;
-        public InputActionReference MultiSelectInput;
-        public InputActionReference ActionQueueInput;
+        [Tooltip("Determines the input for the main select button")] public InputActionReference MainSelectButton;
+        [Tooltip("Determines the input for the multi-select button")] public InputActionReference MultiSelectInput;
+        [Tooltip("Determines the input for adding an action to a queue")] public InputActionReference ActionQueueInput;
         [Space]
-
-        public Vector3 SelectedPoint;
-        public bool AddToActionList = false;
 
         public float DragDelay = 0.1f;
         private float currentDragTime = 0;
+
+        public bool AddToActionList { get; private set; } = false;
 
         [Space]
         public Material NormalMat;
@@ -51,14 +50,16 @@ namespace Selector_System
                 Instance = this;
             }
 
+            // Set up the select action
             selectInput.PerformedActions += Select;
             selectInput.CancelledActions += Select;
             selectInput.Bind(MainSelectButton);
 
+            // Set up the multi-select button
             multiSelectInput.Bind(MultiSelectInput);
+            // Set up the queue button
             actionQueueInput.Bind(ActionQueueInput);
         }
-
 
         void Select(InputAction.CallbackContext cc)
         {
@@ -166,6 +167,7 @@ namespace Selector_System
 
             Helper.SetMaterials(selectedObjects, SelectedMat);
         }
+
         void SelectMultiple()
         {
             Helper.LoopList_ForEach<GameObject>(GetObjectsInArea(), (GameObject obj) => { AddSelected(obj); });
@@ -173,6 +175,7 @@ namespace Selector_System
 
             Helper.SetMaterials(selectedObjects, SelectedMat);
         }
+
         List<GameObject> GetObjectsInArea()
         {
             Rect selectRect = new Rect(startPos.x, startPos.y, (endPos.x - startPos.x), (endPos.y - startPos.y));
@@ -202,6 +205,7 @@ namespace Selector_System
             selectables.Clear();
             selectedObjects.Clear();
         }
+
         void ClearFromSelected(GameObject obj)
         {
             if (obj == null) return;

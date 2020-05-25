@@ -10,9 +10,9 @@ namespace Unit_System
     [RequireComponent(typeof(AIAgent))]
     public class UnitHandler : MonoBehaviour, ISelectable
     {
-        public AIAgent Agent = null;
-        public bool UseDefaultActions = true;
-        public List<SelectorInput> SelectionInputs = new List<SelectorInput>();
+        [Tooltip("The AIAgent that this unit is managing")] public AIAgent Agent = null;
+        [Tooltip("Whether or not this unit will implement the DefaultUnitHandler's actions")] public bool UseDefaultActions = true;
+        [Tooltip("List of actions that this unit can perform")] public List<SelectorInput> SelectionInputs = new List<SelectorInput>();
 
         // Start is called before the first frame update
         void Start()

@@ -8,11 +8,12 @@ namespace Unit_System
     public class PatrolAction : AIAction
     {
         [Header("Patrol Data")]
-        public MoveToPointAction MoveAction = null;
+        [Tooltip("Action that moves a unit around")] public MoveToPointAction MoveAction = null;
         public List<Vector3> PatrolPath = new List<Vector3>();
 
         public override void InitialiseAction(AIAgent agent)
         {
+            // Instantiate and initialise MoveAction
             if (MoveAction)
             {
                 MoveAction = Instantiate(MoveAction);
@@ -28,6 +29,7 @@ namespace Unit_System
             {
                 MoveAction.UpdateAction(agent);
 
+                // If the MoveAction has reached its target it will be set to the next point in the path
                 if (MoveAction.HasActionCompleted(agent))
                 {
                     MoveAction.CurrentTarget = PatrolPath[0];
@@ -61,6 +63,8 @@ namespace Unit_System
         public override bool SelectionAction(AIAgent agent)
         {
             RaycastHit rayHit;
+
+            // Get the hit point, and the current position and add them to the path
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
             {
                 PatrolPath.Clear();
