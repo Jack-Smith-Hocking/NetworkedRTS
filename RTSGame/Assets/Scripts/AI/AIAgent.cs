@@ -10,21 +10,25 @@ namespace Unit_System
     [RequireComponent(typeof(NavMeshAgent))]
     public class AIAgent : MonoBehaviour, Selector_System.ISelectable
     {
-        public NavMeshAgent NavAgent = null;
-        public List<AIAction> PossibleActions = new List<AIAction>();
-
-        public List<AIAction> currentActions = new List<AIAction>();
+        [Tooltip("The NavMeshAgent that will move this AIAgent")] public NavMeshAgent NavAgent = null;
+        [Tooltip("List of possible actions")] public List<AIAction> PossibleActions = new List<AIAction>();
+        [Space]
+        [Tooltip("Current actions")] public List<AIAction> actionQueue = new List<AIAction>();
+        public AIAction currentAction = null;
 
         // Start is called before the first frame update
         IEnumerator Start()
         {
+            // Wait so that the AIManager can set itself up
             yield return new WaitForEndOfFrame();
 
+            // Get copies of the PossibleActions list
             for (int i = 0; i < PossibleActions.Count; i++)
             {
                 PossibleActions[i] = Instantiate(PossibleActions[i]);
             }
 
+            // Give management of this AIAgent to the AIManager instance
             if (AIManager.Instance)
             {
                 AIManager.Instance.SceneAI.Add(this);
@@ -33,39 +37,54 @@ namespace Unit_System
 
         public void UpdateAction()
         {
-            if (currentActions.Count > 0)
+            // If there is a current action, update it
+            if (currentAction)
             {
-                currentActions[0].UpdateAction(this);
+                currentAction.UpdateAction(this);
 
-                if (currentActions[0].HasActionCompleted(this))
+                // If the current action has completed, move on to the next action in the queue
+                if (currentAction.HasActionCompleted(this))
                 {
-                    currentActions[0].ExitAction(this);
-                    currentActions.RemoveAt(0);
+                    currentAction.ExitAction(this);
 
-                    if (currentActions.Count > 0)
+                    // Get the next action from the queue if there is one
+                    if (actionQueue.Count > 0)
                     {
-                        currentActions[0].EnterAction(this);
-                        currentActions[0].ExecuteAction(this);
+                        currentAction = actionQueue[0];
+                        currentAction.EnterAction(this);
+                        currentAction.ExecuteAction(this);
+
+                        actionQueue.RemoveAt(0);
+                    }
+                    else
+                    {
+                        currentAction = null;
                     }
                 }
             }
         }
         public void EvaluateActions()
         {
-            SetCurrentAction(GetBestAction(), false);
+            SetAction(GetBestAction(), false);
         }
 
+        /// <summary>
+        /// Determines the best action to perform
+        /// </summary>
+        /// <returns></returns>
         public AIAction GetBestAction()
         {
             AIAction highestAction = null;
             float highestEvaluation = 0;
 
-            if (currentActions.Count > 0)
+            // If there is a current action, it is by default the most valuable action to start
+            if (currentAction)
             {
-                highestAction = currentActions[0];
-                highestEvaluation = currentActions[0].EvaluateAction(this);
+                highestAction = currentAction;
+                highestEvaluation = currentAction.EvaluateAction(this);
             }
 
+            // Loop through possible actions and evaluate them
             foreach (AIAction action in PossibleActions)
             {
                 float evaluateVal = action.EvaluateAction(this);
@@ -81,64 +100,81 @@ namespace Unit_System
             return highestAction;
         }
 
-        public void SetCurrentAction(AIAction action, bool addToList)
+        /// <summary>
+        /// THis will take an action and either set the current action or add it to the queue
+        /// </summary>
+        /// <param name="action">Action to add</param>
+        /// <param name="addToList">If set to false, will set the current action. Otherwise will add to queue</param>
+        public void SetAction(AIAction action, bool addToList)
         {
             if (!action)
             {
                 return;
             }
-            if (currentActions.Count > 0 && currentActions[0].Equals(action))
+            if (currentAction && currentAction.Equals(action))
             {
                 return;
             }
 
-            if (currentActions.Count == 0)
+            // If there is no current action or queued action, then just et the current action
+            if (!currentAction && actionQueue.Count == 0)
             {
-                currentActions.Add(action);
+                currentAction = action;
                 addToList = false;
             }
+            // Else if there is a current action, or a queued action, add to the queue
             else if (addToList)
             {
-                currentActions.Add(action);
+                actionQueue.Add(action);
             }
+            // Otherwise, reset the queue and set the current action
             else
             {
-                Helper.LoopList_ForEach<AIAction>(currentActions, (AIAction a) =>
+                // Exit out of current action if there is one
+                if (currentAction)
                 {
-                    if (!a.Equals(currentActions[0]))
-                    {
-                        a.CancelAction(this);
-                    }
+                    currentAction.ExitAction(this);
+                }
+
+                // Cancel queued actions
+                Helper.LoopList_ForEach<AIAction>(actionQueue, (AIAction a) =>
+                {
+                    a.CancelAction(this);
                 });
-
-                currentActions[0].ExitAction(this);
-                currentActions.Clear();
-
-                currentActions.Add(action);
+                
+                actionQueue.Clear();
+                currentAction = action;
             }
 
-            if (!addToList)
+            // Enter and execute the new current action, if there is one
+            if (!addToList && currentAction)
             {
-                currentActions[0].EnterAction(this);
-                currentActions[0].ExecuteAction(this);
+                currentAction.EnterAction(this);
+                currentAction.ExecuteAction(this);
             }
         }
 
-        public void AddAction(AIAction action, bool addToList)
+        /// <summary>
+        /// Instantiate, initialise and 'select' an action the add to the queue or set as current
+        /// </summary>
+        /// <param name="action">Action to add</param>
+        /// <param name="addToList">Whether to add to the queue or not</param>
+        public void AddToQueue(AIAction action, bool addToList)
         {
             AIAction newAction = action;
             if (newAction)
             {
+                // Instantiate and initialise the new action
                 newAction = Instantiate(newAction);
                 newAction.InitialiseAction(this);
                 newAction.SelectionAction(this);
 
-                SetCurrentAction(newAction, addToList);
+                SetAction(newAction, addToList);
             }
         }
         private void OnDestroy()
         {
-            Helper.LoopList_ForEach<AIAction>(currentActions, (AIAction a) => { a.CancelAction(this); });
+            Helper.LoopList_ForEach<AIAction>(actionQueue, (AIAction a) => { a.CancelAction(this); });
 
             if (AIManager.Instance)
             {

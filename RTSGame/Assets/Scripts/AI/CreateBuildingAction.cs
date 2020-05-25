@@ -15,13 +15,14 @@ namespace Unit_System
         [Tooltip("Cost of the building")] public ResourceConditional BuildingCost = null;
         [Tooltip("How long it will take to build")] public float BuildTime = 0;
 
-        private bool canAfford = true   ;
+        private bool canAfford = true;
         private bool attemptBuild = false;
         private float currentBuildTime = 0;
         private GameObject building = null;
 
         public override void InitialiseAction(AIAgent agent)
         {
+            // Initialise and instantiate the MoveAction
             if (MoveAction)
             {
                 MoveAction = Instantiate(MoveAction);
@@ -30,7 +31,8 @@ namespace Unit_System
         }
         public override bool HasActionCompleted(AIAgent agent)
         {
-            return (building != null) && canAfford;
+            return (building != null) && canAfford; // If the building was built, and the building was affordable this action is done
+            // Returns false if it wasn't affordable
         }
 
         public override float UpdateAction(AIAgent agent)
@@ -40,6 +42,7 @@ namespace Unit_System
                 // Check if has reached target
                 if (MoveAction.HasActionCompleted(agent) && !attemptBuild)
                 {
+                    // If the target point is reached, set a timer that will wait for the building to build
                     currentBuildTime = Time.time + BuildTime;
 
                     attemptBuild = true;
@@ -47,6 +50,7 @@ namespace Unit_System
                     MoveAction.ExitAction(agent);
                 }
 
+                // If the building is ready to build, then create one at the target point
                 if (BuildingPrefab && Time.time >= currentBuildTime && attemptBuild)
                 {
                     building = Instantiate(BuildingPrefab, MoveAction.CurrentTarget, Quaternion.identity);
@@ -99,6 +103,7 @@ namespace Unit_System
         {
             if (!agent) return;
 
+            // If the action was cancelled before the building was built then resources will be refunded 
             if (canAfford && BuildingCost && building == null)
             {
                 Helper.LoopList_ForEach<Mod_ResourceCost>(BuildingCost.ResourceCosts, (Mod_ResourceCost rc) =>

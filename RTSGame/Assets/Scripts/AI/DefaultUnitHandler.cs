@@ -52,7 +52,7 @@ namespace Unit_System
         {
             Helper.LoopList_ForEach<AIAgent>(CurrentAgents, (AIAgent a) =>
             {
-                a.AddAction(s.Action, Selector.Instance.AddToActionList);
+                a.AddToQueue(s.Action, Selector.Instance.AddToActionList);
             });
         }
 

@@ -10,6 +10,7 @@ namespace Unit_System
     {
         public static AIManager Instance = null;
 
+        public bool SkipEvaluations = false;
         public bool EvalInUpdate = false;
         public float EvalUpdateIntervals = 0.1f;
         [Range(0, 100)] public int EvalUpdatePercentage = 25;
@@ -35,15 +36,18 @@ namespace Unit_System
         {
             Helper.LoopList_ForEach<AIAgent>(SceneAI, (AIAgent agent) => { agent.UpdateAction(); });
 
-            if (EvalInUpdate)
+            if (!SkipEvaluations)
             {
-                UpdateEvaluations();
-            }
-            else
-            {
-                if (!doingUpdate)
+                if (EvalInUpdate)
                 {
-                    StartCoroutine(DoUpdate(Mathf.Abs(EvalUpdateIntervals)));
+                    UpdateEvaluations();
+                }
+                else
+                {
+                    if (!doingUpdate)
+                    {
+                        StartCoroutine(DoUpdate(Mathf.Abs(EvalUpdateIntervals)));
+                    }
                 }
             }
         }

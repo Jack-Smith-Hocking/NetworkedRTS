@@ -28,7 +28,7 @@ namespace Unit_System
         {
             if (s != null && s.Action != null)
             {
-                Agent.AddAction(s.Action, Selector.Instance.AddToActionList);
+                Agent.AddToQueue(s.Action, Selector.Instance.AddToActionList);
             }
         }
 
