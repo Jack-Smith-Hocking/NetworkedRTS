@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 namespace Unit_System
 {
-    [RequireComponent(typeof(NavMeshAgent))]
+    //[RequireComponent(typeof(NavMeshAgent))]
     public class AIAgent : MonoBehaviour, Selector_System.ISelectable
     {
         [Tooltip("The NavMeshAgent that will move this AIAgent")] public NavMeshAgent NavAgent = null;
@@ -32,6 +32,10 @@ namespace Unit_System
             if (AIManager.Instance)
             {
                 AIManager.Instance.SceneAI.Add(this);
+            }
+            if (Selector.Instance)
+            {
+                Selector.Instance.SceneSelectables.Add(gameObject);
             }
         }
 
@@ -159,7 +163,7 @@ namespace Unit_System
         /// </summary>
         /// <param name="action">Action to add</param>
         /// <param name="addToList">Whether to add to the queue or not</param>
-        public void AddToQueue(AIAction action, bool addToList)
+        public void AddAction(AIAction action, bool addToList)
         {
             AIAction newAction = action;
             if (newAction)

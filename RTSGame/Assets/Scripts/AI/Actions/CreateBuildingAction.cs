@@ -3,22 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
 
 namespace Unit_System
 {
     [CreateAssetMenu(fileName = "New CreateBuldingAction", menuName = "ScriptableObject/RTS/AI/CreateBuilding")]
     public class CreateBuildingAction : AIAction
     {
+        [Header("Building Data")]
         [Tooltip("The action that will control moving, without this the unit won't move")] public MoveToPointAction MoveAction = null;
+        [Space]
         [Tooltip("The building to attempt to create")] public GameObject BuildingPrefab = null;
+        [Tooltip("The prefab to show that a building is meant to be built here")] public GameObject DisplayBuilding = null;
+        [Space]
         [Tooltip("Cost of the building")] public ResourceConditional BuildingCost = null;
         [Tooltip("How long it will take to build")] public float BuildTime = 0;
 
-        private bool canAfford = true;
-        private bool attemptBuild = false;
+        public bool CanAfford { get; private set; } = false;
+        public bool AttemptBuild { get; private set; } = false;
+
         private float currentBuildTime = 0;
         private GameObject building = null;
+        private GameObject tempBuilding = null;
 
         public override void InitialiseAction(AIAgent agent)
         {
@@ -31,8 +36,36 @@ namespace Unit_System
         }
         public override bool HasActionCompleted(AIAgent agent)
         {
-            return (building != null) && canAfford; // If the building was built, and the building was affordable this action is done
+            return ((building != null) && CanAfford) || CanAfford == false; // If the building was built, and the building was affordable this action is done
             // Returns false if it wasn't affordable
+        }
+
+        public void StartTimer(AIAgent agent)
+        {
+            // If the target point is reached, set a timer that will wait for the building to build
+            currentBuildTime = Time.time + BuildTime;
+
+            AttemptBuild = CanAfford;
+
+            if (MoveAction)
+            {
+                MoveAction.ExitAction(agent);
+            }
+        }
+        public void Build()
+        {
+            // If the building is ready to build, then create one at the target point
+            if (BuildingPrefab && Time.time >= currentBuildTime && AttemptBuild)
+            {
+                if (tempBuilding)
+                {
+                    Destroy(tempBuilding);
+                }
+
+                building = Instantiate(BuildingPrefab, MoveAction.CurrentTarget, Quaternion.identity);
+
+                AttemptBuild = false;
+            }
         }
 
         public override float UpdateAction(AIAgent agent)
@@ -40,23 +73,12 @@ namespace Unit_System
             if (MoveAction)
             {
                 // Check if has reached target
-                if (MoveAction.HasActionCompleted(agent) && !attemptBuild)
+                if (MoveAction.HasActionCompleted(agent) && !AttemptBuild)
                 {
-                    // If the target point is reached, set a timer that will wait for the building to build
-                    currentBuildTime = Time.time + BuildTime;
-
-                    attemptBuild = true;
-
-                    MoveAction.ExitAction(agent);
+                    StartTimer(agent);
                 }
 
-                // If the building is ready to build, then create one at the target point
-                if (BuildingPrefab && Time.time >= currentBuildTime && attemptBuild)
-                {
-                    building = Instantiate(BuildingPrefab, MoveAction.CurrentTarget, Quaternion.identity);
-
-                    attemptBuild = false;
-                }
+                Build();
 
                 MoveAction.UpdateAction(agent);
             }
@@ -83,10 +105,15 @@ namespace Unit_System
                 MoveAction.EnterAction(agent);
             }
 
-            agent.NavAgent.ResetPath();
+            if (agent.NavAgent.enabled)
+            {
+                agent.NavAgent.ResetPath();
+            }
         }
         public override void ExitAction(AIAgent agent)
         {
+            CancelAction(agent);
+
             if (!agent || !agent.NavAgent) return;
 
             if (MoveAction)
@@ -94,9 +121,10 @@ namespace Unit_System
                 MoveAction.ExitAction(agent);
             }
 
-            agent.NavAgent.ResetPath();
-
-            CancelAction(agent);
+            if (agent.NavAgent.enabled)
+            {
+                agent.NavAgent.ResetPath();
+            }
         }
 
         public override void CancelAction(AIAgent agent)
@@ -104,32 +132,62 @@ namespace Unit_System
             if (!agent) return;
 
             // If the action was cancelled before the building was built then resources will be refunded 
-            if (canAfford && BuildingCost && building == null)
+            if (CanAfford && BuildingCost && building == null)
             {
                 Helper.LoopList_ForEach<Mod_ResourceCost>(BuildingCost.ResourceCosts, (Mod_ResourceCost rc) =>
                 {
                     Mod_ResourceManager.Instance.AddResource(rc.ResourceType, rc.TrueResourceCost * -1);
                 });
             }
+
+            if (tempBuilding)
+            {
+                Destroy(tempBuilding);
+            }
         }
 
-        public override void SelectionAction(AIAgent agent)
+        public void BuyBuilding()
         {
             // Check if the building is affordable
             if (BuildingCost)
             {
-                canAfford = BuildingCost.EvaluateConditional();
+                CanAfford = BuildingCost.EvaluateConditional();
 
-                if (canAfford)
+                if (CanAfford)
                 {
                     Mod_ResourceManager.Instance.AddResources(BuildingCost.ResourceCosts);
+
+                    if (MoveAction)
+                    {
+                        // Create a temporary object at the location to indicate a building will be made there
+                        if (DisplayBuilding)
+                        {
+                            tempBuilding = Instantiate(DisplayBuilding, MoveAction.CurrentTarget, Quaternion.identity);
+                        }
+                    }
                 }
             }
+        }
+
+        public override bool SelectionAction(AIAgent agent)
+        {
+            bool validTarget = false;
 
             if (MoveAction)
             {
-                MoveAction.SelectionAction(agent);
+                validTarget = MoveAction.SelectionAction(agent);
             }
+
+            if (validTarget)
+            {
+                BuyBuilding();
+            }
+            else
+            {
+                CanAfford = false;
+            }
+
+            return validTarget;
         }
     }
 }

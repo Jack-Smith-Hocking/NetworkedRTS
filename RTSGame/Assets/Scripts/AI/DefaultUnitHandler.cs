@@ -21,7 +21,7 @@ namespace Unit_System
     {
         public static DefaultUnitHandler Instance = null;
 
-        public List<AIAgent> CurrentAgents = new List<AIAgent>();
+        public List<UnitHandler> CurrentUnits = new List<UnitHandler>();
         public List<SelectorInput> SelectionInputs = new List<SelectorInput>();
 
         private bool isBound = false;
@@ -44,15 +44,15 @@ namespace Unit_System
 
             s.BoundInput.PerformedActions += (InputAction.CallbackContext cc) =>
             {
-                performedAction?.Invoke(s);
+                performedAction.Invoke(s);
             };
         }
 
         void OnActionPerformed(SelectorInput s)
         {
-            Helper.LoopList_ForEach<AIAgent>(CurrentAgents, (AIAgent a) =>
+            Helper.LoopList_ForEach<UnitHandler>(CurrentUnits, (UnitHandler u) =>
             {
-                a.AddToQueue(s.Action, Selector.Instance.AddToActionList);
+                u.PerformedAction(s);
             });
         }
 

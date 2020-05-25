@@ -15,6 +15,8 @@ MonoBehaviour:
   ActionIcon: {fileID: 0}
   ActionDescription: 
   MoveAction: {fileID: 11400000, guid: d1b697571d9f34d4bbb5105f4e7c5690, type: 2}
-  BuildingPrefab: {fileID: 100000, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
+  BuildingPrefab: {fileID: 3357149591582835654, guid: 1199475fd5f03f244b516e50c990c3d1,
+    type: 3}
+  DisplayBuilding: {fileID: 100000, guid: 90d8e09703679534295bd2cacb73d6de, type: 3}
   BuildingCost: {fileID: 11400000, guid: 2fb5720a0581644439b0cfdcc0bbc60c, type: 2}
   BuildTime: 1

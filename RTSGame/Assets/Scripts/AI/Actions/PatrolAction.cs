@@ -7,6 +7,7 @@ namespace Unit_System
     [CreateAssetMenu(fileName = "New PatrolAction", menuName = "ScriptableObject/RTS/AI/Patrol")]
     public class PatrolAction : AIAction
     {
+        [Header("Patrol Data")]
         public MoveToPointAction MoveAction = null;
         public List<Vector3> PatrolPath = new List<Vector3>();
 
@@ -57,7 +58,7 @@ namespace Unit_System
             agent.NavAgent.ResetPath();
         }
 
-        public override void SelectionAction(AIAgent agent)
+        public override bool SelectionAction(AIAgent agent)
         {
             RaycastHit rayHit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
@@ -71,7 +72,11 @@ namespace Unit_System
                 {
                     MoveAction.CurrentTarget = PatrolPath[0];
                 }
+
+                return true;
             }
+
+            return false;
         }
     }
 }

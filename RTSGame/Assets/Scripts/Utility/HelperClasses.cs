@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -366,6 +365,11 @@ public static class Helper
         if (!transOne || !transTwo) return -1;
 
         return Vector3.Distance(transOne.position, transTwo.position);
+    }
+
+    public static bool IsInLayerMask(LayerMask mask, int layer)
+    {
+        return mask == (mask | (1 << layer));
     }
 
     #region SetMaterials

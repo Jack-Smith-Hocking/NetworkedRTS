@@ -51,9 +51,9 @@ namespace Unit_System
         /// When this action is 'Selected', used in the Selector script
         /// </summary>
         /// <param name="agent">The AIAgent to affect</param>
-        public virtual void SelectionAction(AIAgent agent)
+        public virtual bool SelectionAction(AIAgent agent)
         {
-
+            return false;
         }
     }
 }

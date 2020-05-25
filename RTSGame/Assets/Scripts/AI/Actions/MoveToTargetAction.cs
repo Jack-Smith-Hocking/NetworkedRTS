@@ -8,6 +8,7 @@ namespace Unit_System
     [CreateAssetMenu(fileName = "New MoveToAction", menuName = "ScriptableObject/RTS/AI/MoveToTarget")]
     public class MoveToTargetAction : AIAction
     {
+        [Header("Movement Data")]
         public MoveToPointAction MoveAction;
         public float MaxFollowDistance = 0;
         public float TargetFollowDistance = 0;
@@ -85,13 +86,16 @@ namespace Unit_System
             CurrentTarget = null;
         }
 
-        public override void SelectionAction(AIAgent agent)
+        public override bool SelectionAction(AIAgent agent)
         {
             RaycastHit rayHit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
             {
                 CurrentTarget = rayHit.collider.transform;
+                return true;
             }
+
+            return false;
         }
     }
 }

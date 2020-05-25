@@ -10,6 +10,7 @@ namespace Selector_System
     public class Selector : MonoBehaviour
     {
         public static Selector Instance = null;
+        public List<GameObject> SceneSelectables = new List<GameObject>();
 
         [Space]
         public InputActionReference MainSelectButton;
@@ -108,7 +109,7 @@ namespace Selector_System
             RaycastHit rayHit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
             {
-                if (Helper.ObjectInMonoList<AIAgent>(AIManager.Instance.SceneAI, rayHit.collider.gameObject))
+                if (SceneSelectables.Contains(rayHit.collider.gameObject))
                 {
                     rayHit.collider.gameObject.GetComponent<Renderer>().material = HighlightedMat;
                     highlightedObjects.Add(rayHit.collider.gameObject);
@@ -150,7 +151,7 @@ namespace Selector_System
             RaycastHit rayHit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
             {
-                if (Helper.ObjectInMonoList<AIAgent>(AIManager.Instance.SceneAI, rayHit.collider.gameObject))
+                if (SceneSelectables.Contains(rayHit.collider.gameObject))
                 {
                     if (toggleOff && selectedObjects.Contains(rayHit.collider.gameObject))
                     {
@@ -178,16 +179,13 @@ namespace Selector_System
 
             List<GameObject> objs = new List<GameObject>();
 
-            GameObject agent = null;
-            foreach (AIAgent agentAI in AIManager.Instance.SceneAI)
+            foreach (GameObject selectableObj in SceneSelectables)
             {
-                agent = agentAI.gameObject;
-
-                if (agent != null)
+                if (selectableObj != null)
                 {
-                    if (selectRect.Contains(Camera.main.WorldToViewportPoint(agent.transform.position), true))
+                    if (selectRect.Contains(Camera.main.WorldToViewportPoint(selectableObj.transform.position), true))
                     {
-                        objs.Add(agent);
+                        objs.Add(selectableObj);
                     }
                 }
             }

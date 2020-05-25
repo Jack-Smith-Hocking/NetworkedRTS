@@ -11,6 +11,7 @@ namespace Unit_System
     public class UnitHandler : MonoBehaviour, ISelectable
     {
         public AIAgent Agent = null;
+        public bool UseDefaultActions = true;
         public List<SelectorInput> SelectionInputs = new List<SelectorInput>();
 
         // Start is called before the first frame update
@@ -24,11 +25,11 @@ namespace Unit_System
             });
         }
 
-        void PerformedAction(SelectorInput s)
+        public void PerformedAction(SelectorInput s)
         {
             if (s != null && s.Action != null)
             {
-                Agent.AddToQueue(s.Action, Selector.Instance.AddToActionList);
+                Agent.AddAction(s.Action, Selector.Instance.AddToActionList);
             }
         }
 
@@ -41,14 +42,20 @@ namespace Unit_System
         {
             DefaultUnitHandler.BindAllInputs(SelectionInputs);
 
-            DefaultUnitHandler.Instance.CurrentAgents.Add(Agent);
+            if (UseDefaultActions)
+            {
+                DefaultUnitHandler.Instance.CurrentUnits.Add(this);
+            }
         }
 
         public void OnDeselect()
         {
             DefaultUnitHandler.UnbindAllInputs(SelectionInputs);
 
-            DefaultUnitHandler.Instance.CurrentAgents.Remove(Agent);
+            if (UseDefaultActions)
+            {
+                DefaultUnitHandler.Instance.CurrentUnits.Remove(this);
+            }
         }
 
         public void OnExecute()
@@ -58,7 +65,10 @@ namespace Unit_System
 
         private void OnDestroy()
         {
-            DefaultUnitHandler.Instance.CurrentAgents.Remove(Agent);
+            if (UseDefaultActions)
+            {
+                DefaultUnitHandler.Instance.CurrentUnits.Remove(this);
+            }
         }
     }
 }

@@ -8,9 +8,13 @@ namespace Unit_System
     [CreateAssetMenu(fileName = "New MoveToAction", menuName = "ScriptableObject/RTS/AI/MoveToPoint")]
     public class MoveToPointAction : AIAction
     {
+        [Header("Movement Data")]
+        [Tooltip("Placement layers")] public LayerMask MovementLayers;
         public Vector3 CurrentTarget;
         public float StoppingAccuracy = 1;
         public float EvaluationValue = 0;
+
+        public Collider HitCollider { get; private set; } = null;
 
         private Vector3 currentPos;
 
@@ -54,22 +58,32 @@ namespace Unit_System
         {
             if (!agent || !agent.NavAgent) return;
 
-            agent.NavAgent.ResetPath();
+            if (agent.NavAgent.enabled)
+            {
+                agent.NavAgent.ResetPath();
+            }
         }
         public override void ExitAction(AIAgent agent)
         {
             if (!agent || !agent.NavAgent) return;
 
-            agent.NavAgent.ResetPath();
+            if (agent.NavAgent.enabled)
+            {
+                agent.NavAgent.ResetPath();
+            }
         }
 
-        public override void SelectionAction(AIAgent agent)
+        public override bool SelectionAction(AIAgent agent)
         {
             RaycastHit rayHit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
             {
                 CurrentTarget = rayHit.point;
+
+                return Helper.IsInLayerMask(MovementLayers, rayHit.collider.gameObject.layer);
             }
+
+            return false;
         }
     }
 }
