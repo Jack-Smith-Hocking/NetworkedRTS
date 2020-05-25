@@ -134,9 +134,9 @@ namespace Unit_System
             // If the action was cancelled before the building was built then resources will be refunded 
             if (CanAfford && BuildingCost && building == null)
             {
-                Helper.LoopList_ForEach<Mod_ResourceCost>(BuildingCost.ResourceCosts, (Mod_ResourceCost rc) =>
+                Helper.LoopList_ForEach<Mod_ResourceValue>(BuildingCost.ResourceCosts, (Mod_ResourceValue rc) =>
                 {
-                    Mod_ResourceManager.Instance.AddResource(rc.ResourceType, rc.TrueResourceCost * -1);
+                    Mod_ResourceManager.Instance.AddResource(rc.ResourceType, rc.TrueCost * -1);
                 });
             }
 

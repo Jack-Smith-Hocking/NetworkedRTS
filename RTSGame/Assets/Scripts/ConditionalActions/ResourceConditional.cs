@@ -1,18 +1,21 @@
 ﻿using RTS_System;
+using System;
+using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New ResourceCon", menuName = "ScriptableObject/RTS/Conditionals/ResourceCon")]
 public class ResourceConditional : ConditionalAction
 {
-    public List<RTS_System.Mod_ResourceCost> ResourceCosts = new List<RTS_System.Mod_ResourceCost>();
+    public List<Mod_ResourceValue> ResourceCosts = new List<Mod_ResourceValue>();
 
     public override bool EvaluateConditional()
     {
         bool eval = false;
 
-        Helper.LoopList_ForEach<Mod_ResourceCost>(ResourceCosts, (Mod_ResourceCost rc) => { eval = Mod_ResourceManager.Instance.CanAfford(rc); }, () => { return !eval; });
+        Helper.LoopList_ForEach<Mod_ResourceValue>(ResourceCosts, (Mod_ResourceValue rc) => { eval = rc.CanAfford(); }, () => { return !eval; });
 
         return eval;
     }

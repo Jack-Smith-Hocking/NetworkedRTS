@@ -8,54 +8,77 @@ using TMPro;
 
 namespace RTS_System
 {
-    public class Mod_ResourceManager : MonoBehaviour
+    [Serializable]
+    public struct Mod_ResourceValue
     {
-        public class Mod_ResourceCache
+        public string CostName;
+        public RTS_System.Mod_Resource ResourceType;
+        [Min(0)] public int RawCost;
+
+        public int TrueCost
         {
-            public int ResourceValue { get; private set; } = 0;
-            
-            public Action<int> OnValueChanged = null;
-                
-            private TextMeshProUGUI resourceText = null;
-
-            public Mod_ResourceCache() { }
-            public Mod_ResourceCache(TextMeshProUGUI text, string resourceName)
+            get
             {
-                resourceText = text;
-
-                if (resourceText)
-                {
-                    OnValueChanged += (int val) =>
-                    {
-                        resourceText.text = resourceName + ": " + val;
-                    };
-                }
-            }
-
-            /// <summary>
-            /// Will add an amount to the currently stored value
-            /// </summary>
-            /// <param name="amount">The amount to add</param>
-            /// <returns>Whether or not the amount was successfully added</returns>
-            public bool IncreaseValue(int amount)
-            {
-                int temp = ResourceValue;
-
-                temp += amount;
-
-                if (temp < 0)
-                {
-                    return false;
-                }
-
-                ResourceValue = temp;
-
-                OnValueChanged?.Invoke(ResourceValue);
-
-                return true;
+                return (RawCost * (DecreaseResource ? -1 : 1));
             }
         }
 
+        public bool DecreaseResource;
+
+        public bool CanAfford()
+        {
+            return Mod_ResourceManager.Instance.CanAfford(ResourceType, TrueCost);
+        }
+    }
+
+    public class Mod_ResourceCache
+    {
+        public int ResourceValue { get; private set; } = 0;
+
+        public Action<int> OnValueChanged = null;
+
+        private TextMeshProUGUI resourceText = null;
+
+        public Mod_ResourceCache() { }
+        public Mod_ResourceCache(TextMeshProUGUI text, string resourceName)
+        {
+            resourceText = text;
+
+            if (resourceText)
+            {
+                OnValueChanged += (int val) =>
+                {
+                    resourceText.text = resourceName + ": " + val;
+                };
+            }
+        }
+
+        /// <summary>
+        /// Will add an amount to the currently stored value
+        /// </summary>
+        /// <param name="amount">The amount to add</param>
+        /// <returns>Whether or not the amount was successfully added</returns>
+        public bool IncreaseValue(int amount)
+        {
+            int temp = ResourceValue;
+
+            temp += amount;
+
+            if (temp < 0)
+            {
+                return false;
+            }
+
+            ResourceValue = temp;
+
+            OnValueChanged?.Invoke(ResourceValue);
+
+            return true;
+        }
+    }
+
+    public class Mod_ResourceManager : MonoBehaviour
+    {
         public static Mod_ResourceManager Instance = null;
 
         [Tooltip("The prefab to display resources with, should have an Image and a TextMeshProUGUI")] public GameObject ResourceUIPrefab = null;
@@ -142,26 +165,26 @@ namespace RTS_System
 
             return false;
         }
-        public bool AddResource(Mod_ResourceCost resourceCost)
+        public bool AddResource(Mod_ResourceValue resourceValue)
         {
-            if (!resourceCost) return false;
+            if (!resourceValue.ResourceType) return false;
 
-            if (resourceCaches.ContainsKey(resourceCost.ResourceType))
+            if (resourceCaches.ContainsKey(resourceValue.ResourceType))
             {
-                return resourceCaches[resourceCost.ResourceType].IncreaseValue(resourceCost.TrueResourceCost);
+                return resourceCaches[resourceValue.ResourceType].IncreaseValue(resourceValue.TrueCost);
             }
 
             return false;
         }
 
-        public bool AddResources(List<Mod_ResourceCost> resourceCosts)
+        public bool AddResources(List<Mod_ResourceValue> resourceValues)
         {
             bool canAfford = false;
-            Helper.LoopList_ForEach<Mod_ResourceCost>(resourceCosts, (Mod_ResourceCost rc) => { canAfford = CanAfford(rc); }, () => { return !canAfford; });
+            Helper.LoopList_ForEach<Mod_ResourceValue>(resourceValues, (Mod_ResourceValue rc) => { canAfford = CanAfford(rc); }, () => { return !canAfford; });
 
             if (canAfford)
             {
-                Helper.LoopList_ForEach<Mod_ResourceCost>(resourceCosts, (Mod_ResourceCost rc) => { AddResource(rc); });
+                Helper.LoopList_ForEach<Mod_ResourceValue>(resourceValues, (Mod_ResourceValue rc) => { AddResource(rc); });
 
                 return true;
             }
@@ -169,21 +192,43 @@ namespace RTS_System
             return false;
         }
 
-        public bool CanAfford(Mod_ResourceCost resourceCost, bool trueCost = true)
+        public bool CanAfford(Mod_Resource resource, int cost)
         {
-            if (!resourceCost || !resourceCost.ResourceType) return false;
+            if (!resource) return false;
 
             bool eval = false;
 
-            if (resourceCaches.ContainsKey(resourceCost.ResourceType))
+            if (resourceCaches.ContainsKey(resource))
             {
-                int val = resourceCaches[resourceCost.ResourceType].ResourceValue;
+                int val = resourceCaches[resource].ResourceValue;
+
+                if (cost < 0)
+                {
+                    eval = ((val + cost) >= 0);
+                }
+                else
+                {
+                    eval = true;
+                }
+            }
+
+            return eval;
+        }
+        public bool CanAfford(Mod_ResourceValue resourceValue, bool trueCost = true)
+        {
+            if (!resourceValue.ResourceType) return false;
+
+            bool eval = false;
+
+            if (resourceCaches.ContainsKey(resourceValue.ResourceType))
+            {
+                int val = resourceCaches[resourceValue.ResourceType].ResourceValue;
 
                 if (trueCost)
                 {
-                    if (resourceCost.TrueResourceCost < 0)
+                    if (resourceValue.TrueCost < 0)
                     {
-                        eval = (val >= resourceCost.RawResourceCost);
+                        eval = (val >= resourceValue.RawCost);
                     }
                     else
                     {
