@@ -11,7 +11,7 @@ namespace RTS_System
     [Serializable]
     public struct Mod_ResourceValue
     {
-        public string CostName;
+        [Tooltip("Ease of use in inspector")] public string ListIdentifier;
         public RTS_System.Mod_Resource ResourceType;
         [Min(0)] public int RawCost;
 
@@ -33,7 +33,7 @@ namespace RTS_System
 
     public class Mod_ResourceCache
     {
-        public int ResourceValue { get; private set; } = 0;
+        public int CurrentResourceValue { get; private set; } = 0;
 
         public Action<int> OnValueChanged = null;
 
@@ -54,26 +54,37 @@ namespace RTS_System
         }
 
         /// <summary>
-        /// Will add an amount to the currently stored value
+        /// Will check if amount can be added, if result is less than zero it will fail otherwise amount will be added
         /// </summary>
         /// <param name="amount">The amount to add</param>
         /// <returns>Whether or not the amount was successfully added</returns>
         public bool IncreaseValue(int amount)
         {
-            int temp = ResourceValue;
-
-            temp += amount;
-
-            if (temp < 0)
+            if (CanAfford(amount))
             {
-                return false;
+                CurrentResourceValue += amount;
+
+                OnValueChanged?.Invoke(CurrentResourceValue);
+
+                return true;
             }
 
-            ResourceValue = temp;
+            return false;
+        }
 
-            OnValueChanged?.Invoke(ResourceValue);
+        public bool CanAfford(int amount)
+        {
+            if (amount > 0)
+            {
+                return true;
+            }
 
-            return true;
+            if (amount < 0)
+            {
+                return ((amount + CurrentResourceValue) >= 0);
+            }
+
+            return false;
         }
     }
 
@@ -192,56 +203,33 @@ namespace RTS_System
             return false;
         }
 
-        public bool CanAfford(Mod_Resource resource, int cost)
+        /// <summary>
+        /// Checks if the player can afford something of type resource and cost value
+        /// </summary>
+        /// <param name="resource">Resource to check if can afford</param>
+        /// <param name="value">The value to see if the player can afford</param>
+        /// <returns></returns>
+        public bool CanAfford(Mod_Resource resource, int value)
         {
             if (!resource) return false;
 
-            bool eval = false;
-
+            // Checks if the resource is valid
             if (resourceCaches.ContainsKey(resource))
             {
-                int val = resourceCaches[resource].ResourceValue;
-
-                if (cost < 0)
-                {
-                    eval = ((val + cost) >= 0);
-                }
-                else
-                {
-                    eval = true;
-                }
+                return resourceCaches[resource].CanAfford(value);
             }
 
-            return eval;
+            return false;
         }
+        /// <summary>
+        /// Checks if the player can afford a resource of a certain value
+        /// </summary>
+        /// <param name="resourceValue">Holds data for the resource and the value to add</param>
+        /// <param name="trueCost">Whether to use the raw cost (>= 0) or the true cost (can be less than 0)</param>
+        /// <returns></returns>
         public bool CanAfford(Mod_ResourceValue resourceValue, bool trueCost = true)
         {
-            if (!resourceValue.ResourceType) return false;
-
-            bool eval = false;
-
-            if (resourceCaches.ContainsKey(resourceValue.ResourceType))
-            {
-                int val = resourceCaches[resourceValue.ResourceType].ResourceValue;
-
-                if (trueCost)
-                {
-                    if (resourceValue.TrueCost < 0)
-                    {
-                        eval = (val >= resourceValue.RawCost);
-                    }
-                    else
-                    {
-                        eval = true;
-                    }
-                }
-                else
-                {
-                    eval = true;
-                }
-            }
-
-            return eval;
+            return CanAfford(resourceValue.ResourceType, (trueCost ? resourceValue.TrueCost : resourceValue.RawCost));
         }
     }
 }
