@@ -193,8 +193,31 @@ public class BoundInput
 }
 public static class Helper
 {
-    public static Renderer CurrentTempRenderer = null;
-    public static MonoBehaviour CurrentTempMono = null;
+    public static Renderer CachedRenderer = null;
+    public static MonoBehaviour CachedMono = null;
+
+    public static void ListAddRange<T>(ref List<T> originalList, List<T> addList)
+    {
+        foreach (T elem in addList)
+        {
+            Helper.ListAdd<T>(ref originalList, elem);
+        }
+    }
+
+    public static void ListAdd<T>(ref List<T> originalList, T addObj)
+    {
+        if (addObj != null && originalList != null)
+        {
+            if (originalList.Count == 0)
+            {
+                originalList.Add(addObj);
+            }
+            else if (!originalList.Contains(addObj))
+            {
+                originalList.Add(addObj);
+            }
+        }
+    }
 
     /// <summary>
     /// Loop through a list of type T (For Each Loop) and execute an action on each element
@@ -314,8 +337,8 @@ public static class Helper
 
         if (monoList.Count > 0)
         {
-            CurrentTempMono = monoList[0] as MonoBehaviour;
-            if (!CurrentTempMono)
+            CachedMono = monoList[0] as MonoBehaviour;
+            if (!CachedMono)
             { 
                 return false;
             }
@@ -328,10 +351,10 @@ public static class Helper
         Helper.LoopList_ForEach<T>(monoList, 
         (T mono) => // LoopAction
         {
-            CurrentTempMono = mono as MonoBehaviour;
-            if (CurrentTempMono)
+            CachedMono = mono as MonoBehaviour;
+            if (CachedMono)
             {
-                if(CurrentTempMono.gameObject.Equals(obj))
+                if(CachedMono.gameObject.Equals(obj))
                 {
                     inList = true;
                 }
@@ -418,11 +441,11 @@ public static class Helper
     {
         if (!obj || !mat) return;
 
-        CurrentTempRenderer = obj.GetComponent<Renderer>();
-        if (CurrentTempRenderer)
+        CachedRenderer = obj.GetComponent<Renderer>();
+        if (CachedRenderer)
         {
-            CurrentTempRenderer.material = mat;
-            CurrentTempRenderer = null;
+            CachedRenderer.material = mat;
+            CachedRenderer = null;
         }
     }
     #endregion

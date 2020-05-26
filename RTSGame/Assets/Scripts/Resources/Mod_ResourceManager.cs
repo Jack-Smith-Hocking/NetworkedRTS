@@ -96,7 +96,7 @@ namespace RTS_System
         /// <returns></returns>
         public bool CanAfford(int amount)
         {
-            if (amount > 0)
+            if (amount >= 0)
             {
                 return true;
             }
@@ -135,6 +135,7 @@ namespace RTS_System
             if (Instance.Equals(this))
             {
                 Mod_ResourceCache cache = null;
+                bool hasText = false;
 
                 // Loop through all the resources in the game and spawn prefabs for them
                 foreach (Mod_Resource resource in Resources)
@@ -146,7 +147,7 @@ namespace RTS_System
                     // Add the resource to the dictionary if it isn't there already
                     else
                     {
-                        cache = new Mod_ResourceCache();
+                        hasText = false;
 
                         // Instantiate prefab and get the Text and Image components from it
                         if (ResourceUIPrefab && ResourceUIOwner)
@@ -160,6 +161,7 @@ namespace RTS_System
                             if (resourceText)
                             {
                                 cache = new Mod_ResourceCache(resourceText, resource.ResourceName);
+                                hasText = true;
                             }
                             if (resourceImage)
                             {
@@ -167,8 +169,13 @@ namespace RTS_System
                             }
                         }
 
+                        if (!hasText)
+                        {
+                            cache = new Mod_ResourceCache();
+                        }
+
                         // Set the initial value of the cache
-                        cache.IncreaseValue(Mathf.Abs(resource.ResourceStartCount));
+                        cache.IncreaseValue(resource.ResourceStartCount);
 
                         // Add resource cache to dictionary
                         resourceCaches.Add(resource, cache);

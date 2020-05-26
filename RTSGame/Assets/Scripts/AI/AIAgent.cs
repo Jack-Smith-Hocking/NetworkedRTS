@@ -8,8 +8,9 @@ using UnityEngine.AI;
 namespace Unit_System
 {
     //[RequireComponent(typeof(NavMeshAgent))]
-    public class AIAgent : MonoBehaviour, Selector_System.ISelectable
+    public class AIAgent : SelectableDefault
     {
+        [Header("AIAgent Data")]
         [Tooltip("The NavMeshAgent that will move this AIAgent")] public NavMeshAgent NavAgent = null;
         [Tooltip("List of possible actions")] public List<AIAction> PossibleActions = new List<AIAction>();
         [Space]
@@ -17,10 +18,9 @@ namespace Unit_System
         public AIAction currentAction = null;
 
         // Start is called before the first frame update
-        IEnumerator Start()
+        protected override IEnumerator Start()
         {
-            // Wait so that the AIManager can set itself up
-            yield return new WaitForEndOfFrame();
+            yield return base.Start();
 
             // Get copies of the PossibleActions list
             for (int i = 0; i < PossibleActions.Count; i++)
@@ -32,10 +32,6 @@ namespace Unit_System
             if (AIManager.Instance)
             {
                 AIManager.Instance.SceneAI.Add(this);
-            }
-            if (Selector.Instance)
-            {
-                Selector.Instance.SceneSelectables.Add(gameObject);
             }
         }
 
@@ -185,23 +181,5 @@ namespace Unit_System
                 AIManager.Instance.SceneAI.Remove(this);
             }
         }
-
-        #region ISelectable
-        public void OnHover()
-        {
-        }
-
-        public void OnSelect()
-        {
-        }
-
-        public void OnDeselect()
-        {
-        }
-
-        public void OnExecute()
-        {
-        }
     }
-    #endregion
 }

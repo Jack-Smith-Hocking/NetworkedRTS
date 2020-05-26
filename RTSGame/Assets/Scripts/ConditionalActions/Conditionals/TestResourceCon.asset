@@ -13,11 +13,15 @@ MonoBehaviour:
   m_Name: TestResourceCon
   m_EditorClassIdentifier: 
   ResourceCosts:
-  - ListIdentifier: 
+  - ListIdentifier: Gold
     ResourceType: {fileID: 11400000, guid: 1bb8be234f70c5a4a9f962764b376dcc, type: 2}
-    RawCost: 100
+    RawValue: 25
     DecreaseResource: 1
-  - ListIdentifier: 
+  - ListIdentifier: Iron
     ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
-    RawCost: 100
+    RawValue: 100
+    DecreaseResource: 1
+  - ListIdentifier: Iron
+    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
+    RawValue: 25
     DecreaseResource: 0

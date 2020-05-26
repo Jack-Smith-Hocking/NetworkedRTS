@@ -8,15 +8,18 @@ using System;
 namespace Unit_System
 {
     [RequireComponent(typeof(AIAgent))]
-    public class UnitHandler : MonoBehaviour, ISelectable
+    public class UnitHandler : SelectableDefault
     {
+        [Header("Unit Data")]
         [Tooltip("The AIAgent that this unit is managing")] public AIAgent Agent = null;
         [Tooltip("Whether or not this unit will implement the DefaultUnitHandler's actions")] public bool UseDefaultActions = true;
         [Tooltip("List of actions that this unit can perform")] public List<SelectorInput> SelectionInputs = new List<SelectorInput>();
 
         // Start is called before the first frame update
-        void Start()
+        protected override IEnumerator Start()
         {
+            yield return base.Start();
+
             if (!Agent) Agent = gameObject.GetComponent<AIAgent>();
 
             Helper.LoopList_ForEach<SelectorInput>(SelectionInputs, (SelectorInput s) => 
@@ -34,12 +37,10 @@ namespace Unit_System
         }
 
         #region ISelectable
-        public void OnHover()
+        public override void OnSelect()
         {
-        }
+            base.OnSelect();
 
-        public void OnSelect()
-        {
             DefaultUnitHandler.BindAllInputs(SelectionInputs);
 
             if (UseDefaultActions)
@@ -48,18 +49,16 @@ namespace Unit_System
             }
         }
 
-        public void OnDeselect()
+        public override void OnDeselect()
         {
+            base.OnDeselect();
+
             DefaultUnitHandler.UnbindAllInputs(SelectionInputs);
 
             if (UseDefaultActions)
             {
                 DefaultUnitHandler.Instance.CurrentUnits.Remove(this);
             }
-        }
-
-        public void OnExecute()
-        {
         }
         #endregion
 

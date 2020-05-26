@@ -9,6 +9,6 @@ namespace RTS_System
     {
         public string ResourceName;
         public Sprite ResourceIcon;
-        public int ResourceStartCount = 0;
+        [Min(0)] public int ResourceStartCount = 0;
     }
 }
