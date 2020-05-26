@@ -130,7 +130,7 @@ namespace Selector_System
             {
                 endPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
 
-                highlightedObjects.AddRange(GetObjectsInArea());
+                highlightedObjects.AddRange(Helper.GetObjectsInViewport(SceneSelectables, startPos, endPos, SelectionMask, mainCam));
 
                 currentSelectables.Clear();
                 Helper.LoopList_ForEach<GameObject>(highlightedObjects, (GameObject go) => 
@@ -205,31 +205,8 @@ namespace Selector_System
 
         void SelectMultiple()
         {
-            Helper.LoopList_ForEach<GameObject>(GetObjectsInArea(), (GameObject obj) => { AddSelected(obj); });
+            Helper.LoopList_ForEach<GameObject>(Helper.GetObjectsInViewport(SceneSelectables, startPos, endPos, SelectionMask, mainCam), (GameObject obj) => { AddSelected(obj); });
             SelectSingle(false);
-        }
-
-        List<GameObject> GetObjectsInArea()
-        {
-            Rect selectRect = new Rect(startPos.x, startPos.y, (endPos.x - startPos.x), (endPos.y - startPos.y));
-
-            List<GameObject> objs = new List<GameObject>();
-
-            foreach (GameObject selectableObj in SceneSelectables)
-            {
-                if (selectableObj != null)
-                {
-                    if (Helper.IsInLayerMask(SelectionMask, selectableObj.layer))
-                    {
-                        if (selectRect.Contains(mainCam.WorldToViewportPoint(selectableObj.transform.position), true))
-                        {
-                            objs.Add(selectableObj);
-                        }
-                    }
-                }
-            }
-
-            return objs;
         }
 
         void ClearSelection()

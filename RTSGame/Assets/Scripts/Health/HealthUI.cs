@@ -30,7 +30,7 @@ public class HealthUI : MonoBehaviour
 
         if (HealthDisplay)
         {
-            // Update the UI when the associate Health takes damage rather than in Update()
+            // Update the UI when the associated Health takes damage rather than in Update()
             HealthDisplay.OnTakeDamageSimple += (float damage) =>
             {
                 if (HealthImage)
@@ -41,16 +41,25 @@ public class HealthUI : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void UpdateFacing()
     {
         // Make the UI follow the camera
-        if (HealthBarFollowCamera && HealthRotateObject)
+        if (HealthBarFollowCamera && HealthRotateObject && HealthBarCamera)
         {
             Vector3 camFor = HealthBarCamera.transform.forward;
-            camFor.y = 0;
 
             HealthRotateObject.transform.forward = camFor;
         }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        UpdateFacing();
+    }
+
+    private void OnEnable()
+    {
+        UpdateFacing();
     }
 }

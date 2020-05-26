@@ -11,7 +11,6 @@ namespace Unit_System
         [Header("Movement Data")]
         public MoveToPointAction MoveAction;
         public float MaxFollowDistance = 0;
-        public float TargetFollowDistance = 0;
         public Transform CurrentTarget = null;
 
         public override void InitialiseAction(AIAgent agent)
@@ -29,7 +28,7 @@ namespace Unit_System
 
         public override float UpdateAction(AIAgent agent)
         {
-            bool outsideTargetRange = Vector3.Distance(agent.transform.position, CurrentTarget.transform.position) >= TargetFollowDistance;
+            bool outsideTargetRange = Vector3.Distance(agent.transform.position, CurrentTarget.transform.position) >= MoveAction.StoppingAccuracy;
 
             if (MoveAction && CurrentTarget && outsideTargetRange)
             { 

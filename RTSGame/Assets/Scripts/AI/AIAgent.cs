@@ -17,6 +17,8 @@ namespace Unit_System
         [Tooltip("Current actions")] public List<AIAction> actionQueue = new List<AIAction>();
         public AIAction currentAction = null;
 
+        private AIAction cachedAction = null;
+
         // Start is called before the first frame update
         protected override IEnumerator Start()
         {
@@ -155,21 +157,40 @@ namespace Unit_System
         }
 
         /// <summary>
-        /// Instantiate, initialise and 'select' an action the add to the queue or set as current
+        /// Instantiate, initialise and 'select' an action the add to the queue or set as current, will not be added if it's selection fails
         /// </summary>
         /// <param name="action">Action to add</param>
         /// <param name="addToList">Whether to add to the queue or not</param>
-        public void AddAction(AIAction action, bool addToList)
+        /// <param name="selectAction">Whether to call the SelectAction method on the action or not</param>
+        /// <param name="createInstance">Whether or not to instantiate the action</param>
+        public void AddAction(AIAction action, bool addToList, bool selectAction = true, bool createInstance = true)
         {
-            AIAction newAction = action;
-            if (newAction)
+            cachedAction = action;
+            if (cachedAction)
             {
-                // Instantiate and initialise the new action
-                newAction = Instantiate(newAction);
-                newAction.InitialiseAction(this);
-                newAction.SelectionAction(this);
+                bool selectedPass = false;
 
-                SetAction(newAction, addToList);
+                if (createInstance)
+                {
+                    // Instantiate and initialise the new action
+                    cachedAction = Instantiate(cachedAction);
+                    cachedAction.InitialiseAction(this);
+                }
+
+                if (selectAction)
+                {
+                    selectedPass = cachedAction.SelectionAction(this);
+
+                    if (!selectedPass)
+                    {
+                        cachedAction.CancelAction(this);
+                    }
+                }
+
+                if (selectedPass || !selectAction)
+                {
+                    SetAction(cachedAction, addToList);
+                }
             }
         }
         private void OnDestroy()

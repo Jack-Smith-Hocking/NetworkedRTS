@@ -22,6 +22,22 @@ namespace Unit_System
 
             if (!Agent) Agent = gameObject.GetComponent<AIAgent>();
 
+            if (UseDefaultActions)
+            {
+                Helper.LoopList_ForEach<SelectorInput>(DefaultUnitHandler.Instance.SelectionInputs, (SelectorInput s) =>
+                {
+                    SelectionInputs.Add(new SelectorInput(s));
+                });
+            }
+ 
+            Helper.LoopList_ForEach<SelectorInput>(SelectionInputs, (SelectorInput s) => 
+            {
+                if (s.Action != null)
+                {
+                    s.Action = Instantiate(s.Action);
+                }
+            });
+
             Helper.LoopList_ForEach<SelectorInput>(SelectionInputs, (SelectorInput s) => 
             { 
                 DefaultUnitHandler.AddPerformedAction(s, PerformedAction); 
@@ -32,7 +48,7 @@ namespace Unit_System
         {
             if (s != null && s.Action != null)
             {
-                Agent.AddAction(s.Action, Selector.Instance.AddToActionList);
+                Agent.AddAction(s.Action, Selector.Instance.AddToActionList, true, true);
             }
         }
 
@@ -42,11 +58,6 @@ namespace Unit_System
             base.OnSelect();
 
             DefaultUnitHandler.BindAllInputs(SelectionInputs);
-
-            if (UseDefaultActions)
-            {
-                DefaultUnitHandler.Instance.CurrentUnits.Add(this);
-            }
         }
 
         public override void OnDeselect()
@@ -54,20 +65,11 @@ namespace Unit_System
             base.OnDeselect();
 
             DefaultUnitHandler.UnbindAllInputs(SelectionInputs);
-
-            if (UseDefaultActions)
-            {
-                DefaultUnitHandler.Instance.CurrentUnits.Remove(this);
-            }
         }
         #endregion
 
         private void OnDestroy()
         {
-            if (UseDefaultActions)
-            {
-                DefaultUnitHandler.Instance.CurrentUnits.Remove(this);
-            }
         }
     }
 }

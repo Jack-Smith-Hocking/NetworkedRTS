@@ -23,7 +23,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
       propertyPath: m_Name
-      value: TestCombatAgent
+      value: TestCombatAgent Variant
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
       propertyPath: m_LocalPosition.x
@@ -88,6 +88,41 @@ PrefabInstance:
     - target: {fileID: 589809937, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
       propertyPath: m_BaseOffset
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1906695737, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
+      propertyPath: SelectionInputs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1906695737, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
+      propertyPath: SelectionInputs.Array.data[1].SelectorInputName
+      value: Building
+      objectReference: {fileID: 0}
+    - target: {fileID: 1906695737, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
+      propertyPath: SelectionInputs.Array.data[1].InputAction
+      value: 
+      objectReference: {fileID: -2263483478407229778, guid: b995a5cde5930cc47a278e015840fdd7,
+        type: 3}
+    - target: {fileID: 1906695737, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
+      propertyPath: SelectionInputs.Array.data[1].Action
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1906695737, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
+      propertyPath: SelectionInputs.Array.data[0].SelectorInputName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1906695737, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
+      propertyPath: SelectionInputs.Array.data[0].InputAction
+      value: 
+      objectReference: {fileID: 570080351422657074, guid: b995a5cde5930cc47a278e015840fdd7,
+        type: 3}
+    - target: {fileID: 1906695737, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
+      propertyPath: SelectionInputs.Array.data[0].Action
+      value: 
+      objectReference: {fileID: 11400000, guid: 6862b225732184f43a7f38fb7b14c39d,
+        type: 2}
+    - target: {fileID: 1906695737, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
+      propertyPath: SelectionInputs.Array.data[0].CanQueue
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 589809938, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}

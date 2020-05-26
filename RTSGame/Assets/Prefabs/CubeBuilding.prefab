@@ -32,33 +32,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6603169834556794276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7744355298875506514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4863f7271395e804d8cd537aee75898c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxHealth: 10
-  OnTakeDamageEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDeathEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  DeathFX: {fileID: 0}
-  DeathFXPosition: {fileID: 0}
-  DeathScaleTime: 1
-  DeathEndScale: 0.1
-  HitFX: {fileID: 0}
-  HitFXPosition: {fileID: 0}
-  UseHitFXPoint: 1
-  HealthState: 0
 --- !u!114 &1004960102582241277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,6 +122,44 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6603169834556794276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7744355298875506514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4863f7271395e804d8cd537aee75898c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 10
+  OnTakeDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeathEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6603169834556794276}
+        m_MethodName: Die
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  DeathFX: {fileID: 0}
+  DeathFXPosition: {fileID: 0}
+  DeathScaleTime: 1
+  DeathEndScale: 0.1
+  HitFX: {fileID: 0}
+  HitFXPosition: {fileID: 0}
+  UseHitFXPoint: 1
+  HealthState: 0
 --- !u!1001 &5039395872715570324
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -330,6 +341,12 @@ PrefabInstance:
       propertyPath: OnDeselectEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1189522042674294415, guid: 1199475fd5f03f244b516e50c990c3d1,
+        type: 3}
+      propertyPath: SelectionInputs.Array.data[0].Action
+      value: 
+      objectReference: {fileID: 11400000, guid: 4ebb6c00d52586d44927b126f14b3d73,
+        type: 2}
     - target: {fileID: 2086879317144536005, guid: 1199475fd5f03f244b516e50c990c3d1,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -499,6 +516,16 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4949771989174032913, guid: 7e804b2f05e2b3e459e97e8e6f513691,
+        type: 3}
+      propertyPath: HealthBarFollowCamera
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4949771989174032913, guid: 7e804b2f05e2b3e459e97e8e6f513691,
+        type: 3}
+      propertyPath: HealthDisplay
+      value: 
+      objectReference: {fileID: 6603169834556794276}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e804b2f05e2b3e459e97e8e6f513691, type: 3}
 --- !u!1 &7020588623901446499 stripped

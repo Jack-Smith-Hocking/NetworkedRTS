@@ -24,12 +24,7 @@ namespace Unit_System
         {
             if (!agent) return true;
 
-            if (Vector3.Distance(agent.transform.position, CurrentTarget) <= StoppingAccuracy)
-            {
-                return true;
-            }
-
-            return false;
+            return Vector3.Distance(agent.transform.position, CurrentTarget) <= StoppingAccuracy + 1;
         }
 
         public override bool ExecuteAction(AIAgent agent)

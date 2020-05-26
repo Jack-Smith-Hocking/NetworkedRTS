@@ -156,7 +156,8 @@ MonoBehaviour:
   - SelectorInputName: Building
     InputAction: {fileID: -2263483478407229778, guid: b995a5cde5930cc47a278e015840fdd7,
       type: 3}
-    Action: {fileID: 11400000, guid: e02be8c54edf01d47a36f21a3a3fe90e, type: 2}
+    Action: {fileID: 11400000, guid: 1b1779bfcdf54eb43a6adb51331d4ad8, type: 2}
+    CanQueue: 1
 --- !u!114 &8606768431203705314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,7 +176,18 @@ MonoBehaviour:
       m_Calls: []
   OnDeathEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8606768431203705314}
+        m_MethodName: Die
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   DeathFX: {fileID: 0}
   DeathFXPosition: {fileID: 0}
   DeathScaleTime: 1
@@ -490,6 +502,11 @@ PrefabInstance:
       propertyPath: HealthDisplay
       value: 
       objectReference: {fileID: 8606768431203705314}
+    - target: {fileID: 4949771989174032913, guid: 7e804b2f05e2b3e459e97e8e6f513691,
+        type: 3}
+      propertyPath: HealthBarFollowCamera
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e804b2f05e2b3e459e97e8e6f513691, type: 3}
 --- !u!1 &6670840554496165725 stripped

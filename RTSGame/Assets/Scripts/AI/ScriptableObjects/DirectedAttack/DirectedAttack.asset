@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c17a149d6346519498a17f50438565cb, type: 3}
-  m_Name: MoveToPoint
+  m_Script: {fileID: 11500000, guid: e0c48aa74906a6e4d8fad41a7e67cc33, type: 3}
+  m_Name: DirectedAttack
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
-  CurrentTargets: []
-  StoppingAccuracy: 10
-  EvaluationValue: 5
+  AttackDamage: 2
+  AttackCooldown: 2
+  TargetAction: {fileID: 11400000, guid: db9617900d7d4db49a09fa1b83b8fa98, type: 2}

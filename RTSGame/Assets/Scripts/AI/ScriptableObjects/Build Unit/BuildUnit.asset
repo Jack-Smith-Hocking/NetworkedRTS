@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e41c6a08a2e6e984a8792527da849c08, type: 3}
-  m_Name: CreateUnit
+  m_Name: BuildUnit
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
-  MoveAction: {fileID: 11400000, guid: 20418efaa3cf6ff47a0af6db1b0df717, type: 2}
+  MoveAction: {fileID: 11400000, guid: 208fe73e9e614474e8282c802b9f6c0c, type: 2}
   BuildingPrefab: {fileID: 100000, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
-  DisplayBuilding: {fileID: 100000, guid: 2b127815fd0f2074eae3a0c6a4786d0b, type: 3}
+  DisplayBuilding: {fileID: 100002, guid: eea2ee63e29c7fb47b752b62fb1f7be2, type: 3}
   BuildingCost: {fileID: 11400000, guid: 2fb5720a0581644439b0cfdcc0bbc60c, type: 2}
-  BuildTime: 1
+  BuildTime: 2

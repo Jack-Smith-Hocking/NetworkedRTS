@@ -195,6 +195,8 @@ public static class Helper
 {
     public static Renderer CachedRenderer = null;
     public static MonoBehaviour CachedMono = null;
+    public static List<GameObject> CachedList = new List<GameObject>();
+    public static Rect CachedRect;
 
     public static void ListAddRange<T>(ref List<T> originalList, List<T> addList)
     {
@@ -235,7 +237,7 @@ public static class Helper
         {
             foreach (T loopVal in loopList)
             {
-                if (loopVal == null)
+                if (loopVal == null || loopVal.Equals(null))
                 {
                     nullObjs.Add(loopVal);
                     continue;
@@ -269,7 +271,7 @@ public static class Helper
             {
                 loopVal = loopList[i];
 
-                if (loopVal == null)
+                if (loopVal == null || loopVal.Equals(null))
                 {
                     nullObjs.Add(loopVal);
                     continue;
@@ -339,7 +341,7 @@ public static class Helper
         {
             CachedMono = monoList[0] as MonoBehaviour;
             if (!CachedMono)
-            { 
+            {
                 return false;
             }
         }
@@ -348,18 +350,18 @@ public static class Helper
             return false;
         }
 
-        Helper.LoopList_ForEach<T>(monoList, 
+        Helper.LoopList_ForEach<T>(monoList,
         (T mono) => // LoopAction
         {
             CachedMono = mono as MonoBehaviour;
             if (CachedMono)
             {
-                if(CachedMono.gameObject.Equals(obj))
+                if (CachedMono.gameObject.Equals(obj))
                 {
                     inList = true;
                 }
             }
-        }, 
+        },
         () => { return inList; }); // BreakOut action
 
         return inList;
@@ -393,6 +395,61 @@ public static class Helper
     public static bool IsInLayerMask(LayerMask mask, int layer)
     {
         return mask == (mask | (1 << layer));
+    }
+
+    public static List<GameObject> GetObjectsInViewport(List<GameObject> objList, Vector3 startPos, Vector3 endPos, Camera cam)
+    {
+        CachedRect = new Rect(startPos.x, startPos.y, (endPos.x - startPos.x), (endPos.y - startPos.y));
+
+        CachedList.Clear();
+
+        Helper.LoopList_ForEach<GameObject>(objList, (GameObject go) =>
+        {
+            if (go != null)
+            {
+                if (CachedRect.Contains(cam.WorldToViewportPoint(go.transform.position), true))
+                {
+                    CachedList.Add(go);
+                }
+            }
+        });
+
+        return CachedList;
+    }
+
+    /// <summary>
+    /// Will return all the GameObjects within a selection area
+    /// </summary>
+    /// <param name="objList">List of objects to check within selection area</param>
+    /// <param name="startPos">Start selection position (ensure is in ViewPort space)</param>
+    /// <param name="endPos">End selection position (ensure is in ViewPort space)</param>
+    /// <param name="objLayerMask">A GameObject in the area needs to be in this layer to be valid</param>
+    /// <param name="cam">The camera to base the calculations off of</param>
+    /// <returns>A list of GameObjects in the area</returns>
+    public static List<GameObject> GetObjectsInViewport(List<GameObject> objList, Vector3 startPos, Vector3 endPos, LayerMask objLayerMask, Camera cam)
+    {
+        CachedRect = new Rect(startPos.x, startPos.y, (endPos.x - startPos.x), (endPos.y - startPos.y));
+
+        CachedList.Clear();
+
+        // Loop over the list to see which GameObjects are in the area
+        Helper.LoopList_ForEach<GameObject>(objList, (GameObject go) =>
+        {
+            if (go != null)
+            {
+                // Check if this GameObject is in the right layer
+                if (Helper.IsInLayerMask(objLayerMask, go.layer))
+                {
+                    // Determines whether the GameObject is in the selection area
+                    if (CachedRect.Contains(cam.WorldToViewportPoint(go.transform.position), true))
+                    {
+                        CachedList.Add(go);
+                    }
+                }
+            }
+        });
+
+        return CachedList;
     }
 
     #region SetMaterials

@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e41c6a08a2e6e984a8792527da849c08, type: 3}
-  m_Name: TestBuilding
+  m_Name: BuildSpawner
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
-  MoveAction: {fileID: 11400000, guid: d1b697571d9f34d4bbb5105f4e7c5690, type: 2}
+  MoveAction: {fileID: 11400000, guid: 3026ec13abb656d40838247efbcf0ad2, type: 2}
   BuildingPrefab: {fileID: 325476590979837097, guid: bbf7266ac68a39e40944da20701e1494,
     type: 3}
   DisplayBuilding: {fileID: 100000, guid: 90d8e09703679534295bd2cacb73d6de, type: 3}
   BuildingCost: {fileID: 11400000, guid: 2fb5720a0581644439b0cfdcc0bbc60c, type: 2}
-  BuildTime: 1
+  BuildTime: 2

@@ -13,18 +13,23 @@ namespace Unit_System
         [Tooltip("Identifier for long inspector lists")] public string SelectorInputName;
         [Tooltip("Input to bind to")] public InputActionReference InputAction = null;
         [Tooltip("Action to perform on key press")] public AIAction Action = null;
-
         public BoundInput BoundInput = new BoundInput();
+
+        public SelectorInput() { }
+        public SelectorInput(SelectorInput selectorInput)
+        {
+            if (selectorInput == null) return;
+
+            SelectorInputName = selectorInput.SelectorInputName;
+            InputAction = selectorInput.InputAction;
+            Action = selectorInput.Action;
+        }
     }
 
     public class DefaultUnitHandler : MonoBehaviour
     {
         public static DefaultUnitHandler Instance = null;
         
-        /// <summary>
-        /// List of currently managed units, all these units will have access to the SelectionInputs list while they are selected
-        /// </summary>
-        public List<UnitHandler> CurrentUnits = new List<UnitHandler>();
         [Tooltip("List of actions that can be performed by all Units if they choose")] public List<SelectorInput> SelectionInputs = new List<SelectorInput>();
 
         private bool isBound = false;
@@ -33,13 +38,6 @@ namespace Unit_System
         void Start()
         {
             Instance = this;
-
-            Helper.LoopList_ForEach<SelectorInput>(SelectionInputs, (SelectorInput s) =>
-            {
-                AddPerformedAction(s, OnActionPerformed);
-            });
-
-            BindAllDefaults();
         }
         public static void AddPerformedAction(SelectorInput s, Action<SelectorInput> performedAction)
         {
@@ -49,14 +47,6 @@ namespace Unit_System
             {
                 performedAction.Invoke(s);
             };
-        }
-
-        void OnActionPerformed(SelectorInput s)
-        {
-            Helper.LoopList_ForEach<UnitHandler>(CurrentUnits, (UnitHandler u) =>
-            {
-                u.PerformedAction(s);
-            });
         }
 
         public void BindAllDefaults()
