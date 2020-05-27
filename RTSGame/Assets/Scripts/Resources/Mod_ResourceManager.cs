@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using TMPro;
+using Mirror;
 
 namespace RTS_System
 {
@@ -110,6 +111,9 @@ namespace RTS_System
         }
     }
 
+    [Serializable]
+    public class SyncResourceDictionary : SyncDictionary<Mod_Resource, Mod_ResourceCache> { }
+
     public class Mod_ResourceManager : MonoBehaviour
     {
         public static Mod_ResourceManager Instance = null;
@@ -123,8 +127,11 @@ namespace RTS_System
         private Image resourceImage = null;
         private TextMeshProUGUI resourceText = null;
 
-        private Dictionary<Mod_Resource, Mod_ResourceCache> resourceCaches = new Dictionary<Mod_Resource, Mod_ResourceCache>();
-        
+       // private Dictionary<Mod_Resource, Mod_ResourceCache> syncedResources = new Dictionary<Mod_Resource, Mod_ResourceCache>();
+
+        [SyncVar]
+        private SyncResourceDictionary syncedResources = new SyncResourceDictionary();
+
         // Start is called before the first frame update
         void Start()
         {
@@ -140,7 +147,7 @@ namespace RTS_System
                 // Loop through all the resources in the game and spawn prefabs for them
                 foreach (Mod_Resource resource in Resources)
                 {
-                    if (resourceCaches.ContainsKey(resource))
+                    if (syncedResources.ContainsKey(resource))
                     {
                         DebugManager.WarningMessage($"Resource of name '{resource.ResourceName}' already exists!");
                     }
@@ -178,7 +185,7 @@ namespace RTS_System
                         cache.IncreaseValue(resource.ResourceStartCount);
 
                         // Add resource cache to dictionary
-                        resourceCaches.Add(resource, cache);
+                        syncedResources.Add(resource, cache);
                     }
                 }
 
@@ -198,9 +205,9 @@ namespace RTS_System
         {
             if (!resource) return false;
 
-            if (resourceCaches.ContainsKey(resource))
+            if (syncedResources.ContainsKey(resource))
             {
-                return resourceCaches[resource].IncreaseValue(amount);
+                return syncedResources[resource].IncreaseValue(amount);
             }
 
             return false;
@@ -214,9 +221,9 @@ namespace RTS_System
         {
             if (!resourceValue.ResourceType) return false;
 
-            if (resourceCaches.ContainsKey(resourceValue.ResourceType))
+            if (syncedResources.ContainsKey(resourceValue.ResourceType))
             {
-                return resourceCaches[resourceValue.ResourceType].IncreaseValue(resourceValue.TrueValue);
+                return syncedResources[resourceValue.ResourceType].IncreaseValue(resourceValue.TrueValue);
             }
 
             return false;
@@ -253,9 +260,9 @@ namespace RTS_System
             if (!resource) return false;
 
             // Checks if the resource is valid
-            if (resourceCaches.ContainsKey(resource))
+            if (syncedResources.ContainsKey(resource))
             {
-                return resourceCaches[resource].CanAfford(value);
+                return syncedResources[resource].CanAfford(value);
             }
 
             return false;
