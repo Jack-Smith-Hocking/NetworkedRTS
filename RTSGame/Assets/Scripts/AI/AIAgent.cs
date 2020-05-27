@@ -7,7 +7,6 @@ using UnityEngine.AI;
 
 namespace Unit_System
 {
-    //[RequireComponent(typeof(NavMeshAgent))]
     public class AIAgent : SelectableDefault
     {
         [Header("AIAgent Data")]

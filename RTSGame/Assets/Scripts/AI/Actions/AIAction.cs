@@ -6,6 +6,17 @@ namespace Unit_System
 {
     public abstract class AIAction : UtilityAction
     {
+        public string ActionName;
+        public static Dictionary<string, AIAction> ActionTable = new Dictionary<string, AIAction>();
+
+        private void OnEnable()
+        {
+            if (!name.Contains("Clone"))
+            {
+                ActionTable[ActionName] = this;
+            }
+        }
+
         public override float UpdateAction(AIAgent agent)
         {
             return EvaluateAction(agent);
@@ -52,6 +63,11 @@ namespace Unit_System
         /// </summary>
         /// <param name="agent">The AIAgent to affect</param>
         public virtual bool SelectionAction(AIAgent agent)
+        {
+            return false;
+        }
+
+        public virtual bool SetVariables(AIAgent agent, GameObject go, Vector3 vec)
         {
             return false;
         }

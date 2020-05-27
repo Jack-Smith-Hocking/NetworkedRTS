@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
+  ActionName: MoveToAttackTarget
   MoveAction: {fileID: 11400000, guid: ea83634b31a700144b8f18096c9e8b3f, type: 2}
   MaxFollowDistance: 1000
   CurrentTarget: {fileID: 0}

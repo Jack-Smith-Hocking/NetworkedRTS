@@ -7,7 +7,9 @@ public abstract class SelectableDefault : MonoBehaviour, ISelectable
 {
     protected virtual IEnumerator Start()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSecondsRealtime(1);
+
+        yield return new WaitWhile(() => { return Selector.Instance == null; });
 
         Helper.ListAdd<GameObject>(ref Selector.Instance.SceneSelectables, gameObject);
     }

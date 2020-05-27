@@ -6,13 +6,15 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Mirror;
 
 namespace Selector_System
 {
-    public class Selector : MonoBehaviour
+    public class Selector : NetworkBehaviour
     {
         public static Selector Instance = null;
 
+        public Camera SelectorCam = null;
         public LayerMask SelectionMask;
         public List<GameObject> SceneSelectables = new List<GameObject>();
 
@@ -40,12 +42,10 @@ namespace Selector_System
         private BoundInput multiSelectInput = new BoundInput();
         private BoundInput actionQueueInput = new BoundInput();
 
-        private Camera mainCam = null;
-
         // Start is called before the first frame update
         void Start()
         {
-            if (!Instance)
+            if (!Instance && isLocalPlayer)
             {
                 Instance = this;
             }
@@ -54,7 +54,10 @@ namespace Selector_System
                 return;
             }
 
-            mainCam = Camera.main;
+            if (!SelectorCam)
+            {
+                SelectorCam = Camera.main;
+            }
 
             // Set up the select action
             selectInput.PerformedActions += Select;
@@ -79,12 +82,12 @@ namespace Selector_System
 
             if (isDown)
             {
-                startPos = mainCam.ScreenToViewportPoint(Input.mousePosition);
+                startPos = SelectorCam.ScreenToViewportPoint(Input.mousePosition);
                 currentDragTime = Time.time;
             }
             else
             {
-                endPos = mainCam.ScreenToViewportPoint(Input.mousePosition);
+                endPos = SelectorCam.ScreenToViewportPoint(Input.mousePosition);
 
                 highlightedObjects.Clear();
 
@@ -101,6 +104,8 @@ namespace Selector_System
 
         private void Update()
         {
+            if (!isLocalPlayer) return;
+
             AddToActionList = actionQueueInput.CurrentBoolVal;
 
             currentSelectables.Clear();
@@ -128,9 +133,9 @@ namespace Selector_System
 
             if (isDown)
             {
-                endPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+                endPos = SelectorCam.ScreenToViewportPoint(Input.mousePosition);
 
-                highlightedObjects.AddRange(Helper.GetObjectsInViewport(SceneSelectables, startPos, endPos, SelectionMask, mainCam));
+                highlightedObjects.AddRange(Helper.GetObjectsInViewport(SceneSelectables, startPos, endPos, SelectionMask, SelectorCam));
 
                 currentSelectables.Clear();
                 Helper.LoopList_ForEach<GameObject>(highlightedObjects, (GameObject go) => 
@@ -148,7 +153,7 @@ namespace Selector_System
                 currentSelectables.Clear();
 
                 RaycastHit rayHit;
-                if (Physics.Raycast(mainCam.ScreenPointToRay(Input.mousePosition), out rayHit, Mathf.Infinity, SelectionMask))
+                if (Physics.Raycast(SelectorCam.ScreenPointToRay(Input.mousePosition), out rayHit, Mathf.Infinity, SelectionMask))
                 {
                     if (SceneSelectables.Contains(rayHit.collider.gameObject))
                     {
@@ -187,7 +192,7 @@ namespace Selector_System
         void SelectSingle(bool toggleOff = true)
         {
             RaycastHit rayHit;
-            if (Physics.Raycast(mainCam.ScreenPointToRay(Input.mousePosition), out rayHit, Mathf.Infinity, SelectionMask))
+            if (Physics.Raycast(SelectorCam.ScreenPointToRay(Input.mousePosition), out rayHit, Mathf.Infinity, SelectionMask))
             {
                 if (SceneSelectables.Contains(rayHit.collider.gameObject))
                 {
@@ -205,7 +210,7 @@ namespace Selector_System
 
         void SelectMultiple()
         {
-            Helper.LoopList_ForEach<GameObject>(Helper.GetObjectsInViewport(SceneSelectables, startPos, endPos, SelectionMask, mainCam), (GameObject obj) => { AddSelected(obj); });
+            Helper.LoopList_ForEach<GameObject>(Helper.GetObjectsInViewport(SceneSelectables, startPos, endPos, SelectionMask, SelectorCam), (GameObject obj) => { AddSelected(obj); });
             SelectSingle(false);
         }
 
@@ -232,6 +237,24 @@ namespace Selector_System
 
             currentSelectables.Clear();
             selectedObjects.Remove(obj);
+        }
+
+        [Command]
+        public void CmdAddAction(GameObject agent, string actionName, GameObject target, Vector3 targetPos, bool addToList)
+        {
+            if (!agent) return;
+
+            AIAgent ai = agent.GetComponent<AIAgent>();
+
+            if (ai && AIAction.ActionTable.ContainsKey(actionName))
+            {
+                AIAction action = Instantiate(AIAction.ActionTable[actionName]);
+
+                action.InitialiseAction(ai);
+                action.SetVariables(ai, target, targetPos);
+
+                ai.AddAction(action, addToList, false, false);
+            }
         }
     }
 }

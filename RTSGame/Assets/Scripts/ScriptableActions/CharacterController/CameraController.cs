@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace ScriptableActions.Character
 {
-    public class CameraController : MonoBehaviour
+    public class CameraController : NetworkBehaviour
     {
         [Header("Camera")]
         [Tooltip("The camera to be controller by input")] public Camera CameraToAffect = null;
@@ -81,6 +82,8 @@ namespace ScriptableActions.Character
         // Start is called before the first frame update
         public void Start()
         {
+            if (!isLocalPlayer) return;
+
             currentCameraDistance = Mathf.Clamp(StartCameraDistance, MinCameraDistance, MaxCameraDistance);
             targetCameraDistance = currentCameraDistance;
 
@@ -133,6 +136,8 @@ namespace ScriptableActions.Character
 
         public void UpdateCamera()
         {
+            if (!isLocalPlayer) return;
+
             isGamepad = PlayerInput.currentControlScheme == "Gamepad";
             
             // Rotate the ObjectToFocusOn and ObjectToRotate GameObjects
@@ -219,6 +224,8 @@ namespace ScriptableActions.Character
         /// <returns></returns>
         bool CheckLineOfSight()
         {
+            if (!cameraTransform) return false;
+
             RaycastHit hit;
             Ray ray = new Ray(offseetPosition, -cameraTransform.forward);
 

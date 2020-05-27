@@ -192,5 +192,26 @@ namespace Unit_System
 
             return validTarget;
         }
+
+        public override bool SetVariables(AIAgent agent, GameObject go, Vector3 vec)
+        {
+            bool valid = false;
+
+            if (MoveAction)
+            {
+                valid = MoveAction.SetVariables(agent, go, vec);
+            }
+
+            if (valid)
+            {
+                BuyBuilding();
+            }
+            else
+            {
+                CanAfford = false;
+            }
+
+            return valid;
+        }
     }
 }

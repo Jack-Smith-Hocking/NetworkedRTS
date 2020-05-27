@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Selector_System;
 using System;
+using System.Security.AccessControl;
 
 namespace Unit_System
 {
@@ -48,7 +49,12 @@ namespace Unit_System
         {
             if (s != null && s.Action != null)
             {
-                Agent.AddAction(s.Action, Selector.Instance.AddToActionList, true, true);
+                RaycastHit rayHit;
+                if (Physics.Raycast(Selector.Instance.SelectorCam.ScreenPointToRay(Input.mousePosition), out rayHit))
+                {
+                    Selector.Instance.CmdAddAction(Agent.gameObject, s.Action.ActionName, rayHit.collider.gameObject, rayHit.point, Selector.Instance.AddToActionList);
+                }
+                //Agent.AddAction(s.Action, Selector.Instance.AddToActionList, true, true);
             }
         }
 

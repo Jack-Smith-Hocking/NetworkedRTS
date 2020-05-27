@@ -98,7 +98,7 @@ namespace Unit_System
         {
             if (TargetAction)
             {
-                TargetAction.SelectionAction(agent);
+                bool validTarget = TargetAction.SelectionAction(agent);
 
                 if (TargetAction.CurrentTarget)
                 {
@@ -106,11 +106,33 @@ namespace Unit_System
 
                     if (targetHealth)
                     {
-                        targetHealth.OnDeathEvent.AddListener(() => { targetHealth = null; });
+                        targetHealth.OnDeathEvent.AddListener(() => { targetHealth = null; TargetAction.CurrentTarget = null; });
                     }
                 }
 
-                return targetHealth != null;
+                return targetHealth != null && validTarget;
+            }
+
+            return false;
+        }
+
+        public override bool SetVariables(AIAgent agent, GameObject go, Vector3 vec)
+        {
+            if (TargetAction)
+            {
+                bool validTarget = TargetAction.SetVariables(agent, go, vec);
+
+                if (TargetAction.CurrentTarget)
+                {
+                    targetHealth = TargetAction.CurrentTarget.GetComponentInChildren<Health>();
+
+                    if (targetHealth)
+                    {
+                        targetHealth.OnDeathEvent.AddListener(() => { targetHealth = null; TargetAction.CurrentTarget = null; });
+                    }
+                }
+
+                return targetHealth != null && validTarget;
             }
 
             return false;

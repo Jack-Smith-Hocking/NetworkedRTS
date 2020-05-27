@@ -82,6 +82,23 @@ namespace Unit_System
 
             return false;
         }
+
+        public override bool SetVariables(AIAgent agent, GameObject go, Vector3 vec)
+        {
+            bool valid = false;
+
+            if (agent)
+            {
+                PatrolPath.Clear();
+
+                PatrolPath.Add(vec);
+                PatrolPath.Add(agent.transform.position);
+
+                valid = MoveAction.SetVariables(agent, go, vec);
+            }
+
+            return valid;
+        }
     }
 }
 

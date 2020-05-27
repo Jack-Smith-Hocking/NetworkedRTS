@@ -6,6 +6,7 @@ namespace Selector_System
 {
     public class SelectorUI : MonoBehaviour
     {
+        public Camera SelectorCam = null;
         public RectTransform SelectorTrans = null;
 
         private Vector3 startPos;
@@ -14,6 +15,11 @@ namespace Selector_System
         private void Start()
         {
             SelectorTrans.gameObject.SetActive(false);
+
+            if (!SelectorCam)
+            {
+                SelectorCam = Camera.main;
+            }
         }
 
         private void Update()
@@ -21,7 +27,7 @@ namespace Selector_System
             if (Input.GetMouseButtonDown(0))
             {
                 RaycastHit rayHit;
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
+                if (Physics.Raycast(SelectorCam.ScreenPointToRay(Input.mousePosition), out rayHit))
                 {
                     startPos = rayHit.point;
 
@@ -45,7 +51,7 @@ namespace Selector_System
         {
             //The start position of the square is in 3d space, or the first coordinate will move
             //as we move the camera which is not what we want
-            Vector3 squareStartScreen = Camera.main.WorldToScreenPoint(startPos);
+            Vector3 squareStartScreen = SelectorCam.WorldToScreenPoint(startPos);
 
             squareStartScreen.z = 0f;
 

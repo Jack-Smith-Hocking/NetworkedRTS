@@ -28,6 +28,8 @@ namespace Unit_System
 
         public override float UpdateAction(AIAgent agent)
         {
+            if (!CurrentTarget || !MoveAction) return 0.0f;
+
             bool outsideTargetRange = Vector3.Distance(agent.transform.position, CurrentTarget.transform.position) >= MoveAction.StoppingAccuracy;
 
             if (MoveAction && CurrentTarget && outsideTargetRange)
@@ -91,10 +93,26 @@ namespace Unit_System
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
             {
                 CurrentTarget = rayHit.collider.transform;
-                return true;
+                return MoveAction.SelectionAction(agent);
             }
 
             return false;
+        }
+
+        public override bool SetVariables(AIAgent agent, GameObject go, Vector3 vec)
+        {
+            bool valid = false;
+            if (MoveAction)
+            {
+                valid = MoveAction.SetVariables(agent, go, vec);
+
+                if (valid)
+                {
+                    CurrentTarget = go.transform;
+                }
+            }
+
+            return valid;
         }
     }
 }

@@ -98,5 +98,30 @@ namespace Unit_System
 
             return canCreateUnit;
         }
+
+        public override bool SetVariables(AIAgent agent, GameObject go, Vector3 vec)
+        {
+            canCreateUnit = false;
+
+            if (BuildAction)
+            {
+                if (BuildAction.MoveAction)
+                {
+                    canCreateUnit = BuildAction.MoveAction.SetVariables(agent, go, vec);
+
+                    if (Vector3.Distance(BuildAction.MoveAction.CurrentTarget, agent.transform.position) > MaxSpawnDist)
+                    {
+                        canCreateUnit = false;
+                    }
+                }
+
+                if (canCreateUnit)
+                {
+                    BuildAction.BuyBuilding();
+                }
+            }
+
+            return canCreateUnit;
+        }
     }
 }

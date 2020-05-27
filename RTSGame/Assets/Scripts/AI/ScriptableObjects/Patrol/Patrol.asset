@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
+  ActionName: PatrolPoint
   MoveAction: {fileID: 11400000, guid: 27c80a447a601a14b88a81d4baf4f9bc, type: 2}
   PatrolPath: []

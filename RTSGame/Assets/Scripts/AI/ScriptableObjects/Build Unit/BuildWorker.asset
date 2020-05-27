@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
+  ActionName: BuildWorker
   BuildAction: {fileID: 11400000, guid: 2ec720988ea3f244c98cc532ad54d334, type: 2}
   MaxSpawnDist: 50

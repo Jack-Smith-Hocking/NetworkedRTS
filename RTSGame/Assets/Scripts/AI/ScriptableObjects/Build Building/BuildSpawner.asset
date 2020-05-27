@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
+  ActionName: BuildSpawner
   MoveAction: {fileID: 11400000, guid: 3026ec13abb656d40838247efbcf0ad2, type: 2}
   BuildingPrefab: {fileID: 325476590979837097, guid: bbf7266ac68a39e40944da20701e1494,
     type: 3}

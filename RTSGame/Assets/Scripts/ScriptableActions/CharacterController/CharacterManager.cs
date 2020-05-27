@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using Mirror;
 
 namespace ScriptableActions.Character
 {
@@ -53,6 +54,8 @@ namespace ScriptableActions.Character
         // Start is called before the first frame update
         void Start()
         {
+            //if (!isLocalPlayer) return;
+
             // Set up Actions
             if (WalkAction != null)
             {

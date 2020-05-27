@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
+  ActionName: MoveToAttackPoint
   MovementLayers:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 1024
   StoppingAccuracy: 25
   EvaluationValue: 0
   CurrentTarget: {x: 0, y: 0, z: 0}

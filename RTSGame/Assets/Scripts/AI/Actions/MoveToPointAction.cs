@@ -78,5 +78,26 @@ namespace Unit_System
 
             return false;
         }
+
+        public override bool SetVariables(AIAgent agent, GameObject go, Vector3 vec)
+        {
+            bool valid = false;
+
+            if (go)
+            {
+                if (Helper.IsInLayerMask(MovementLayers, go.layer))
+                {
+                    CurrentTarget = vec;
+                    valid = true;
+                }
+            }
+            else
+            {
+                CurrentTarget = vec;
+                valid = true;
+            }
+
+            return valid;
+        }
     }
 }

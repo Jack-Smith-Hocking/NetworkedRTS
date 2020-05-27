@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
+  ActionName: DirectedAttack
   AttackDamage: 2
   AttackCooldown: 2
   TargetAction: {fileID: 11400000, guid: db9617900d7d4db49a09fa1b83b8fa98, type: 2}
