@@ -22,7 +22,7 @@ MonoBehaviour:
         m_Bits: 512
       StoppingDistance: 10
       CurrentTarget: {x: 0, y: 0, z: 0}
-    MaxFollowDistance: 100
-    RepositionTime: 0.5
+    MaxFollowDistance: 500
+    RepositionTime: 0
     CurrentTarget: {fileID: 0}
     CurrentRepositionTime: 0

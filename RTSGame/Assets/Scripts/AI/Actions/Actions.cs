@@ -40,7 +40,6 @@ namespace RTS_System.AI
         public override bool HasCompleted(AIAgent agent)
         {
             return agent.NavAgent.remainingDistance <= StoppingDistance;
-            //return (Vector3.Distance(CurrentTarget, agent.transform.position) <= StoppingDistance);
         }
 
         public override void Execute(AIAgent agent)
@@ -116,21 +115,20 @@ namespace RTS_System.AI
         {
             if (Helper.IsNullOrDestroyed<Transform>(CurrentTarget)) return;
 
-            bool closeEnoughToTarget = MoveToPoint.HasCompleted(agent);
-
-            if (Time.time > CurrentRepositionTime && !closeEnoughToTarget)
+            if (Time.time > CurrentRepositionTime)
             {
                 CurrentRepositionTime = Time.time + RepositionTime;
 
                 MoveToPoint.CurrentTarget = CurrentTarget.position;
                 MoveToPoint.Execute(agent);
             }
-            else if (closeEnoughToTarget)
+
+            MoveToPoint.Update(agent);
+
+            if (!agent.NavAgent.pathPending && MoveToPoint.HasCompleted(agent))
             {
                 agent.NavAgent.ResetPath();
             }
-
-            MoveToPoint.Update(agent);
         }
 
         public override void Execute(AIAgent agent)
