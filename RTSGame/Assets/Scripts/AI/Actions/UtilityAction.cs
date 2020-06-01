@@ -8,7 +8,7 @@ namespace RTS_System.AI
     {
         [Header("Action Data")]
         [Tooltip("An icon to be displayed for this Action wherever visual representation is necessary")] public Sprite ActionIcon = null;
-        [Tooltip("A description for this Action to be displayed whenever one is necessary")] public string ActionDescription;
+        [TextArea] [Tooltip("A description for this Action to be displayed whenever one is necessary")] public string ActionDescription;
 
         /// <summary>
         /// Sets up any necessary data 

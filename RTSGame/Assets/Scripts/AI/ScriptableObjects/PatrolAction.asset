@@ -9,12 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0c48aa74906a6e4d8fad41a7e67cc33, type: 3}
-  m_Name: DirectedAttack
+  m_Script: {fileID: 11500000, guid: 0ec9e19e0c88fff489d64538065e54bf, type: 3}
+  m_Name: PatrolAction
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
-  ActionName: DirectedAttack
-  AttackDamage: 2
-  AttackCooldown: 2
-  TargetAction: {fileID: 11400000, guid: db9617900d7d4db49a09fa1b83b8fa98, type: 2}
+  ActionName: PatrolAction
+  PatrolData:
+    MoveToPoint:
+      MovementLayers:
+        serializedVersion: 2
+        m_Bits: 256
+      StoppingDistance: 10
+      CurrentTarget: {x: 0, y: 0, z: 0}
+    PatrolPath: []
+    CurrentPathIndex: 0

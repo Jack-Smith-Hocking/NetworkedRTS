@@ -10,11 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 17ccce55900ad3a4297d3e92011cb334, type: 3}
-  m_Name: MoveToTarget
+  m_Name: MoveToTatgetAction
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
-  ActionName: MoveToAttackTarget
-  MoveAction: {fileID: 11400000, guid: ea83634b31a700144b8f18096c9e8b3f, type: 2}
-  MaxFollowDistance: 1000
-  CurrentTarget: {fileID: 0}
+  ActionName: MoveToTargetAction
+  MoveToTarget:
+    MoveToPoint:
+      MovementLayers:
+        serializedVersion: 2
+        m_Bits: 512
+      StoppingDistance: 10
+      CurrentTarget: {x: 0, y: 0, z: 0}
+    MaxFollowDistance: 100
+    RepositionTime: 0.5
+    CurrentTarget: {fileID: 0}
+    CurrentRepositionTime: 0

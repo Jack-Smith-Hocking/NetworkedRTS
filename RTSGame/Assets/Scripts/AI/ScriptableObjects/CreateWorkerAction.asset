@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ec9e19e0c88fff489d64538065e54bf, type: 3}
-  m_Name: Patrol
+  m_Script: {fileID: 11500000, guid: e41c6a08a2e6e984a8792527da849c08, type: 3}
+  m_Name: CreateWorkerAction
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
-  ActionName: PatrolPoint
-  MoveAction: {fileID: 11400000, guid: 27c80a447a601a14b88a81d4baf4f9bc, type: 2}
-  PatrolPath: []
+  ActionName: CreateWorkerAction
