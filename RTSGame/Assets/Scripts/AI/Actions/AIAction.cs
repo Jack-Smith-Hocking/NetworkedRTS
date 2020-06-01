@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Unit_System
+namespace RTS_System.AI
 {
     public abstract class AIAction : UtilityAction
     {

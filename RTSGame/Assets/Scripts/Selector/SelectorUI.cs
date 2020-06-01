@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Selector_System
+namespace RTS_System.Selection
 {
     public class SelectorUI : MonoBehaviour
     {

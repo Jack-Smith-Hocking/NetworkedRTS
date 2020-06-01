@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 /// <summary>
 /// Binds and unbinds actions to inputs
@@ -198,6 +200,12 @@ public static class Helper
     public static List<GameObject> CachedList = new List<GameObject>();
     public static Rect CachedRect;
 
+    /// <summary>
+    /// Will add a list to another list, but will check if each element of the additive list is already in the original
+    /// </summary>
+    /// <typeparam name="T">The type of data being worked with</typeparam>
+    /// <param name="originalList">The list to add to</param>
+    /// <param name="addList">The list to add</param>
     public static void ListAddRange<T>(ref List<T> originalList, List<T> addList)
     {
         foreach (T elem in addList)
@@ -206,18 +214,52 @@ public static class Helper
         }
     }
 
+    /// <summary>
+    /// Will add a item to a list if the item isn't already in it
+    /// </summary>
+    /// <typeparam name="T">The type of data being worked with</typeparam>
+    /// <param name="originalList">The list to add to"</param>
+    /// <param name="addObj">The object to add</param>
     public static void ListAdd<T>(ref List<T> originalList, T addObj)
     {
-        if (addObj != null && originalList != null)
+        if ((!IsNullOrDestroyed<T>(addObj)) && originalList != null)
         {
+            // If there are no elements in the list, add
             if (originalList.Count == 0)
             {
                 originalList.Add(addObj);
             }
+            // If the obj is not in the list, add
             else if (!originalList.Contains(addObj))
             {
                 originalList.Add(addObj);
             }
+        }
+    }
+
+    public static void TrimElement<T>(ref List<T> trimList, T trimObj)
+    {
+        if (trimList != null && trimList.Count > 0)
+        {
+            trimList.Remove(trimObj);
+        }
+    }
+    public static void TrimElements<T>(ref List<T> listToTrim, List<T> trimList)
+    {
+        if (listToTrim != null && trimList != null)
+        {
+            foreach (T elem in trimList)
+            {
+                TrimElement<T>(ref listToTrim, elem);
+            }
+        }
+    }
+
+    public static void TrimList<T>(ref List<T> listToTrim)
+    {
+        if (listToTrim != null)
+        {
+            TrimElements<T>(ref listToTrim, GetNullOrDestroyed<T>(listToTrim));
         }
     }
 
@@ -228,18 +270,16 @@ public static class Helper
     /// <param name="loopList">The list to affect</param>
     /// <param name="loopAction">The action to perform on each element of the list</param>
     /// <param name="breakOut">An optional Func<bool> that will determine any break conditions for the loop</bool></param>
-    /// <returns>Will return a list of null objects in the loopList, is cut short if the breakOut is triggered</returns>
-    public static List<T> LoopList_ForEach<T>(List<T> loopList, Action<T> loopAction, Func<bool> breakOut = null)
+    public static void LoopList_ForEach<T>(List<T> loopList, Action<T> loopAction, Func<bool> breakOut = null)
     {
-        List<T> nullObjs = new List<T>(loopList.Count);
-
+        // Check if the list and action are both valid
         if (loopList != null && loopAction != null)
         {
+            // Loop through the list and perform an action
             foreach (T loopVal in loopList)
             {
-                if (loopVal == null || loopVal.Equals(null))
+                if (IsNullOrDestroyed<T>(loopVal))
                 {
-                    nullObjs.Add(loopVal);
                     continue;
                 }
 
@@ -248,8 +288,6 @@ public static class Helper
                 if (breakOut != null && breakOut()) break;
             }
         }
-
-        return nullObjs;
     }
     /// <summary>
     /// Loop through a list of type T (For Loop) and execute an action on each element
@@ -258,11 +296,8 @@ public static class Helper
     /// <param name="loopList">The list to affect</param>
     /// <param name="loopAction">The action to perform on each element of the list</param>
     /// <param name="breakOut">An optional Func<bool> that will determine any break conditions for the loop</param>
-    /// <returns>Will return a list of null objects in the loopList, is cut short if the breakOut is triggered</returns>
-    public static List<T> LoopList_For<T>(List<T> loopList, Action<T> loopAction, Func<bool> breakOut = null)
+    public static void LoopList_For<T>(List<T> loopList, Action<T> loopAction, Func<bool> breakOut = null)
     {
-        List<T> nullObjs = new List<T>(loopList.Count);
-
         if (loopList != null && loopAction != null)
         {
             T loopVal = default;
@@ -271,9 +306,8 @@ public static class Helper
             {
                 loopVal = loopList[i];
 
-                if (loopVal == null || loopVal.Equals(null))
+                if (IsNullOrDestroyed<T>(loopVal))
                 {
-                    nullObjs.Add(loopVal);
                     continue;
                 }
 
@@ -282,8 +316,6 @@ public static class Helper
                 if (breakOut != null && breakOut()) break;
             }
         }
-
-        return nullObjs;
     }
 
     /// <summary>
@@ -295,29 +327,20 @@ public static class Helper
     /// <returns>A valid position on the NavMesh</returns>
     public static Vector3 RandomNavSphere(Vector3 origin, float dist, int areaMask)
     {
-        Vector3 rand_direction = UnityEngine.Random.insideUnitSphere * dist;
+        Vector3 rand_direction = UnityEngine.Random.insideUnitSphere * Mathf.Abs(dist);
 
         rand_direction += origin;
 
-        if (rand_direction.magnitude > 100000)
-        {
-            Debug.LogError("thing");
-        }
-
         NavMeshHit navHit;
 
-        bool foundPos = NavMesh.SamplePosition(rand_direction, out navHit, dist, areaMask);
+        bool foundPos = NavMesh.SamplePosition(rand_direction, out navHit, Mathf.Abs(dist), areaMask);
         if (foundPos == false)
         {
-            foundPos = NavMesh.SamplePosition(origin, out navHit, dist, areaMask);
+            foundPos = NavMesh.SamplePosition(origin, out navHit, Mathf.Abs(dist), areaMask);
 
             if (foundPos == false)
             {
                 return RandomNavSphere(origin, dist * 1.5f, areaMask);
-            }
-            else
-            {
-                return origin;
             }
         }
 
@@ -325,7 +348,7 @@ public static class Helper
     }
 
     /// <summary>
-    /// Will loop (For Each) through a list and see if the GameObject is in it. Ensure the list is a list of MonoBehavioours, checks are in place to reject anything else
+    /// Will loop (For Each) through a list and see if the GameObject is in it. Ensure the list is a list of MonoBehavioours, checks are in place to reject anything else (Modifies 'CachedList')
     /// </summary>
     /// <typeparam name="T">The type of list, will need to be a MonoBehaviour or child of a MonoBehaviour</typeparam>
     /// <param name="monoList">TThe list to check in</param>
@@ -397,8 +420,21 @@ public static class Helper
         return mask == (mask | (1 << layer));
     }
 
-    public static List<GameObject> GetObjectsInViewport(List<GameObject> objList, Vector3 startPos, Vector3 endPos, Camera cam)
+    /// <summary>
+    /// Will return all the GameObjects within a selection area (Modifies 'CachedList')
+    /// </summary>
+    /// <param name="objList">List of objects to check within selection area</param>
+    /// <param name="startPos">Start selection position (ensure is in ViewPort space)</param>
+    /// <param name="endPos">End selection position (ensure is in ViewPort space)</param>
+    /// <param name="cam">The camera to base the calculations off of</param>
+    /// <returns>A list of GameObjects in the area</returns> 
+    public static List<GameObject> GetObjectsInViewport(List<GameObject> objList, Camera cam, Vector3 startPos, Vector3 endPos)
     {
+        if (objList == null || cam == null)
+        {
+            return null;
+        }
+
         CachedRect = new Rect(startPos.x, startPos.y, (endPos.x - startPos.x), (endPos.y - startPos.y));
 
         CachedList.Clear();
@@ -418,7 +454,7 @@ public static class Helper
     }
 
     /// <summary>
-    /// Will return all the GameObjects within a selection area
+    /// Will return all the GameObjects within a selection area (Modifies 'CachedList')
     /// </summary>
     /// <param name="objList">List of objects to check within selection area</param>
     /// <param name="startPos">Start selection position (ensure is in ViewPort space)</param>
@@ -426,8 +462,13 @@ public static class Helper
     /// <param name="objLayerMask">A GameObject in the area needs to be in this layer to be valid</param>
     /// <param name="cam">The camera to base the calculations off of</param>
     /// <returns>A list of GameObjects in the area</returns>
-    public static List<GameObject> GetObjectsInViewport(List<GameObject> objList, Vector3 startPos, Vector3 endPos, LayerMask objLayerMask, Camera cam)
+    public static List<GameObject> GetObjectsInViewport(List<GameObject> objList, Camera cam, Vector3 startPos, Vector3 endPos, LayerMask objLayerMask)
     {
+        if (objList == null || cam == null)
+        {
+            return null;
+        }
+
         CachedRect = new Rect(startPos.x, startPos.y, (endPos.x - startPos.x), (endPos.y - startPos.y));
 
         CachedList.Clear();
@@ -450,6 +491,30 @@ public static class Helper
         });
 
         return CachedList;
+    }
+
+    public static bool IsNullOrDestroyed<T>(T obj)
+    {
+        return (obj == null) || (obj.Equals(null));
+    }
+    public static List<T> GetNullOrDestroyed<T>(List<T> listToCheck)
+    {
+        if (listToCheck == null || listToCheck.Count == 0)
+        {
+            return null;
+        }
+
+        List<T> nullList = new List<T>(listToCheck.Count);
+
+        foreach (T elem in listToCheck)
+        {
+            if (IsNullOrDestroyed<T>(elem))
+            {
+                nullList.Add(elem);
+            }
+        }
+
+        return nullList;
     }
 
     #region SetMaterials
@@ -478,7 +543,7 @@ public static class Helper
     }
 
     /// <summary>
-    /// Set the material of all GameObjects in the list (only the first Renderer on the GameObject)
+    /// Set the material of all GameObjects in the list (only the first Renderer on the GameObject) (Modifies 'CachedRenderer')
     /// </summary>
     /// <param name="list">List of GameObjects to update</param>
     /// <param name="mat">The material to change to</param>
@@ -490,7 +555,7 @@ public static class Helper
         Helper.LoopList_ForEach<GameObject>(list, (GameObject obj) => { SetMaterial(obj, mat); }, breakOut);
     }
     /// <summary>
-    /// Set the material of a GameObject
+    /// Set the material of a GameObject (Modifies 'CachedRenderer')
     /// </summary>
     /// <param name="obj">GameObject to update</param>
     /// <param name="mat">Material to update to</param>
@@ -502,7 +567,6 @@ public static class Helper
         if (CachedRenderer)
         {
             CachedRenderer.material = mat;
-            CachedRenderer = null;
         }
     }
     #endregion

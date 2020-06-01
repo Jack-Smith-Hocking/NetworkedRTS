@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Selector_System;
+using RTS_System;
 
-namespace Unit_System
+namespace RTS_System.AI
 {
     [System.Serializable]
     public class SelectorInput

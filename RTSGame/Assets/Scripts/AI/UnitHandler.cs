@@ -1,12 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using Selector_System;
-using System;
-using System.Security.AccessControl;
+using RTS_System.Selection;
 
-namespace Unit_System
+namespace RTS_System.AI
 {
     [RequireComponent(typeof(AIAgent))]
     public class UnitHandler : SelectableDefault

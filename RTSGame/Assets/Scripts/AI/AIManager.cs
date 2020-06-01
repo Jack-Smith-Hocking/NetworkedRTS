@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Unit_System
+namespace RTS_System.AI
 {
     public class AIManager : MonoBehaviour
 

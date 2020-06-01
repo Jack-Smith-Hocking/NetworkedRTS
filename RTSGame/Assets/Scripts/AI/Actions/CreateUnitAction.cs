@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Unit_System
+namespace RTS_System.AI
 {
     [CreateAssetMenu(fileName = "New CreateUnitAction", menuName = "ScriptableObject/RTS/AI/CreateUnit")]
     public class CreateUnitAction : AIAction

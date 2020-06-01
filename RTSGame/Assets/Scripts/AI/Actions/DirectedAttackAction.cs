@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.XR.OpenVR;
 using UnityEngine;
 
-namespace Unit_System
+namespace RTS_System.AI
 {
     [CreateAssetMenu(fileName = "New DirectedAttack", menuName = "ScriptableObject/RTS/AI/DirectedAttack")]
     public class DirectedAttackAction : AIAction

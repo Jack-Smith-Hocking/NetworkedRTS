@@ -1,14 +1,13 @@
-﻿using Unit_System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Mirror;
+using RTS_System.AI;    
 
-namespace Selector_System
+namespace RTS_System.Selection
 {
     public class Selector : NetworkBehaviour
     {
@@ -135,7 +134,7 @@ namespace Selector_System
             {
                 endPos = SelectorCam.ScreenToViewportPoint(Input.mousePosition);
 
-                highlightedObjects.AddRange(Helper.GetObjectsInViewport(SceneSelectables, startPos, endPos, SelectionMask, SelectorCam));
+                highlightedObjects.AddRange(Helper.GetObjectsInViewport(SceneSelectables, SelectorCam, startPos, endPos, SelectionMask));
 
                 currentSelectables.Clear();
                 Helper.LoopList_ForEach<GameObject>(highlightedObjects, (GameObject go) => 
@@ -210,7 +209,7 @@ namespace Selector_System
 
         void SelectMultiple()
         {
-            Helper.LoopList_ForEach<GameObject>(Helper.GetObjectsInViewport(SceneSelectables, startPos, endPos, SelectionMask, SelectorCam), (GameObject obj) => { AddSelected(obj); });
+            Helper.LoopList_ForEach<GameObject>(Helper.GetObjectsInViewport(SceneSelectables, SelectorCam, startPos, endPos, SelectionMask), (GameObject obj) => { AddSelected(obj); });
             SelectSingle(false);
         }
 

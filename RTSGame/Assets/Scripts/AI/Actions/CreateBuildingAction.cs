@@ -1,10 +1,9 @@
-﻿using RTS_System;
+﻿using RTS_System.Resource;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
-namespace Unit_System
+namespace RTS_System.AI
 {
     [CreateAssetMenu(fileName = "New CreateBuldingAction", menuName = "ScriptableObject/RTS/AI/CreateBuilding")]
     public class CreateBuildingAction : AIAction

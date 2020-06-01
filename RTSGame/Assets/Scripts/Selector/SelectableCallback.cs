@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Selector_System
+namespace RTS_System.Selection
 {
     public class SelectableCallback : SelectableDefault
     {

@@ -1,11 +1,11 @@
 ﻿using Pixelplacement;
-using Selector_System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using RTS_System.Selection;
 
-namespace Unit_System
+namespace RTS_System.AI
 {
     public class AIAgent : SelectableDefault
     {
@@ -16,13 +16,15 @@ namespace Unit_System
         [Tooltip("Current actions")] public List<AIAction> actionQueue = new List<AIAction>();
         public AIAction currentAction = null;
 
+        public Player AgentOwner = null;
+
         private AIAction cachedAction = null;
 
         // Start is called before the first frame update
         protected override IEnumerator Start()
         {
             yield return base.Start();
-
+            
             // Get copies of the PossibleActions list
             for (int i = 0; i < PossibleActions.Count; i++)
             {
