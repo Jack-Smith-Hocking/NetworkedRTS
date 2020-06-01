@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace RTS_System.Selection
 {
-    public class SelectableCallback : SelectableDefault
+    public class SelectableCallback : DefaultSelectable
     {
         [Header("ISelectable Callbacks")]
         public UnityEvent OnHoverEvent;

@@ -11,8 +11,6 @@ namespace RTS_System.Selection
 {
     public class Selector : NetworkBehaviour
     {
-        public static Selector Instance = null;
-
         public Camera SelectorCam = null;
         public LayerMask SelectionMask;
         public List<GameObject> SceneSelectables = new List<GameObject>();
@@ -44,14 +42,7 @@ namespace RTS_System.Selection
         // Start is called before the first frame update
         void Start()
         {
-            if (!Instance && isLocalPlayer)
-            {
-                Instance = this;
-            }
-            else
-            {
-                return;
-            }
+            if (!isLocalPlayer) return;
 
             if (!SelectorCam)
             {

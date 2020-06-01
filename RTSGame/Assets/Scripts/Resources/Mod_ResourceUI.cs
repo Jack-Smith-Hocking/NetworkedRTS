@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System.Security.Policy;
+using Mirror;
 
-namespace RTS_System
+namespace RTS_System.Resource
 {
     public class Mod_ResourceUI : MonoBehaviour
     {
@@ -58,6 +58,21 @@ namespace RTS_System
             {
                 resourceUIDict[resource.ResourceName].text = $"{resource.ResourceName}: {resourceCount}";
             }
-        }    
+        }
+        public void UpdateResourceUI(string resource, int resourceCount)
+        {
+            if (resourceUIDict.ContainsKey(resource))
+            {
+                resourceUIDict[resource].text = $"{resource}: {resourceCount}";
+            }
+        }
+
+        public void UpdateUI(Mod_ResourceManager resourceManager)
+        {
+            foreach (var elem in resourceManager.SyncedResources)
+            {
+                UpdateResourceUI(elem.Key, elem.Value.CurrentResourceValue);
+            }
+        }
     }
 }

@@ -35,6 +35,11 @@ namespace RTS_System.AI
                 MoveAction = Instantiate(MoveAction);
                 MoveAction.InitialiseAction(agent);
             }
+            if (BuildingCost)
+            {
+                BuildingCost = Instantiate(BuildingCost);
+                BuildingCost.ResourceManager = agent.AgentOwner.PlayerResourceManager;
+            }
         }
         public override bool HasActionCompleted(AIAgent agent)
         {
@@ -136,9 +141,13 @@ namespace RTS_System.AI
             // If the action was cancelled before the building was built then resources will be refunded 
             if (CanAfford && BuildingCost && building == null)
             {
-                Helper.LoopList_ForEach<Mod_ResourceValue>(BuildingCost.ResourceCosts, (Mod_ResourceValue rc) =>
+                //Helper.LoopList_ForEach<Mod_ResourceValue>(BuildingCost.ResourceCosts, (Mod_ResourceValue rc) =>
+                //{
+                //    agent.AgentOwner.PlayerResourceManager.AddResource(rc.ResourceType, rc.TrueValue * -1);
+                //});
+                Helper.LoopList_ForEach<Mod_ResourceValue>(BuildingCost.ResourceCosts, (Mod_ResourceValue rv) =>
                 {
-                    Mod_ResourceManager.Instance.AddResource(rc.ResourceType, rc.TrueValue * -1);
+                    agent.AgentOwner.PlayerResourceManager.ServAddToSynceDict(rv.ResourceType.ResourceName, rv.TrueValue * -1);
                 });
             }
 
@@ -148,7 +157,7 @@ namespace RTS_System.AI
             }
         }
 
-        public void BuyBuilding()
+        public void BuyBuilding(AIAgent agent)
         {
             // Check if the building is affordable
             if (BuildingCost)
@@ -157,7 +166,11 @@ namespace RTS_System.AI
 
                 if (CanAfford)
                 {
-                    Mod_ResourceManager.Instance.AddResources(BuildingCost.ResourceCosts);
+                    Helper.LoopList_ForEach<Mod_ResourceValue>(BuildingCost.ResourceCosts, (Mod_ResourceValue rv) =>
+                    {
+                        agent.AgentOwner.PlayerResourceManager.ServAddToSynceDict(rv.ResourceType.ResourceName, rv.TrueValue);
+                    });
+                    //agent.AgentOwner.PlayerResourceManager.AddResources(BuildingCost.ResourceCosts);
 
                     if (MoveAction)
                     {
@@ -182,7 +195,7 @@ namespace RTS_System.AI
 
             if (validTarget)
             {
-                BuyBuilding();
+                BuyBuilding(agent);
             }
             else
             {
@@ -203,7 +216,7 @@ namespace RTS_System.AI
 
             if (valid)
             {
-                BuyBuilding();
+                BuyBuilding(agent);
             }
             else
             {

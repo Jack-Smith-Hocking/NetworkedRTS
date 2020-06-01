@@ -4,15 +4,13 @@ using UnityEngine;
 
 namespace RTS_System.Selection
 {
-    public abstract class SelectableDefault : MonoBehaviour, ISelectable
+    public abstract class DefaultSelectable : MonoBehaviour, ISelectable
     {
         protected virtual IEnumerator Start()
         {
             yield return new WaitForSecondsRealtime(1);
 
-            yield return new WaitWhile(() => { return Selector.Instance == null; });
-
-            Helper.ListAdd<GameObject>(ref Selector.Instance.SceneSelectables, gameObject);
+           // Helper.ListAdd<GameObject>(ref Selector.Instance.SceneSelectables, gameObject);
         }
 
         #region ISelectables

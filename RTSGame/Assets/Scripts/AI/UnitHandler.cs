@@ -6,7 +6,7 @@ using RTS_System.Selection;
 namespace RTS_System.AI
 {
     [RequireComponent(typeof(AIAgent))]
-    public class UnitHandler : SelectableDefault
+    public class UnitHandler : DefaultSelectable
     {
         [Header("Unit Data")]
         [Tooltip("The AIAgent that this unit is managing")] public AIAgent Agent = null;
@@ -47,11 +47,10 @@ namespace RTS_System.AI
             if (s != null && s.Action != null)
             {
                 RaycastHit rayHit;
-                if (Physics.Raycast(Selector.Instance.SelectorCam.ScreenPointToRay(Input.mousePosition), out rayHit))
+                if (Physics.Raycast(Agent.AgentOwner.PlayerSelector.SelectorCam.ScreenPointToRay(Input.mousePosition), out rayHit))
                 {
-                    Selector.Instance.CmdAddAction(Agent.gameObject, s.Action.ActionName, rayHit.collider.gameObject, rayHit.point, Selector.Instance.AddToActionList);
+                    Agent.AgentOwner.PlayerSelector.CmdAddAction(Agent.gameObject, s.Action.ActionName, rayHit.collider.gameObject, rayHit.point, Agent.AgentOwner.PlayerSelector.AddToActionList);
                 }
-                //Agent.AddAction(s.Action, Selector.Instance.AddToActionList, true, true);
             }
         }
 

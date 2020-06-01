@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using RTS_System.Selection;
+using System.Linq;
 
 namespace RTS_System.AI
 {
-    public class AIAgent : SelectableDefault
+    public class AIAgent : DefaultSelectable
     {
         [Header("AIAgent Data")]
         [Tooltip("The NavMeshAgent that will move this AIAgent")] public NavMeshAgent NavAgent = null;
@@ -31,10 +32,15 @@ namespace RTS_System.AI
                 PossibleActions[i] = Instantiate(PossibleActions[i]);
             }
 
+            if (AgentOwner)
+            {
+                Helper.ListAdd<GameObject>(ref AgentOwner.PlayerSelector.SceneSelectables, gameObject);
+            }
+
             // Give management of this AIAgent to the AIManager instance
             if (AIManager.Instance)
             {
-                AIManager.Instance.SceneAI.Add(this);
+                Helper.ListAdd<AIAgent>(ref AIManager.Instance.SceneAI, this);
             }
         }
 

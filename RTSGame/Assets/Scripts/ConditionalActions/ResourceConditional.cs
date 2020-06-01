@@ -8,12 +8,13 @@ namespace RTS_System.Resource
     public class ResourceConditional : ConditionalAction
     {
         public List<Mod_ResourceValue> ResourceCosts = new List<Mod_ResourceValue>();
+        public Mod_ResourceManager ResourceManager = null;
 
         public override bool EvaluateConditional()
         {
             bool eval = false;
 
-            Helper.LoopList_ForEach<Mod_ResourceValue>(ResourceCosts, (Mod_ResourceValue rc) => { eval = rc.CanAfford(); }, () => { return !eval; });
+            Helper.LoopList_ForEach<Mod_ResourceValue>(ResourceCosts, (Mod_ResourceValue rc) => { eval = rc.CanAfford(ResourceManager); }, () => { return !eval; });
 
             return eval;
         }

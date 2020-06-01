@@ -92,7 +92,7 @@ namespace RTS_System.AI
 
                 if (canCreateUnit)
                 {
-                    BuildAction.BuyBuilding();
+                    BuildAction.BuyBuilding(agent);
                 }
             }
 
@@ -117,7 +117,7 @@ namespace RTS_System.AI
 
                 if (canCreateUnit)
                 {
-                    BuildAction.BuyBuilding();
+                    BuildAction.BuyBuilding(agent);
                 }
             }
 

@@ -17,7 +17,7 @@ namespace RTS_System.Resource
         [Tooltip("The value of the resource.ResourceName, whether it adds or subtracts depends on DecreaseResource")] [Min(0)] public int RawValue;
 
         [Tooltip("True = Value will be subtracted from player total, false = add to player total")] public bool DecreaseResource;
-        
+
         public int TrueValue
         {
             get
@@ -30,9 +30,9 @@ namespace RTS_System.Resource
         /// Whether or not the player can afford this
         /// </summary>
         /// <returns></returns>
-        public bool CanAfford()
+        public bool CanAfford(Mod_ResourceManager manager)
         {
-            return Mod_ResourceManager.Instance.CanAfford(ResourceType, TrueValue);
+            return manager.CanAfford(ResourceType, TrueValue);
         }
     }
 
@@ -41,21 +41,22 @@ namespace RTS_System.Resource
         /// <summary>
         /// The current resource.ResourceName value, can't be externally set
         /// </summary>
-        public int CurrentResourceValue { get; private set; } = 0;
-        
+        [SyncVar]
+        public int CurrentResourceValue = 0;
+
         /// <summary>
         /// Will check if amount can be added, if result is less than zero it will fail otherwise amount will be added
         /// </summary>
         /// <param name="amount">The amount to add</param>
         /// <returns>Whether or not the amount was successfully added</returns>
-        public bool IncreaseValue(Mod_Resource resource, int amount)
+        public bool IncreaseValue(int amount)
         {
             // Checks whether the amount can be afforded
             if (CanAfford(amount))
             {
                 CurrentResourceValue += amount;
 
-                Mod_ResourceUI.Instance.UpdateResourceUI(resource, CurrentResourceValue);
+                // Mod_ResourceUI.Instance.UpdateResourceUI(resource, CurrentResourceValue);
 
                 return true;
             }
@@ -84,49 +85,103 @@ namespace RTS_System.Resource
         }
     }
 
-    [Serializable]
-    public class SyncResourceDictionary : SyncDictionary<string, Mod_ResourceCache> { }
-
     public class Mod_ResourceManager : NetworkBehaviour
     {
-        public static Mod_ResourceManager Instance = null;
-
         [Tooltip("All of the resources in the game")] public List<Mod_Resource> Resources = new List<Mod_Resource>();
 
-        //private Dictionary<Mod_Resource, Mod_ResourceCache> syncedResources = new Dictionary<Mod_Resource, Mod_ResourceCache>();
-
-        private SyncResourceDictionary syncedResources = new SyncResourceDictionary();
+        public Dictionary<string, Mod_ResourceCache> SyncedResources = new Dictionary<string, Mod_ResourceCache>();
 
         // Start is called before the first frame update
         void Start()
         {
-            // Create singleton
-            if (!Instance) Instance = this;
-
-            // If this is the singleton then set up resources
-            if (Instance.Equals(this))
+            if (isLocalPlayer)
             {
-                Mod_ResourceCache cache = null;
-
                 // Loop through all the resources in the game and spawn prefabs for them
                 Helper.LoopList_ForEach<Mod_Resource>(Resources, (Mod_Resource resource) =>
                 {
-                    if (syncedResources.ContainsKey(resource.ResourceName))
+                    if (SyncedResources.ContainsKey(resource.ResourceName))
                     {
                         DebugManager.WarningMessage($"Resource of name '{resource.ResourceName}' already exists!");
                     }
                     // Add the resource.ResourceName to the dictionary if it isn't there already
                     else
                     {
-                        cache = new Mod_ResourceCache();
-                        cache.IncreaseValue(resource, resource.ResourceStartCount);
-
                         Mod_ResourceUI.Instance.AddResourceUI(resource);
 
-                        // Add resource.ResourceName cache to dictionary
-                        syncedResources.Add(resource.ResourceName, cache);
+                        // Add resource cache to dictionary
+                        CmdAddToSyncDict(resource.ResourceName, resource.ResourceStartCount);
                     }
                 });
+            }
+        }
+
+        public void UpdateUI(string key, int value)
+        {
+            Mod_ResourceUI.Instance.UpdateResourceUI(key, value);
+        }
+
+        [ClientRpc]
+        public void RpcSetResource(string resourceName, int resourceAmount)
+        {
+            if (isLocalPlayer)
+            {
+                if (SyncedResources.ContainsKey(resourceName))
+                {
+                    SyncedResources[resourceName].CurrentResourceValue = resourceAmount;
+                }
+                else
+                {
+                    Mod_ResourceCache cache = new Mod_ResourceCache();
+                    cache.CurrentResourceValue = resourceAmount;
+
+                }
+                UpdateUI(resourceName, resourceAmount);
+            }
+        }
+
+        [Command]
+        public void CmdAddToSyncDict(string resourceName, int resourceAmount)
+        {
+            bool canAfford = false;
+
+            Mod_ResourceCache cache = new Mod_ResourceCache();
+            if (!SyncedResources.ContainsKey(resourceName))
+            {
+                canAfford = cache.IncreaseValue(resourceAmount);
+            }
+            else
+            {
+                canAfford = SyncedResources[resourceName].IncreaseValue(resourceAmount);
+                cache.CurrentResourceValue = SyncedResources[resourceName].CurrentResourceValue;
+            }
+
+            if (canAfford)
+            {
+                SyncedResources[resourceName] = cache;
+                RpcSetResource(resourceName, cache.CurrentResourceValue);
+            }
+        }
+
+        [Server]
+        public void ServAddToSynceDict(string resourceName, int resourceAmount)
+        {
+            bool canAfford = false;
+
+            Mod_ResourceCache cache = new Mod_ResourceCache();
+            if (!SyncedResources.ContainsKey(resourceName))
+            {
+                canAfford = cache.IncreaseValue(resourceAmount);
+            }
+            else
+            {
+                canAfford = SyncedResources[resourceName].IncreaseValue(resourceAmount);
+                cache.CurrentResourceValue = SyncedResources[resourceName].CurrentResourceValue;
+            }
+
+            if (canAfford)
+            {
+                SyncedResources[resourceName] = cache;
+                RpcSetResource(resourceName, cache.CurrentResourceValue);
             }
         }
 
@@ -140,9 +195,9 @@ namespace RTS_System.Resource
         {
             if (!resource) return false;
 
-            if (syncedResources.ContainsKey(resource.ResourceName))
+            if (SyncedResources.ContainsKey(resource.ResourceName))
             {
-                return syncedResources[resource.ResourceName].IncreaseValue(resource, amount);
+                CmdAddToSyncDict(resource.ResourceName, amount);
             }
 
             return false;
@@ -154,14 +209,7 @@ namespace RTS_System.Resource
         /// <returns></returns>
         public bool AddResource(Mod_ResourceValue resourceValue)
         {
-            if (!resourceValue.ResourceType) return false;
-
-            if (syncedResources.ContainsKey(resourceValue.ResourceType.ResourceName))
-            {
-                return syncedResources[resourceValue.ResourceType.ResourceName].IncreaseValue(resourceValue.ResourceType, resourceValue.TrueValue);
-            }
-
-            return false;
+            return AddResource(resourceValue.ResourceType, resourceValue.TrueValue);
         }
 
         /// <summary>
@@ -187,7 +235,7 @@ namespace RTS_System.Resource
         /// <summary>
         /// Checks if the player can afford something of type resource.ResourceName and cost value
         /// </summary>
-        /// <param name="resource.ResourceName">Resource to check if can afford</param>
+        /// <param name="resource">Resource to check if can afford</param>
         /// <param name="value">The value to see if the player can afford</param>
         /// <returns></returns>
         public bool CanAfford(Mod_Resource resource, int value)
@@ -195,9 +243,9 @@ namespace RTS_System.Resource
             if (!resource) return false;
 
             // Checks if the resource.ResourceName is valid
-            if (syncedResources.ContainsKey(resource.ResourceName))
+            if (SyncedResources.ContainsKey(resource.ResourceName))
             {
-                return syncedResources[resource.ResourceName].CanAfford(value);
+                return SyncedResources[resource.ResourceName].CanAfford(value);
             }
 
             return false;

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Mirror;
 
 namespace RTS_System.AI
 {
-    public class AIManager : MonoBehaviour
+    public class AIManager : NetworkBehaviour
 
     {
         public static AIManager Instance = null;
@@ -24,7 +25,7 @@ namespace RTS_System.AI
         // Start is called before the first frame update
         void Start()
         {
-            if (!Instance)
+            if (!Instance && isServer)
             {
                 Instance = this;
             }

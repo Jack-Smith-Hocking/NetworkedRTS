@@ -10,5 +10,15 @@ namespace RTS_System
         public string ResourceName;
         public Sprite ResourceIcon;
         [Min(0)] public int ResourceStartCount = 0;
+
+        public static Dictionary<string, Mod_Resource> ResourceTable = new Dictionary<string, Mod_Resource>();
+
+        public void OnEnable()
+        {
+            if (!name.Contains("Clone") && !ResourceTable.ContainsKey(ResourceName))
+            {
+                ResourceTable.Add(ResourceName, this);
+            }
+        }
     }
 }

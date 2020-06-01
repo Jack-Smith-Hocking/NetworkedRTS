@@ -17,7 +17,7 @@ MonoBehaviour:
   ActionName: MoveToAttackPoint
   MovementLayers:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 1536
   StoppingAccuracy: 25
   EvaluationValue: 0
   CurrentTarget: {x: 0, y: 0, z: 0}

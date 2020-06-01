@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
 
 /// <summary>
 /// Binds and unbinds actions to inputs
@@ -215,7 +213,7 @@ public static class Helper
     }
 
     /// <summary>
-    /// Will add a item to a list if the item isn't already in it
+    /// Will add a item to an list if the item isn't already in it
     /// </summary>
     /// <typeparam name="T">The type of data being worked with</typeparam>
     /// <param name="originalList">The list to add to"</param>
@@ -515,6 +513,24 @@ public static class Helper
         }
 
         return nullList;
+    }
+
+    public static T GetComponent<T>(GameObject obj)
+    {
+        if (IsNullOrDestroyed<GameObject>(obj)) return default;
+
+        T type = obj.GetComponent<T>();
+
+        if (type == null)
+        {
+            type = obj.GetComponentInChildren<T>();
+        }
+        if (type == null)
+        {
+            type = obj.GetComponentInParent<T>();
+        }
+
+        return type;
     }
 
     #region SetMaterials
