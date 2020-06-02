@@ -161,6 +161,10 @@ MonoBehaviour:
     InputAction: {fileID: -2263483478407229778, guid: b995a5cde5930cc47a278e015840fdd7,
       type: 3}
     Action: {fileID: 11400000, guid: 7aed48dab0f87ab42a35d592ec70c2e8, type: 2}
+  - SelectorInputName: CollectResource
+    InputAction: {fileID: -595309359941966064, guid: b995a5cde5930cc47a278e015840fdd7,
+      type: 3}
+    Action: {fileID: 11400000, guid: 480ca6ec2574b9441be9e5a84f574462, type: 2}
 --- !u!114 &8606768431203705314
 MonoBehaviour:
   m_ObjectHideFlags: 0

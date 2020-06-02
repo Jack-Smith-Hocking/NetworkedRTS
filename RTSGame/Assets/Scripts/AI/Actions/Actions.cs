@@ -7,12 +7,17 @@ using System.Reflection.Emit;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
+using UnityEngine.UIElements;
 
 namespace RTS_System.AI
 {
     [Serializable]
     public abstract class BaseAction
     {
+        [Header("BaseAction DebugInfo")]
+        public bool ValidTarget = false;
+
         public virtual bool HasCompleted(AIAgent agent) { return true; }
 
         public virtual float Evaluate(AIAgent agent) { return 0.0f; }
@@ -36,7 +41,6 @@ namespace RTS_System.AI
 
         [Header("MoveToPoint Debug Info")]
         public Vector3 CurrentTarget;
-        public bool ValidTarget = false;
 
         public override bool HasCompleted(AIAgent agent)
         {
@@ -111,10 +115,10 @@ namespace RTS_System.AI
         {
             if (!Helper.IsNullOrDestroyed<Transform>(CurrentTarget))
             {
-                return Helper.Distance(agent.transform, CurrentTarget) >= MaxFollowDistance;
+                return Helper.Distance(agent.transform, CurrentTarget) >= MaxFollowDistance || !ValidTarget;
             }
 
-            return true;
+            return !ValidTarget;
         }
 
         public override void Update(AIAgent agent)
@@ -161,16 +165,17 @@ namespace RTS_System.AI
 
         public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3, int num)
         {
-            bool valid = false;
+            ValidTarget = false;
 
-            valid = MoveToPoint.SetVariables(agent, obj, vec3, num);
+            ValidTarget = MoveToPoint.SetVariables(agent, obj, vec3, num);
+            ValidTarget = obj && ValidTarget;
 
-            if (valid)
+            if (ValidTarget)
             {
                 CurrentTarget = obj.transform;
             }
 
-            return valid;
+            return ValidTarget;
         }
     }
     #endregion
@@ -221,13 +226,13 @@ namespace RTS_System.AI
 
         public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3, int num)
         {
-            bool valid = false;
+            ValidTarget = false;
 
             if (agent)
             {
-                valid = MoveToPoint.SetVariables(agent, obj, vec3, num);
+                ValidTarget = MoveToPoint.SetVariables(agent, obj, vec3, num);
 
-                if (valid)
+                if (ValidTarget)
                 {
                     PatrolPath.Clear();
 
@@ -236,7 +241,7 @@ namespace RTS_System.AI
                 }
             }
 
-            return valid;
+            return ValidTarget;
         }
     }
     #endregion
@@ -258,7 +263,7 @@ namespace RTS_System.AI
 
         public override bool HasCompleted(AIAgent agent)
         {
-            return !TargetHealth;
+            return !TargetHealth || !ValidTarget;
         }
 
         public override void Execute(AIAgent agent)
@@ -294,7 +299,7 @@ namespace RTS_System.AI
 
         public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3, int num)
         {
-            bool validTarget = MoveToTarget.SetVariables(agent, obj, vec3, num);
+            ValidTarget = MoveToTarget.SetVariables(agent, obj, vec3, num);
 
             if (MoveToTarget.CurrentTarget)
             {
@@ -306,7 +311,7 @@ namespace RTS_System.AI
                 }
             }
 
-            return TargetHealth != null && validTarget;
+            return TargetHealth != null && ValidTarget;
         }
     }
     #endregion
@@ -336,7 +341,7 @@ namespace RTS_System.AI
 
         public override bool HasCompleted(AIAgent agent)
         {
-            return ((Building != null) && CanAffordBuilding) || CanAffordBuilding == false;
+            return ((Building != null) && CanAffordBuilding) || CanAffordBuilding == false || !ValidTarget;
         }
 
         public override void Execute(AIAgent agent)
@@ -447,14 +452,88 @@ namespace RTS_System.AI
 
         public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3, int num)
         {
-            bool valid = MoveToPoint.SetVariables(agent, obj, vec3, num);
+            ValidTarget = MoveToPoint.SetVariables(agent, obj, vec3, num);
 
-            if (valid && (!StopDistanceAsSpawnDist || MoveToPoint.HasCompleted(agent)))
+            if (ValidTarget && (!StopDistanceAsSpawnDist || MoveToPoint.HasCompleted(agent)))
             {
                 BuyBuilding(agent);
             }
 
-            return valid;
+            return ValidTarget;
+        }
+    }
+    #endregion
+
+    #region CollectResource
+    [Serializable]
+    public class CollectResource : BaseAction
+    {
+        [Header("MoveToTarget")]
+        public MoveToTarget MoveToTarget = null;
+
+        [Header("CollectResource Data")]
+        public int CollectionAmount = 50;
+        public float CollectionTime = 1;
+        public bool CompleteOnEmpty = true;
+
+        [Header("CollectionResource Debug Info")]
+        public Mod_ResourceCollection ResourcePile = null;
+        public Mod_ResourceValue CollectedResource;
+        public float CurrentCollectionTime = 0;
+
+        public override bool HasCompleted(AIAgent agent)
+        {
+            if (ResourcePile)
+            {
+                return (ResourcePile.IsEmpty || !CompleteOnEmpty) || !ValidTarget;
+            }
+
+            return !ValidTarget;
+        }
+
+        public override void Execute(AIAgent agent)
+        {
+            MoveToTarget.Execute(agent);
+        }
+
+        public override void Update(AIAgent agent)
+        {
+            if (MoveToTarget.MoveToPoint.HasCompleted(agent) && Time.time >= CurrentCollectionTime)
+            {
+                if (ResourcePile)
+                {
+                    CollectedResource = ResourcePile.CollectResources(CollectionAmount);
+
+                    agent.AgentOwner.PlayerResourceManager.ServAddToSynceDict(CollectedResource.ResourceType.ResourceName, CollectedResource.RawValue);
+
+                    CurrentCollectionTime = Time.time + CollectionTime;
+                }
+            }
+
+            MoveToTarget.Update(agent);
+        }
+
+        public override void Enter(AIAgent agent)
+        {
+            MoveToTarget.Enter(agent);
+        }
+        public override void Exit(AIAgent agent)
+        {
+            MoveToTarget.Exit(agent);
+        }
+
+        public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3, int num)
+        {
+            ValidTarget = MoveToTarget.SetVariables(agent, obj, vec3, num);
+
+            if (ValidTarget)
+            {
+                ResourcePile = Helper.GetComponent<Mod_ResourceCollection>(obj);
+
+                ValidTarget = ResourcePile;
+            }
+
+            return ValidTarget;
         }
     }
     #endregion

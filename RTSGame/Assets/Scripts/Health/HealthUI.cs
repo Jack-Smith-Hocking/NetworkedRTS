@@ -66,7 +66,7 @@ public class HealthUI : MonoBehaviour
 
     public void TurnOffAfterDelay(float delay)
     {
-        StopCoroutine(DoAfterDelay(delay, () => { HealthImage.gameObject.SetActive(false); }));
+        StopAllCoroutines();
         StartCoroutine(DoAfterDelay(delay, () => { HealthImage.gameObject.SetActive(false); }));
     }
 

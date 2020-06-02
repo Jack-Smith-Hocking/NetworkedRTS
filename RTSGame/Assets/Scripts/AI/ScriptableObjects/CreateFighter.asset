@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActionIcon: {fileID: 0}
   ActionDescription: 
-  ActionName: 
+  ActionName: CreateFighterAction
   CreateBuilding:
     MoveToPoint:
       MovementLayers:

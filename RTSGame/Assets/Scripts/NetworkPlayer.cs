@@ -17,8 +17,9 @@ namespace RTS_System
         public string FriendlyLayer = "Unit";
         public string EnemyLayer = "EnemyUnit";
 
-        private void Start()
+        IEnumerator Start()
         {
+            yield return new WaitForEndOfFrame();
             //if (!isLocalPlayer && !isServer) return;
 
             AIAgent agent = null;
@@ -31,7 +32,7 @@ namespace RTS_System
 
                 if (agent && !agent.AgentOwner)
                 {
-                    PlayerSelector.RpcSetAgentOwner(col.gameObject, gameObject);
+                    Selector.ClientInstance.CmdSetAgentOwner(col.gameObject, gameObject);
 
                     Helper.ListAdd<GameObject>(ref PlayerSelector.SceneSelectables, agent.gameObject);
                 }

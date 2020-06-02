@@ -11,6 +11,8 @@ namespace RTS_System.Selection
 {
     public class Selector : NetworkBehaviour
     {
+        public static Selector ClientInstance = null;
+
         public Camera SelectorCam = null;
         public LayerMask SelectionMask;
         public List<GameObject> SceneSelectables = new List<GameObject>();
@@ -42,6 +44,8 @@ namespace RTS_System.Selection
         void Start()
         {
             if (!isLocalPlayer) return;
+
+            ClientInstance = this;
 
             if (!SelectorCam)
             {
@@ -240,9 +244,12 @@ namespace RTS_System.Selection
                 AIAction action = Instantiate(AIAction.ActionTable[actionName]);
 
                 action.InitialiseAction(ai);
-                action.SetVariables(ai, target, targetPos, layer);
+                bool valid = action.SetVariables(ai, target, targetPos, layer);
 
-                ai.AddAction(action, addToList, false, false);
+                if (valid)
+                {
+                    ai.AddAction(action, addToList, false, false);
+                }
             }
         }
 
@@ -257,6 +264,14 @@ namespace RTS_System.Selection
             NetworkServer.Destroy(objToDestroy);
         }
 
+        [Command]
+        public void CmdSetAgentOwner(GameObject agent, GameObject owner)
+        {
+            if (agent && owner)
+            {
+                RpcSetAgentOwner(agent, owner);
+            }
+        }
         [ClientRpc]
         public void RpcSetAgentOwner(GameObject agent, GameObject owner)
         {
