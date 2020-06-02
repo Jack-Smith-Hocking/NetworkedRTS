@@ -119,6 +119,7 @@ MonoBehaviour:
   PossibleActions: []
   actionQueue: []
   currentAction: {fileID: 0}
+  AgentOwner: {fileID: 0}
 --- !u!195 &589809937
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -159,7 +160,7 @@ MonoBehaviour:
   - SelectorInputName: Building
     InputAction: {fileID: -2263483478407229778, guid: b995a5cde5930cc47a278e015840fdd7,
       type: 3}
-    Action: {fileID: 11400000, guid: 1b1779bfcdf54eb43a6adb51331d4ad8, type: 2}
+    Action: {fileID: 11400000, guid: 7aed48dab0f87ab42a35d592ec70c2e8, type: 2}
 --- !u!114 &8606768431203705314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,6 +199,17 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 589809936}
+        m_MethodName: ServerDestroy
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 2
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2

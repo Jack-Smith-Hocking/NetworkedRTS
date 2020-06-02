@@ -72,6 +72,7 @@ namespace RTS_System.AI
 
         private void OnDestroy()
         {
+            DefaultUnitHandler.UnbindAllInputs(SelectionInputs);
         }
     }
 }

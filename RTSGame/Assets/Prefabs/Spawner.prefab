@@ -9,9 +9,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1553255986604784433}
-  - component: {fileID: 1071091744292063076}
+  - component: {fileID: 564297416}
+  - component: {fileID: 564297421}
+  - component: {fileID: 564297418}
+  - component: {fileID: 564297419}
+  - component: {fileID: 564297420}
+  - component: {fileID: 564297422}
+  - component: {fileID: 564297423}
   m_Layer: 9
-  m_Name: CubeBuilding
+  m_Name: Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +39,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1071091744292063076
+--- !u!114 &564297416
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -49,13 +55,117 @@ MonoBehaviour:
   serverOnly: 0
   m_AssetId: 
   hasSpawned: 0
---- !u!114 &1004960102582241277
+--- !u!65 &564297421
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325476590979837097}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 20, y: 20, z: 20}
+  m_Center: {x: 0, y: 10, z: 0}
+--- !u!114 &564297418
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7744355298875506514}
+  m_GameObject: {fileID: 325476590979837097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7f0dc189f5163f48b886df0427b2600, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NavAgent: {fileID: 0}
+  PossibleActions: []
+  actionQueue: []
+  currentAction: {fileID: 0}
+  AgentOwner: {fileID: 0}
+--- !u!114 &564297419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325476590979837097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e892ee89d205fb44ae369d8cd2843ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Agent: {fileID: 0}
+  UseDefaultActions: 0
+  SelectionInputs:
+  - SelectorInputName: CreateUnit
+    InputAction: {fileID: -2263483478407229778, guid: b995a5cde5930cc47a278e015840fdd7,
+      type: 3}
+    Action: {fileID: 11400000, guid: 997c9b3bdb01f0644a751a50e64ece11, type: 2}
+--- !u!114 &564297420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325476590979837097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7f0dc189f5163f48b886df0427b2600, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NavAgent: {fileID: 0}
+  PossibleActions: []
+  actionQueue: []
+  currentAction: {fileID: 0}
+  AgentOwner: {fileID: 0}
+--- !u!114 &564297422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325476590979837097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4863f7271395e804d8cd537aee75898c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 10
+  OnTakeDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeathEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: Die
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  DeathFX: {fileID: 0}
+  DeathFXPosition: {fileID: 0}
+  DeathScaleTime: 1
+  DeathEndScale: 0.1
+  HitFX: {fileID: 0}
+  HitFXPosition: {fileID: 0}
+  UseHitFXPoint: 1
+  HealthState: 0
+--- !u!114 &564297423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325476590979837097}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 17565db782b051940b6b774c815dad53, type: 3}
@@ -139,44 +249,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &6603169834556794276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7744355298875506514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4863f7271395e804d8cd537aee75898c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxHealth: 10
-  OnTakeDamageEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDeathEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6603169834556794276}
-        m_MethodName: Die
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  DeathFX: {fileID: 0}
-  DeathFXPosition: {fileID: 0}
-  DeathScaleTime: 1
-  DeathEndScale: 0.1
-  HitFX: {fileID: 0}
-  HitFXPosition: {fileID: 0}
-  UseHitFXPoint: 1
-  HealthState: 0
 --- !u!1001 &5039395872715570324
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -362,7 +434,7 @@ PrefabInstance:
         type: 3}
       propertyPath: SelectionInputs.Array.data[0].Action
       value: 
-      objectReference: {fileID: 11400000, guid: 4ebb6c00d52586d44927b126f14b3d73,
+      objectReference: {fileID: 11400000, guid: 997c9b3bdb01f0644a751a50e64ece11,
         type: 2}
     - target: {fileID: 2086879317144536005, guid: 1199475fd5f03f244b516e50c990c3d1,
         type: 3}
@@ -382,13 +454,10 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 101091166020958393, guid: 1199475fd5f03f244b516e50c990c3d1, type: 3}
     - {fileID: 135806223, guid: 1199475fd5f03f244b516e50c990c3d1, type: 3}
+    - {fileID: 1189522042674294415, guid: 1199475fd5f03f244b516e50c990c3d1, type: 3}
+    - {fileID: 406928086156238938, guid: 1199475fd5f03f244b516e50c990c3d1, type: 3}
+    - {fileID: 595807957337358908, guid: 1199475fd5f03f244b516e50c990c3d1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 1199475fd5f03f244b516e50c990c3d1, type: 3}
---- !u!1 &7744355298875506514 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3357149591582835654, guid: 1199475fd5f03f244b516e50c990c3d1,
-    type: 3}
-  m_PrefabInstance: {fileID: 5039395872715570324}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4633909717960092335 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 405732499188749883, guid: 1199475fd5f03f244b516e50c990c3d1,
@@ -542,7 +611,8 @@ PrefabInstance:
         type: 3}
       propertyPath: HealthDisplay
       value: 
-      objectReference: {fileID: 6603169834556794276}
+      objectReference: {fileID: 6603169834556794276, guid: bbf7266ac68a39e40944da20701e1494,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e804b2f05e2b3e459e97e8e6f513691, type: 3}
 --- !u!1 &7020588623901446499 stripped

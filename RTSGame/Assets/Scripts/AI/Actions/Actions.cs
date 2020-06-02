@@ -36,10 +36,16 @@ namespace RTS_System.AI
 
         [Header("MoveToPoint Debug Info")]
         public Vector3 CurrentTarget;
+        public bool ValidTarget = false;
 
         public override bool HasCompleted(AIAgent agent)
         {
-            return agent.NavAgent.remainingDistance <= StoppingDistance;
+            if (agent.NavAgent)
+            {
+                return agent.NavAgent.remainingDistance <= StoppingDistance || !ValidTarget;
+            }
+
+            return Vector3.Distance(CurrentTarget, agent.transform.position) <= StoppingDistance || !ValidTarget;
         }
 
         public override void Execute(AIAgent agent)
@@ -61,27 +67,27 @@ namespace RTS_System.AI
         public override void Exit(AIAgent agent)
         {
             Enter(agent);
+
+            ValidTarget = false;
         }
 
         public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3)
         {
-            bool valid = false;
-
             if (obj)
             {
                 if (Helper.IsInLayerMask(MovementLayers, obj.layer))
                 {
                     CurrentTarget = vec3;
-                    valid = true;
+                    ValidTarget = true;
                 }
             }
             else
             {
                 CurrentTarget = vec3;
-                valid = true;
+                ValidTarget = true;
             }
 
-            return valid;
+            return ValidTarget;
         }
     }
     #endregion
@@ -362,6 +368,14 @@ namespace RTS_System.AI
                     }
 
                     Building = GameObject.Instantiate(BuildingPrefab, MoveToPoint.CurrentTarget, Quaternion.identity);
+                    agent.AgentOwner.PlayerSelector.ServSpawnObject(Building);
+
+                    agent.AgentOwner.PlayerSelector.RpcSetAgentOwner(Building, agent.AgentOwner.gameObject);
+                    //AIAgent buildingAgent = Helper.GetComponent<AIAgent>(Building);
+                    //if (buildingAgent)
+                    //{
+                    //    buildingAgent.AgentOwner = agent.AgentOwner;
+                    //}
 
                     AttemptBuild = false;
                 }
@@ -393,7 +407,8 @@ namespace RTS_System.AI
 
             if (TempIndicator)
             {
-                GameObject.Destroy(TempIndicator);
+                agent.AgentOwner.PlayerSelector.ServDestroyObject(TempIndicator);
+                //GameObject.Destroy(TempIndicator);
             }
 
             TempIndicator = null;
@@ -408,6 +423,9 @@ namespace RTS_System.AI
             // Check if the building is affordable
             if (BuildingCost)
             {
+                BuildingCost = GameObject.Instantiate(BuildingCost);
+                BuildingCost.ResourceManager = agent.AgentOwner.PlayerResourceManager;
+
                 CanAffordBuilding = BuildingCost.EvaluateConditional();
 
                 if (CanAffordBuilding)
@@ -418,9 +436,10 @@ namespace RTS_System.AI
                     });
 
                     // Create a temporary object at the location to indicate a building will be made there
-                    if (TempIndicator)
+                    if (BuildingIndicator)
                     {
-                        TempIndicator = GameObject.Instantiate(TempIndicator, MoveToPoint.CurrentTarget, Quaternion.identity);
+                        TempIndicator = GameObject.Instantiate(BuildingIndicator, MoveToPoint.CurrentTarget, Quaternion.identity);
+                        agent.AgentOwner.PlayerSelector.ServSpawnObject(TempIndicator);
                     }
                 }
             }

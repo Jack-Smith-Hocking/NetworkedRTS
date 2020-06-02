@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace RTS_System
 {
-    public class Player : MonoBehaviour
+    public class NetworkPlayer : MonoBehaviour
     {
         public Selector PlayerSelector = null;
         public Mod_ResourceManager PlayerResourceManager = null;

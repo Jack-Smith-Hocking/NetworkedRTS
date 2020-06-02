@@ -246,5 +246,29 @@ namespace RTS_System.Selection
                 ai.AddAction(action, addToList, false, false);
             }
         }
+
+        [Server]
+        public void ServSpawnObject(GameObject objToSpawn)
+        {
+            NetworkServer.Spawn(objToSpawn);
+        }
+        [Server]
+        public void ServDestroyObject(GameObject objToDestroy)
+        {
+            NetworkServer.Destroy(objToDestroy);
+        }
+        [ClientRpc]
+        public void RpcSetAgentOwner(GameObject agent, GameObject owner)
+        {
+            if (!agent || !owner) return;
+
+            AIAgent ai = Helper.GetComponent<AIAgent>(agent);
+            NetworkPlayer player = Helper.GetComponent<NetworkPlayer>(owner);
+
+            if (ai && player)
+            {
+                ai.AgentOwner = player;
+            }
+        }
     }
 }

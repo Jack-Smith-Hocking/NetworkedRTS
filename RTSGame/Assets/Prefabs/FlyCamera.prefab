@@ -416,7 +416,7 @@ PrefabInstance:
     - target: {fileID: 4586871434865420188, guid: 5211a350486fa0c43a46d9b73f28e94d,
         type: 3}
       propertyPath: MinCameraDistance
-      value: 100
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 4586871434865420188, guid: 5211a350486fa0c43a46d9b73f28e94d,
         type: 3}

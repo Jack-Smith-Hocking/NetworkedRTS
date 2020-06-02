@@ -17,7 +17,7 @@ namespace RTS_System.AI
         [Tooltip("Current actions")] public List<AIAction> actionQueue = new List<AIAction>();
         public AIAction currentAction = null;
 
-        public Player AgentOwner = null;
+        public NetworkPlayer AgentOwner = null;
 
         private AIAction cachedAction = null;
 
@@ -208,6 +208,17 @@ namespace RTS_System.AI
             {
                 AIManager.Instance.SceneAI.Remove(this);
             }
+        }
+
+        public void ServerDestroy(float delay)
+        {
+            ServerDestroyDelayed(delay);
+        }
+        IEnumerator ServerDestroyDelayed(float delay)
+        {
+            yield return new WaitForSecondsRealtime(delay);
+
+            AgentOwner.PlayerSelector.ServDestroyObject(gameObject);
         }
     }
 }

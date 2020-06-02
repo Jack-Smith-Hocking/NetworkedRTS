@@ -15,3 +15,22 @@ MonoBehaviour:
   ActionIcon: {fileID: 0}
   ActionDescription: 
   ActionName: CreateWorkerAction
+  CreateBuilding:
+    MoveToPoint:
+      MovementLayers:
+        serializedVersion: 2
+        m_Bits: 256
+      StoppingDistance: 50
+      CurrentTarget: {x: 0, y: 0, z: 0}
+      ValidTarget: 0
+    BuildingPrefab: {fileID: 100000, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
+    BuildingIndicator: {fileID: 7350694739302784146, guid: 353ae9e06b3167c40bd115ef8ef90388,
+      type: 3}
+    BuildingCost: {fileID: 11400000, guid: 2fb5720a0581644439b0cfdcc0bbc60c, type: 2}
+    BuildCompletionTime: 2
+    StopDistanceAsSpawnDist: 1
+    Building: {fileID: 0}
+    TempIndicator: {fileID: 0}
+    CurrentBuildTime: 0
+    CanAffordBuilding: 0
+    AttemptBuild: 0
