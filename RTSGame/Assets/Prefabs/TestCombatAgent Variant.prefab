@@ -6,7 +6,7 @@ CapsuleCollider:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 767273180226089327}
+  m_GameObject: {fileID: 767273180226058222}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
@@ -108,7 +108,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1906695737, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
       propertyPath: SelectionInputs.Array.data[0].SelectorInputName
-      value: 
+      value: DirectedAttack
       objectReference: {fileID: 0}
     - target: {fileID: 1906695737, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
       propertyPath: SelectionInputs.Array.data[0].InputAction
@@ -118,16 +118,31 @@ PrefabInstance:
     - target: {fileID: 1906695737, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
       propertyPath: SelectionInputs.Array.data[0].Action
       value: 
-      objectReference: {fileID: 11400000, guid: 6862b225732184f43a7f38fb7b14c39d,
+      objectReference: {fileID: 11400000, guid: ecf1859e4b1f94d47bd0ebffa40627d1,
         type: 2}
     - target: {fileID: 1906695737, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
       propertyPath: SelectionInputs.Array.data[0].CanQueue
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6670840554496165725, guid: ab33e6080ae416b4d899f39fa8951b98,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8672304758992897971, guid: ab33e6080ae416b4d899f39fa8951b98,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.19
+      objectReference: {fileID: 0}
+    - target: {fileID: 9162037003769073176, guid: ab33e6080ae416b4d899f39fa8951b98,
+        type: 3}
+      propertyPath: m_AssetId
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 589809938, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
---- !u!1 &767273180226089327 stripped
+--- !u!1 &767273180226058222 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: ab33e6080ae416b4d899f39fa8951b98,
     type: 3}

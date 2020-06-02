@@ -348,7 +348,7 @@ namespace RTS_System.AI
         {
             // Start the building timer
             {
-                if (MoveToPoint.HasCompleted(agent) && !AttemptBuild)
+                if ((MoveToPoint.HasCompleted(agent) || StopDistanceAsSpawnDist) && !AttemptBuild)
                 {
                     CurrentBuildTime = Time.time + BuildCompletionTime;
 
@@ -368,14 +368,9 @@ namespace RTS_System.AI
                     }
 
                     Building = GameObject.Instantiate(BuildingPrefab, MoveToPoint.CurrentTarget, Quaternion.identity);
+                   
                     agent.AgentOwner.PlayerSelector.ServSpawnObject(Building);
-
                     agent.AgentOwner.PlayerSelector.RpcSetAgentOwner(Building, agent.AgentOwner.gameObject);
-                    //AIAgent buildingAgent = Helper.GetComponent<AIAgent>(Building);
-                    //if (buildingAgent)
-                    //{
-                    //    buildingAgent.AgentOwner = agent.AgentOwner;
-                    //}
 
                     AttemptBuild = false;
                 }

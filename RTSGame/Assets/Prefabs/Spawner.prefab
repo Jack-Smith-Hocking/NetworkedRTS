@@ -100,10 +100,14 @@ MonoBehaviour:
   Agent: {fileID: 0}
   UseDefaultActions: 0
   SelectionInputs:
-  - SelectorInputName: CreateUnit
-    InputAction: {fileID: -2263483478407229778, guid: b995a5cde5930cc47a278e015840fdd7,
+  - SelectorInputName: CreateWorker
+    InputAction: {fileID: 2207451653104450684, guid: b995a5cde5930cc47a278e015840fdd7,
       type: 3}
     Action: {fileID: 11400000, guid: 997c9b3bdb01f0644a751a50e64ece11, type: 2}
+  - SelectorInputName: CreateFighter
+    InputAction: {fileID: 5514273164105147810, guid: b995a5cde5930cc47a278e015840fdd7,
+      type: 3}
+    Action: {fileID: 11400000, guid: 5b815cb6a1b797c4e81b02da398b85f4, type: 2}
 --- !u!114 &564297420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -643,7 +647,7 @@ PrefabInstance:
         type: 3}
       propertyPath: HealthDisplay
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 564297422}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e804b2f05e2b3e459e97e8e6f513691, type: 3}
 --- !u!1 &7020588623901446499 stripped

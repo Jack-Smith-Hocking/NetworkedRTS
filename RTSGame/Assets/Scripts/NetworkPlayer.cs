@@ -19,7 +19,7 @@ namespace RTS_System
 
         private void Start()
         {
-            if (!isLocalPlayer) return;
+            //if (!isLocalPlayer && !isServer) return;
 
             AIAgent agent = null;
 
@@ -29,10 +29,10 @@ namespace RTS_System
             {
                 agent = Helper.GetComponent<AIAgent>(col.gameObject);
 
-                if (agent)
+                if (agent && !agent.AgentOwner)
                 {
-                    agent.gameObject.layer = LayerMask.NameToLayer(FriendlyLayer);
-                    agent.AgentOwner = this;
+                    PlayerSelector.RpcSetAgentOwner(col.gameObject, gameObject);
+
                     Helper.ListAdd<GameObject>(ref PlayerSelector.SceneSelectables, agent.gameObject);
                 }
             });

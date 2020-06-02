@@ -256,6 +256,7 @@ namespace RTS_System.Selection
         {
             NetworkServer.Destroy(objToDestroy);
         }
+
         [ClientRpc]
         public void RpcSetAgentOwner(GameObject agent, GameObject owner)
         {
