@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -61,5 +62,18 @@ public class HealthUI : MonoBehaviour
     private void OnEnable()
     {
         UpdateFacing();
+    }
+
+    public void TurnOffAfterDelay(float delay)
+    {
+        StopCoroutine(DoAfterDelay(delay, () => { HealthImage.gameObject.SetActive(false); }));
+        StartCoroutine(DoAfterDelay(delay, () => { HealthImage.gameObject.SetActive(false); }));
+    }
+
+    public IEnumerator DoAfterDelay(float delay, Action doAction)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+
+        doAction?.Invoke();
     }
 }

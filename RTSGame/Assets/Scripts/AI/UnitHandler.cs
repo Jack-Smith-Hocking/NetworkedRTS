@@ -49,7 +49,7 @@ namespace RTS_System.AI
                 RaycastHit rayHit;
                 if (Physics.Raycast(Agent.AgentOwner.PlayerSelector.SelectorCam.ScreenPointToRay(Input.mousePosition), out rayHit))
                 {
-                    Agent.AgentOwner.PlayerSelector.CmdAddAction(Agent.gameObject, s.Action.ActionName, rayHit.collider.gameObject, rayHit.point, Agent.AgentOwner.PlayerSelector.AddToActionList);
+                    Agent.AgentOwner.PlayerSelector.CmdAddAction(Agent.gameObject, s.Action.ActionName, rayHit.collider.gameObject, rayHit.point, rayHit.collider.gameObject.layer, Agent.AgentOwner.PlayerSelector.AddToActionList);
                 }
             }
         }

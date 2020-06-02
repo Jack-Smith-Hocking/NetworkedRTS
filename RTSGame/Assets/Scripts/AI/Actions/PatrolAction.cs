@@ -36,9 +36,9 @@ namespace RTS_System.AI
             return false;
         }
 
-        public override bool SetVariables(AIAgent agent, GameObject go, Vector3 vec)
+        public override bool SetVariables(AIAgent agent, GameObject go, Vector3 vec, int num)
         {
-            return PatrolData.SetVariables(agent, go, vec);
+            return PatrolData.SetVariables(agent, go, vec, num);
         }
     }
 }

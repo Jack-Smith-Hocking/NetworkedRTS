@@ -5,9 +5,9 @@ using UnityEngine.Events;
 using System;
 using UnityEngine.UI;
 using Pixelplacement;
-using RTS_System;
+using Mirror;
 
-public class Health : MonoBehaviour
+public class Health : NetworkBehaviour
 {
     public enum DamageState
     {
@@ -38,7 +38,8 @@ public class Health : MonoBehaviour
 
     public bool HasDied { get { return CurrentHealth <= 0; } }
 
-    public float CurrentHealth { get; protected set; } = 0;
+    [SyncVar] public float CurrentHealth /*{ get; protected set; }*/ = 0;
+
     /// <summary>
     /// (CurrentHealth/MaxHealth)
     /// </summary>
@@ -68,7 +69,8 @@ public class Health : MonoBehaviour
     /// A simple 'TakeDamage' only takes a float damage input, will invoke OnTakeDamageSimple callback
     /// </summary>
     /// <param name="damage">Amount of damage to take, below zero will heal</param>
-    public void TakeDamage(float damage)
+    [ClientRpc]
+    public void RpcTakeDamageSimple(float damage)
     {
         // Check if damage/healing can be done
         if (HealthState == DamageState.NO_DAMAGE && damage > 0) return;
@@ -86,18 +88,12 @@ public class Health : MonoBehaviour
     /// <param name="damage">Amount of damage to take, below zero will heal</param>
     /// <param name="collisionPoint">The point on the object that was hit when taking damage</param>
     /// <param name="damageDealer">The GameObject that dealt the damage</param>
-    public void TakeDamage(float damage, Vector3 collisionPoint, GameObject damageDealer)
+    [ClientRpc]
+    public void RpcTakeDamage(float damage, Vector3 collisionPoint, GameObject damageDealer)
     {
-        // Check if damage/healing can be done
-        if (HealthState == DamageState.NO_DAMAGE && damage > 0) return;
-        if (HealthState == DamageState.NO_HEAL && damage < 0) return;
+        RpcTakeDamageSimple(damage);
 
-        CurrentHealth -= damage;
-        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
-
-        OnTakeDamageSimple?.Invoke(damage);
         OnTakeDamage?.Invoke(damage, collisionPoint, damageDealer);
-        OnTakeDamageEvent?.Invoke();
 
         // Apply HitFX at the point of the hit if there are any
         if (HitFX)

@@ -229,7 +229,7 @@ namespace RTS_System.Selection
         }
 
         [Command]
-        public void CmdAddAction(GameObject agent, string actionName, GameObject target, Vector3 targetPos, bool addToList)
+        public void CmdAddAction(GameObject agent, string actionName, GameObject target, Vector3 targetPos, int layer, bool addToList)
         {
             if (!agent) return;
 
@@ -240,7 +240,7 @@ namespace RTS_System.Selection
                 AIAction action = Instantiate(AIAction.ActionTable[actionName]);
 
                 action.InitialiseAction(ai);
-                action.SetVariables(ai, target, targetPos);
+                action.SetVariables(ai, target, targetPos, layer);
 
                 ai.AddAction(action, addToList, false, false);
             }

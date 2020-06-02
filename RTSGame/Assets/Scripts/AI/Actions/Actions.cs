@@ -23,7 +23,7 @@ namespace RTS_System.AI
         public virtual void Exit(AIAgent agent) { }
         public virtual void Cancel(AIAgent agent) { }
 
-        public virtual bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3) { return false; }
+        public virtual bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3, int num) { return false; }
     }
 
     #region MoveToPoint
@@ -71,11 +71,11 @@ namespace RTS_System.AI
             ValidTarget = false;
         }
 
-        public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3)
+        public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3, int num)
         {
             if (obj)
             {
-                if (Helper.IsInLayerMask(MovementLayers, obj.layer))
+                if (Helper.IsInLayerMask(MovementLayers, num))
                 {
                     CurrentTarget = vec3;
                     ValidTarget = true;
@@ -159,11 +159,11 @@ namespace RTS_System.AI
             CurrentTarget = null;
         }
 
-        public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3)
+        public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3, int num)
         {
             bool valid = false;
 
-            valid = MoveToPoint.SetVariables(agent, obj, vec3);
+            valid = MoveToPoint.SetVariables(agent, obj, vec3, num);
 
             if (valid)
             {
@@ -219,13 +219,13 @@ namespace RTS_System.AI
             MoveToPoint.Exit(agent);
         }
 
-        public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3)
+        public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3, int num)
         {
             bool valid = false;
 
             if (agent)
             {
-                valid = MoveToPoint.SetVariables(agent, obj, vec3);
+                valid = MoveToPoint.SetVariables(agent, obj, vec3, num);
 
                 if (valid)
                 {
@@ -276,7 +276,7 @@ namespace RTS_System.AI
             {
                 if (MoveToTarget.MoveToPoint.HasCompleted(agent))
                 {
-                    TargetHealth.TakeDamage(AttackDamage);
+                    TargetHealth.RpcTakeDamageSimple(AttackDamage);
 
                     CurrentAttackDelay = Time.time + AttackDelay;
                 }
@@ -292,9 +292,9 @@ namespace RTS_System.AI
             MoveToTarget.Exit(agent);
         }
 
-        public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3)
+        public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3, int num)
         {
-            bool validTarget = MoveToTarget.SetVariables(agent, obj, vec3);
+            bool validTarget = MoveToTarget.SetVariables(agent, obj, vec3, num);
 
             if (MoveToTarget.CurrentTarget)
             {
@@ -368,12 +368,17 @@ namespace RTS_System.AI
                     }
 
                     Building = GameObject.Instantiate(BuildingPrefab, MoveToPoint.CurrentTarget, Quaternion.identity);
-                   
+
                     agent.AgentOwner.PlayerSelector.ServSpawnObject(Building);
                     agent.AgentOwner.PlayerSelector.RpcSetAgentOwner(Building, agent.AgentOwner.gameObject);
 
                     AttemptBuild = false;
                 }
+                else if (!BuildingPrefab)
+                {
+                    DebugManager.WarningMessage($"Attempting to build a null building from agent: {agent.gameObject.name}");
+                }
+
             }
 
             MoveToPoint.Update(agent);
@@ -440,9 +445,9 @@ namespace RTS_System.AI
             }
         }
 
-        public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3)
+        public override bool SetVariables(AIAgent agent, GameObject obj, Vector3 vec3, int num)
         {
-            bool valid = MoveToPoint.SetVariables(agent, obj, vec3);
+            bool valid = MoveToPoint.SetVariables(agent, obj, vec3, num);
 
             if (valid && (!StopDistanceAsSpawnDist || MoveToPoint.HasCompleted(agent)))
             {

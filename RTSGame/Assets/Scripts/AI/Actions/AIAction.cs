@@ -67,7 +67,7 @@ namespace RTS_System.AI
             return false;
         }
 
-        public virtual bool SetVariables(AIAgent agent, GameObject go, Vector3 vec)
+        public virtual bool SetVariables(AIAgent agent, GameObject go, Vector3 vec, int num)
         {
             return false;
         }

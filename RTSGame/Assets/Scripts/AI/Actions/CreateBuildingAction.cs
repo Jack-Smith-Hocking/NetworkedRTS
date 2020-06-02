@@ -44,9 +44,9 @@ namespace RTS_System.AI
             CreateBuilding.Cancel(agent);
         }
 
-        public override bool SetVariables(AIAgent agent, GameObject go, Vector3 vec)
+        public override bool SetVariables(AIAgent agent, GameObject go, Vector3 vec, int num)
         {
-            return CreateBuilding.SetVariables(agent, go, vec);
+            return CreateBuilding.SetVariables(agent, go, vec, num);
         }
     }
 }

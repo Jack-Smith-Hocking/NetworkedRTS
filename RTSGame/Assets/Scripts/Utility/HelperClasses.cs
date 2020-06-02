@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -515,6 +516,12 @@ public static class Helper
         return nullList;
     }
 
+    /// <summary>
+    /// Only pass in MonoBehaviour as type parameter otherwise there will be errors!
+    /// </summary>
+    /// <typeparam name="T">Make sure this is a MonoBehaviour type</typeparam>
+    /// <param name="obj">The object to check for the MonoBehaviour</param>
+    /// <returns>The first found MonoBehaviour (Checks GetComponent, GetComponentInChildren then GetComponentInParent)</returns>
     public static T GetComponent<T>(GameObject obj)
     {
         if (IsNullOrDestroyed<GameObject>(obj)) return default;

@@ -37,9 +37,9 @@ namespace RTS_System.AI
             MoveToPoint.Exit(agent);
         }
 
-        public override bool SetVariables(AIAgent agent, GameObject go, Vector3 vec)
+        public override bool SetVariables(AIAgent agent, GameObject go, Vector3 vec, int num)
         {
-            return MoveToPoint.SetVariables(agent, go, vec);
+            return MoveToPoint.SetVariables(agent, go, vec, num);
         }
     }
 }

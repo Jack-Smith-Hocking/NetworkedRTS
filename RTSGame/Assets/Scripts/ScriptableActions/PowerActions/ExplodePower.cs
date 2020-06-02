@@ -69,7 +69,7 @@ namespace ScriptableActions.Character
                     if (health)
                     {
                         Physics.Raycast(new Ray(trans.position, col.transform.position - trans.position), out rayHit, col.gameObject.layer);
-                        health.TakeDamage(ExplodeDamage, rayHit.point, trans.gameObject);
+                        health.RpcTakeDamage(ExplodeDamage, rayHit.point, trans.gameObject);
                     }
                 }
             }
