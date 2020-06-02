@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 6166778365129076295}
   - component: {fileID: 9162037003769073176}
   - component: {fileID: 2532058544707057168}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: TestAgent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -368,7 +368,7 @@ GameObject:
   - component: {fileID: 485748327}
   - component: {fileID: 485748329}
   - component: {fileID: 485748328}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -452,6 +452,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 695301994221368011, guid: 7e804b2f05e2b3e459e97e8e6f513691,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592574292198696722, guid: 7e804b2f05e2b3e459e97e8e6f513691,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3273998611920155173, guid: 7e804b2f05e2b3e459e97e8e6f513691,
         type: 3}

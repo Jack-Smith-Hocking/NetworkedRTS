@@ -5,16 +5,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using RTS_System.AI;
 using System.Linq;
+using Mirror;
 
 namespace RTS_System
 {
-    public class NetworkPlayer : MonoBehaviour
+    public class NetworkPlayer : NetworkBehaviour
     {
         public Selector PlayerSelector = null;
         public Mod_ResourceManager PlayerResourceManager = null;
+        [Space]
+        public string FriendlyLayer = "Unit";
+        public string EnemyLayer = "EnemyUnit";
 
         private void Start()
         {
+            if (!isLocalPlayer) return;
+
             AIAgent agent = null;
 
             Collider[] cols = Physics.OverlapSphere(transform.position, 200);
@@ -25,15 +31,11 @@ namespace RTS_System
 
                 if (agent)
                 {
+                    agent.gameObject.layer = LayerMask.NameToLayer(FriendlyLayer);
                     agent.AgentOwner = this;
                     Helper.ListAdd<GameObject>(ref PlayerSelector.SceneSelectables, agent.gameObject);
                 }
             });
-        }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.DrawSphere(transform.position, 200);
         }
     }
 }

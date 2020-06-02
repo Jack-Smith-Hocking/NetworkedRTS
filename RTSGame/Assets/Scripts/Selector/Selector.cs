@@ -15,15 +15,14 @@ namespace RTS_System.Selection
         public LayerMask SelectionMask;
         public List<GameObject> SceneSelectables = new List<GameObject>();
 
-        [Space]
         [Tooltip("Determines the input for the main select button")] public InputActionReference MainSelectButton;
         [Tooltip("Determines the input for the multi-select button")] public InputActionReference MultiSelectInput;
         [Tooltip("Determines the input for adding an action to a queue")] public InputActionReference ActionQueueInput;
         [Space]
 
+
         public float DragDelay = 0.1f;
         private float currentDragTime = 0;
-
         public bool AddToActionList { get; private set; } = false;
 
         private List<ISelectable> selectables = new List<ISelectable>();
@@ -268,6 +267,15 @@ namespace RTS_System.Selection
             if (ai && player)
             {
                 ai.AgentOwner = player;
+
+                if (player.isLocalPlayer)
+                {
+                    ai.gameObject.layer = LayerMask.NameToLayer(player.FriendlyLayer);
+                }
+                else
+                {
+                    ai.gameObject.layer = LayerMask.NameToLayer(player.EnemyLayer);
+                }
             }
         }
     }
