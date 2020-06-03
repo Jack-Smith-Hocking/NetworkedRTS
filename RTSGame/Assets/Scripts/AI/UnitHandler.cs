@@ -27,9 +27,17 @@ namespace RTS_System.AI
                     SelectionInputs.Add(new ActionInput(s));
                 });
             }
- 
+
+            AIAction tempAction = null;
             Helper.LoopList_ForEach<ActionInput>(SelectionInputs, (ActionInput s) => 
-            { 
+            {
+                tempAction = s.GetActionClone;
+                if (tempAction)
+                {
+                    Agent.PossibleActionsDict[s.ActionName] = tempAction;
+                    Agent.PossibleActions.Add(tempAction);
+                }
+
                 DefaultUnitHandler.AddPerformedAction(s, PerformedAction); 
             });
         }

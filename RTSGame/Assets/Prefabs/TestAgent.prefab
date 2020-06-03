@@ -116,11 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NavAgent: {fileID: 589809937}
-  PossibleActions:
-  - {fileID: 11400000, guid: 003073430c6f1e44db018a2ac8d3c795, type: 2}
-  - {fileID: 11400000, guid: 7aed48dab0f87ab42a35d592ec70c2e8, type: 2}
-  - {fileID: 11400000, guid: 43edc9fa7dd38d942ba0f43daf7d6d9d, type: 2}
-  - {fileID: 11400000, guid: 550ca1c3eddf9ff4c8f17708199dc284, type: 2}
+  PossibleActions: []
   actionQueue: []
   currentAction: {fileID: 0}
   AgentOwner: {fileID: 0}

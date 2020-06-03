@@ -12,17 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e41c6a08a2e6e984a8792527da849c08, type: 3}
   m_Name: CreateWorkerAction
   m_EditorClassIdentifier: 
-  ActionIcon: {fileID: 0}
+  ActionIcon: {fileID: 21300114, guid: 9ba453ff7c6124209b57da4cd176d458, type: 3}
   ActionDescription: 
-  ActionName: CreateWorkerAction
+  ActionName: Create Worker Action
   CreateBuilding:
+    ValidTarget: 0
     MoveToPoint:
+      ValidTarget: 0
       MovementLayers:
         serializedVersion: 2
         m_Bits: 256
       StoppingDistance: 50
       CurrentTarget: {x: 0, y: 0, z: 0}
-      ValidTarget: 0
     BuildingPrefab: {fileID: 100000, guid: ab33e6080ae416b4d899f39fa8951b98, type: 3}
     BuildingIndicator: {fileID: 7350694739302784146, guid: 353ae9e06b3167c40bd115ef8ef90388,
       type: 3}

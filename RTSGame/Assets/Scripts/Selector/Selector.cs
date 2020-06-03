@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
 using Mirror;
-using RTS_System.AI;    
+using RTS_System.AI;
+using System;
 
 namespace RTS_System.Selection
 {
@@ -22,19 +23,34 @@ namespace RTS_System.Selection
         [Tooltip("Determines the input for adding an action to a queue")] public InputActionReference ActionQueueInput;
         [Space]
 
+        public Action OnSelectedChange;
 
         public float DragDelay = 0.1f;
-        private float currentDragTime = 0;
+        
         public bool AddToActionList { get; private set; } = false;
+
+        public GameObject GetFirstSelected
+        {
+            get
+            {
+                if (SelectedObjects.Count > 0)
+                {
+                    return SelectedObjects[0];
+                }
+                return null;
+            }
+        }
+
+        public List<GameObject> SelectedObjects { get; private set; } = new List<GameObject>();
 
         private List<ISelectable> selectables = new List<ISelectable>();
         private List<ISelectable> currentSelectables = new List<ISelectable>();
-
-        private List<GameObject> selectedObjects = new List<GameObject>();
         private List<GameObject> highlightedObjects = new List<GameObject>();
 
         private Vector3 startPos;
         private Vector3 endPos;
+
+        private float currentDragTime = 0;
 
         private BoundInput selectInput = new BoundInput();
         private BoundInput multiSelectInput = new BoundInput();
@@ -46,6 +62,11 @@ namespace RTS_System.Selection
             if (!isLocalPlayer) return;
 
             ClientInstance = this;
+
+            if (ActionUIManager.Instance)
+            {
+                ActionUIManager.Instance.UpdateCallback.Invoke(this);
+            }
 
             if (!SelectorCam)
             {
@@ -92,6 +113,8 @@ namespace RTS_System.Selection
                 {
                     SelectSingle();
                 }
+             
+                OnSelectedChange?.Invoke();
             }
         }
 
@@ -105,7 +128,7 @@ namespace RTS_System.Selection
 
             Helper.LoopList_ForEach<GameObject>(highlightedObjects, (GameObject go) => 
             {
-                if (selectedObjects.Contains(go))
+                if (SelectedObjects.Contains(go))
                 {
                     Helper.LoopList_ForEach<ISelectable>(go.GetComponentsInChildren<ISelectable>().ToList<ISelectable>(), (ISelectable s) =>
                     {
@@ -168,12 +191,12 @@ namespace RTS_System.Selection
                 return;
             }
 
-            if (selectedObjects.Contains(selected))
+            if (SelectedObjects.Contains(selected))
             {
                 return;
             }
 
-            selectedObjects.Add(selected);
+            SelectedObjects.Add(selected);
             
             currentSelectables.Clear();
             currentSelectables.AddRange(selected.GetComponentsInChildren<ISelectable>());
@@ -189,7 +212,7 @@ namespace RTS_System.Selection
             {
                 if (SceneSelectables.Contains(rayHit.collider.gameObject))
                 {
-                    if (toggleOff && selectedObjects.Contains(rayHit.collider.gameObject))
+                    if (toggleOff && SelectedObjects.Contains(rayHit.collider.gameObject))
                     {
                         ClearFromSelected(rayHit.collider.gameObject);
                     }
@@ -212,7 +235,7 @@ namespace RTS_System.Selection
             Helper.LoopList_ForEach<ISelectable>(selectables, (ISelectable selectable) => { selectable.OnDeselect(); });
 
             selectables.Clear();
-            selectedObjects.Clear();
+            SelectedObjects.Clear();
         }
 
         void ClearFromSelected(GameObject obj)
@@ -229,7 +252,7 @@ namespace RTS_System.Selection
             }
 
             currentSelectables.Clear();
-            selectedObjects.Remove(obj);
+            SelectedObjects.Remove(obj);
         }
 
         [Command]

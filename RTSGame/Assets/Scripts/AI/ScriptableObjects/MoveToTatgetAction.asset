@@ -12,14 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17ccce55900ad3a4297d3e92011cb334, type: 3}
   m_Name: MoveToTatgetAction
   m_EditorClassIdentifier: 
-  ActionIcon: {fileID: 0}
+  ActionIcon: {fileID: 21300048, guid: 9ba453ff7c6124209b57da4cd176d458, type: 3}
   ActionDescription: 
-  ActionName: MoveToTargetAction
+  ActionName: Move To Target Action
   MoveToTarget:
+    ValidTarget: 0
     MoveToPoint:
+      ValidTarget: 0
       MovementLayers:
         serializedVersion: 2
-        m_Bits: 512
+        m_Bits: 1536
       StoppingDistance: 10
       CurrentTarget: {x: 0, y: 0, z: 0}
     MaxFollowDistance: 500

@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c17a149d6346519498a17f50438565cb, type: 3}
   m_Name: MoveToPointAction
   m_EditorClassIdentifier: 
-  ActionIcon: {fileID: 0}
+  ActionIcon: {fileID: 21300042, guid: 9ba453ff7c6124209b57da4cd176d458, type: 3}
   ActionDescription: 
-  ActionName: MoveToPointAction
+  ActionName: Move To Point Action
   MoveToPoint:
+    ValidTarget: 0
     MovementLayers:
       serializedVersion: 2
       m_Bits: 256

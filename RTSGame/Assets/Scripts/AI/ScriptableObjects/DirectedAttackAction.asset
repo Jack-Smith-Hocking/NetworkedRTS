@@ -12,18 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0c48aa74906a6e4d8fad41a7e67cc33, type: 3}
   m_Name: DirectedAttackAction
   m_EditorClassIdentifier: 
-  ActionIcon: {fileID: 0}
+  ActionIcon: {fileID: 21300052, guid: 9ba453ff7c6124209b57da4cd176d458, type: 3}
   ActionDescription: 
-  ActionName: DirectedAttackAction
+  ActionName: Directed Attack Action
   DirectedAttack:
+    ValidTarget: 0
     MoveToTarget:
+      ValidTarget: 0
       MoveToPoint:
+        ValidTarget: 0
         MovementLayers:
           serializedVersion: 2
           m_Bits: 1024
         StoppingDistance: 25
         CurrentTarget: {x: 0, y: 0, z: 0}
-        ValidTarget: 0
       MaxFollowDistance: 100
       RepositionTime: 0.1
       CurrentTarget: {fileID: 0}

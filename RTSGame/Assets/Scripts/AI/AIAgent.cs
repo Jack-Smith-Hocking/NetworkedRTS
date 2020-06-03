@@ -14,14 +14,14 @@ namespace RTS_System.AI
         [Tooltip("The NavMeshAgent that will move this AIAgent")] public NavMeshAgent NavAgent = null;
         [Tooltip("List of possible actions")] public List<AIAction> PossibleActions = new List<AIAction>();
         [Space]
-        [Tooltip("Current actions")] public List<AIAction> actionQueue = new List<AIAction>();
-        public AIAction currentAction = null;
+        [Tooltip("Current actions")] public List<AIAction> ActionQueue = new List<AIAction>();
+        public AIAction CurrentAction = null;
 
         public NetworkPlayer AgentOwner = null;
 
         private AIAction cachedAction = null;
 
-        private Dictionary<string, AIAction> possibleActionsDict = new Dictionary<string, AIAction>();
+        public Dictionary<string, AIAction> PossibleActionsDict = new Dictionary<string, AIAction>();
 
         // Start is called before the first frame update
         protected override IEnumerator Start()
@@ -29,12 +29,12 @@ namespace RTS_System.AI
             yield return base.Start();
             
             // Get copies of the PossibleActions list
-            for (int i = 0; i < PossibleActions.Count; i++)
-            {
-                PossibleActions[i] = Instantiate(PossibleActions[i]);
+            //for (int i = 0; i < PossibleActions.Count; i++)
+            //{
+            //    PossibleActions[i] = Instantiate(PossibleActions[i]);
 
-                possibleActionsDict[PossibleActions[i].ActionName] = PossibleActions[i];
-            }
+            //    PossibleActionsDict[PossibleActions[i].ActionName] = PossibleActions[i];
+            //}
 
             if (AgentOwner)
             {
@@ -51,27 +51,27 @@ namespace RTS_System.AI
         public void UpdateAction()
         {
             // If there is a current action, update it
-            if (currentAction)
+            if (CurrentAction)
             {
-                currentAction.UpdateAction(this);
+                CurrentAction.UpdateAction(this);
 
                 // If the current action has completed, move on to the next action in the queue
-                if (currentAction.HasActionCompleted(this))
+                if (CurrentAction.HasActionCompleted(this))
                 {
-                    currentAction.ExitAction(this);
+                    CurrentAction.ExitAction(this);
 
                     // Get the next action from the queue if there is one
-                    if (actionQueue.Count > 0)
+                    if (ActionQueue.Count > 0)
                     {
-                        currentAction = actionQueue[0];
-                        currentAction.EnterAction(this);
-                        currentAction.ExecuteAction(this);
+                        CurrentAction = ActionQueue[0];
+                        CurrentAction.EnterAction(this);
+                        CurrentAction.ExecuteAction(this);
 
-                        actionQueue.RemoveAt(0);
+                        ActionQueue.RemoveAt(0);
                     }
                     else
                     {
-                        currentAction = null;
+                        CurrentAction = null;
                     }
                 }
             }
@@ -91,10 +91,10 @@ namespace RTS_System.AI
             float highestEvaluation = 0;
 
             // If there is a current action, it is by default the most valuable action to start
-            if (currentAction)
+            if (CurrentAction)
             {
-                highestAction = currentAction;
-                highestEvaluation = currentAction.EvaluateAction(this);
+                highestAction = CurrentAction;
+                highestEvaluation = CurrentAction.EvaluateAction(this);
             }
 
             // Loop through possible actions and evaluate them
@@ -124,46 +124,46 @@ namespace RTS_System.AI
             {
                 return;
             }
-            if (currentAction && currentAction.Equals(action) && checkInList)
+            if (CurrentAction && CurrentAction.Equals(action) && checkInList)
             {
                 return;
             }
 
             // If there is no current action or queued action, then just et the current action
-            if (!currentAction && actionQueue.Count == 0)
+            if (!CurrentAction && ActionQueue.Count == 0)
             {
-                currentAction = action;
+                CurrentAction = action;
                 addToList = false;
             }
             // Else if there is a current action, or a queued action, add to the queue
             else if (addToList)
             {
-                actionQueue.Add(action);
+                ActionQueue.Add(action);
             }
             // Otherwise, reset the queue and set the current action
             else
             {
                 // Exit out of current action if there is one
-                if (currentAction)
+                if (CurrentAction)
                 {
-                    currentAction.ExitAction(this);
+                    CurrentAction.ExitAction(this);
                 }
 
                 // Cancel queued actions
-                Helper.LoopList_ForEach<AIAction>(actionQueue, (AIAction a) =>
+                Helper.LoopList_ForEach<AIAction>(ActionQueue, (AIAction a) =>
                 {
                     a.CancelAction(this);
                 });
                 
-                actionQueue.Clear();
-                currentAction = action;
+                ActionQueue.Clear();
+                CurrentAction = action;
             }
 
             // Enter and execute the new current action, if there is one
-            if (!addToList && currentAction)
+            if (!addToList && CurrentAction)
             {
-                currentAction.EnterAction(this);
-                currentAction.ExecuteAction(this);
+                CurrentAction.EnterAction(this);
+                CurrentAction.ExecuteAction(this);
             }
         }
 
@@ -207,9 +207,9 @@ namespace RTS_System.AI
 
         public void AddAction(string actionName, bool addToList, GameObject go, Vector3 vec3, int integer)
         {
-            if (possibleActionsDict.ContainsKey(actionName))
+            if (PossibleActionsDict.ContainsKey(actionName))
             {
-                AIAction action = possibleActionsDict[actionName];
+                AIAction action = PossibleActionsDict[actionName];
 
                 if (action)
                 {
@@ -230,7 +230,7 @@ namespace RTS_System.AI
 
         private void OnDestroy()
         {
-            Helper.LoopList_ForEach<AIAction>(actionQueue, (AIAction a) => { a.CancelAction(this); });
+            Helper.LoopList_ForEach<AIAction>(ActionQueue, (AIAction a) => { a.CancelAction(this); });
 
             if (AIManager.Instance)
             {

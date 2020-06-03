@@ -29,6 +29,18 @@ namespace RTS_System.AI
                 return string.Empty;
             }
         }
+        public AIAction GetActionClone
+        {
+            get
+            {
+                if (Action)
+                {
+                    return GameObject.Instantiate(Action);
+                }
+
+                return null;    
+            }
+        }
 
         public ActionInput() { }
 

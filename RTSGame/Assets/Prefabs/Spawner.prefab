@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1553255986604784433}
   - component: {fileID: 564297416}
   - component: {fileID: 564297421}
-  - component: {fileID: 564297418}
   - component: {fileID: 564297419}
   - component: {fileID: 564297420}
   - component: {fileID: 564297422}
@@ -68,23 +67,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 20, y: 20, z: 20}
   m_Center: {x: 0, y: 10, z: 0}
---- !u!114 &564297418
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 325476590979837097}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7f0dc189f5163f48b886df0427b2600, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NavAgent: {fileID: 0}
-  PossibleActions: []
-  actionQueue: []
-  currentAction: {fileID: 0}
-  AgentOwner: {fileID: 0}
 --- !u!114 &564297419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,8 +104,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NavAgent: {fileID: 0}
   PossibleActions: []
-  actionQueue: []
-  currentAction: {fileID: 0}
+  ActionQueue: []
+  CurrentAction: {fileID: 0}
   AgentOwner: {fileID: 0}
 --- !u!114 &564297422
 MonoBehaviour:
@@ -168,7 +150,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 564297418}
+      - m_Target: {fileID: 564297420}
         m_MethodName: ServerDestroy
         m_Mode: 4
         m_Arguments:
