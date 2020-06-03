@@ -2804,6 +2804,16 @@ PrefabInstance:
       propertyPath: sceneId
       value: 475996436
       objectReference: {fileID: 0}
+    - target: {fileID: 502595491378954909, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
+        type: 3}
+      propertyPath: m_AssetId
+      value: 4fcf9d440d8e2d0418bd72e17a0a7637
+      objectReference: {fileID: 0}
+    - target: {fileID: 4401052552219417439, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4846994828206223102, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
         type: 3}
       propertyPath: m_AnchorMax.x

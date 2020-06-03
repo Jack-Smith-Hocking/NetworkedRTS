@@ -11,6 +11,7 @@ namespace RTS_System
 {
     public class NetworkPlayer : NetworkBehaviour
     {
+
         public Selector PlayerSelector = null;
         public Mod_ResourceManager PlayerResourceManager = null;
         [Space]

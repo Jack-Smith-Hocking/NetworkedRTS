@@ -8,7 +8,7 @@ namespace RTS_System.Selection
     {
         protected virtual IEnumerator Start()
         {
-            yield return new WaitForSecondsRealtime(1);
+            yield return new WaitForEndOfFrame();
 
            // Helper.ListAdd<GameObject>(ref Selector.Instance.SceneSelectables, gameObject);
         }

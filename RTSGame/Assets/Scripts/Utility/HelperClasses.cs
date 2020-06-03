@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -192,6 +193,47 @@ public class BoundInput
         Helper.LoopList_ForEach<InputAction>(otherBoundInputs, (InputAction action) => { Unbind(action); });
     }
 }
+
+public class TimerDict
+{
+    public Dictionary<string, float> StaticTimerDict = new Dictionary<string, float>();
+
+    public void SetTimer(string timerName, float time, bool overwrite = false)
+    {
+        if (StaticTimerDict.ContainsKey(timerName))
+        {
+            if (overwrite)
+            {
+                StaticTimerDict[timerName] = time;
+            }
+
+            return;
+        }
+
+        StaticTimerDict[timerName] = time;
+    }
+    public float GetTimer(string timerName)
+    {
+        if (StaticTimerDict.ContainsKey(timerName))
+        {
+            return StaticTimerDict[timerName];
+        }
+
+        DebugManager.WarningMessage($"Failed to find timer of name: {timerName}");
+        return -1;
+    }
+    /// <summary>
+    /// Checks if the timer at timerName is <= to the timeCheck
+    /// </summary>
+    /// <param name="timerName">The name of the timer to get</param>
+    /// <param name="timeCheck">The time to check against</param>
+    /// <returns>Will return true if no timer was found at timerName</returns>
+    public bool CheckTimer(string timerName, float timeCheck)
+    {
+        return GetTimer(timerName) <= timeCheck;
+    }
+}
+
 public static class Helper
 {
     public static Renderer CachedRenderer = null;
@@ -199,6 +241,9 @@ public static class Helper
     public static List<GameObject> CachedList = new List<GameObject>();
     public static Rect CachedRect;
 
+    public static TimerDict StaticTimerInstance = new TimerDict();
+
+    #region HelpfulListFunctions
     /// <summary>
     /// Will add a list to another list, but will check if each element of the additive list is already in the original
     /// </summary>
@@ -219,21 +264,29 @@ public static class Helper
     /// <typeparam name="T">The type of data being worked with</typeparam>
     /// <param name="originalList">The list to add to"</param>
     /// <param name="addObj">The object to add</param>
-    public static void ListAdd<T>(ref List<T> originalList, T addObj)
+    public static bool ListAdd<T>(ref List<T> originalList, T addObj)
     {
-        if ((!IsNullOrDestroyed<T>(addObj)) && originalList != null)
+        if (IsNullOrDestroyed<T>(addObj) && originalList == null)
         {
-            // If there are no elements in the list, add
-            if (originalList.Count == 0)
-            {
-                originalList.Add(addObj);
-            }
-            // If the obj is not in the list, add
-            else if (!originalList.Contains(addObj))
-            {
-                originalList.Add(addObj);
-            }
+            return false;
         }
+
+        // If there are no elements in the list, add
+        if (originalList.Count == 0)
+        {
+            originalList.Add(addObj);
+
+            return true;
+        }
+        // If the obj is not in the list, add
+        else if (!originalList.Contains(addObj))
+        {
+            originalList.Add(addObj);
+
+            return true;
+        }
+
+        return false;
     }
 
     public static void TrimElement<T>(ref List<T> trimList, T trimObj)
@@ -316,6 +369,43 @@ public static class Helper
             }
         }
     }
+    #endregion
+
+    #region HelpfulVectorFunctions
+    /// <summary>
+    /// Get the distance between two GameObjects
+    /// </summary>
+    /// <param name="objOne">First object</param>
+    /// <param name="objTwo">Second object</param>
+    /// <returns>Returns -1 if either object is null</returns>
+    public static float Distance(GameObject objOne, GameObject objTwo)
+    {
+        if (!objOne || !objTwo) return -1;
+
+        return Distance(objOne.transform, objTwo.transform);
+    }
+    /// <summary>
+    /// Get the distance between two Transforms
+    /// </summary>
+    /// <param name="transOne">First object</param>
+    /// <param name="transTwo">Second object</param>
+    /// <returns>Returns -1 if either object is null</returns>
+    public static float Distance(Transform transOne, Transform transTwo)
+    {
+        if (!transOne || !transTwo) return -1;
+
+        return Vector3.Distance(transOne.position, transTwo.position);
+    }
+
+    public static bool InDistance(Vector3 start, Vector3 end, float dist)
+    {
+        return (Vector3.Distance(start, end) <= dist);
+    }
+    public static bool OutDistance(Vector3 start, Vector3 end, float dist)
+    {
+        return !InDistance(start, end, dist);
+    }
+    #endregion
 
     /// <summary>
     /// Get a random point on a NavMesh
@@ -389,31 +479,6 @@ public static class Helper
         return inList;
     }
 
-    /// <summary>
-    /// Get the distance between two GameObjects
-    /// </summary>
-    /// <param name="objOne">First object</param>
-    /// <param name="objTwo">Second object</param>
-    /// <returns>Returns -1 if either object is null</returns>
-    public static float Distance(GameObject objOne, GameObject objTwo)
-    {
-        if (!objOne || !objTwo) return -1;
-
-        return Distance(objOne.transform, objTwo.transform);
-    }
-    /// <summary>
-    /// Get the distance between two Transforms
-    /// </summary>
-    /// <param name="transOne">First object</param>
-    /// <param name="transTwo">Second object</param>
-    /// <returns>Returns -1 if either object is null</returns>
-    public static float Distance(Transform transOne, Transform transTwo)
-    {
-        if (!transOne || !transTwo) return -1;
-
-        return Vector3.Distance(transOne.position, transTwo.position);
-    }
-
     public static bool IsInLayerMask(LayerMask mask, int layer)
     {
         return mask == (mask | (1 << layer));
@@ -465,7 +530,7 @@ public static class Helper
     {
         if (objList == null || cam == null)
         {
-            return null;
+            return new List<GameObject>(0);
         }
 
         CachedRect = new Rect(startPos.x, startPos.y, (endPos.x - startPos.x), (endPos.y - startPos.y));
@@ -538,6 +603,45 @@ public static class Helper
         }
 
         return type;
+    }
+    public static List<T> GetComponents<T>(GameObject obj)
+    {
+        if (IsNullOrDestroyed(obj)) return new List<T>(0);
+
+        List<T> componentList = new List<T>();
+
+        componentList.AddRange(obj.GetComponents<T>());
+        componentList.AddRange(obj.GetComponentsInChildren<T>());
+        componentList.AddRange(obj.GetComponentsInParent<T>());
+
+        return componentList;
+    }
+
+    public static void SendMessageToChain(GameObject go, string message, SendMessageOptions options = SendMessageOptions.DontRequireReceiver)
+    {
+        if (go && message.Length > 0)
+        {
+            go.BroadcastMessage(message, options);
+
+            if (go.transform.parent)
+            {
+                go.transform.parent.SendMessageUpwards(message, options);
+            }
+        }
+    }
+
+    public static string ExcludeInString(string original, string toExclude)
+    {
+        return original.Replace(toExclude, "");
+    }
+    public static string MultiExludeInString(string original, List<string> toExclude)
+    {
+        Helper.LoopList_ForEach<string>(toExclude, (string s) =>
+        {
+            original = Helper.ExcludeInString(original, s);
+        });
+
+        return original;
     }
 
     #region SetMaterials

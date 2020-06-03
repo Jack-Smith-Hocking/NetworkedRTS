@@ -8,6 +8,8 @@ namespace RTS_System.AI
 {
     public class ActionUI : MonoBehaviour
     {
+        public List<string> WordsToExcludeInDisplayName = new List<string>();
+        [Space]
         public TextMeshProUGUI ActionDisplayText = null;
         public Image ActionDisplayImage = null;
         [Space]
@@ -28,7 +30,14 @@ namespace RTS_System.AI
 
             if (ActionDisplayText)
             {
-                ActionDisplayText.text = actionToDisplay.ActionName + " " + actionInput;
+                string actionName = actionToDisplay.ActionName;
+
+                if (WordsToExcludeInDisplayName.Count > 0)
+                {
+                    actionName = Helper.MultiExludeInString(actionName, WordsToExcludeInDisplayName);
+                }
+
+                ActionDisplayText.text =  actionName + " " + actionInput;
             }
         }
     }

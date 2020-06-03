@@ -23,6 +23,8 @@ namespace RTS_System.AI
 
         public Dictionary<string, AIAction> PossibleActionsDict = new Dictionary<string, AIAction>();
 
+        public TimerDict ActionTimer = new TimerDict();
+
         // Start is called before the first frame update
         protected override IEnumerator Start()
         {

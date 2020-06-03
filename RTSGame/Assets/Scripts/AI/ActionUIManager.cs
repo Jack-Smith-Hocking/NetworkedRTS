@@ -11,32 +11,21 @@ namespace RTS_System.AI
     {
         public static ActionUIManager Instance = null;
 
-        public GameObject CurrentActionDisplayParent = null;
-        public GameObject ActionDisplayParent = null;
-        public GameObject ActionDisplayPrefab = null;
-
-        public Action<Selector> UpdateCallback = null;
+        [Tooltip("This will be the GameObject that is used to display the currently run action of an AI (using the ActionDisplayPrefab")] public GameObject CurrentActionDisplayParent = null;
+        [Tooltip("The GameObject that will show all of the current actions of an AIAgent")] public GameObject ActionDisplayParent = null;
+        [Tooltip("The prefab that will display AIActions")] public GameObject ActionDisplayPrefab = null;
 
         [Space]
         public List<GameObject> DisplayedActions = new List<GameObject>();
         public UnitHandler DisplayedUnit = null;
-        public Selector DisplayedSelector = null;
 
-        private void Start()
+        private IEnumerator Start()
         {
+            yield return new WaitWhile(() => { return Selector.ClientInstance == null; });
+
             Instance = this;
 
-            UpdateCallback += (Selector selector) =>
-            {
-                if (selector)
-                {
-                    selector.OnSelectedChange += UpdateUI;
-
-                    DisplayedSelector = selector;
-                }
-            };
-
-            UpdateCallback.Invoke(Selector.ClientInstance);
+            Selector.ClientInstance.OnSelectedChange += UpdateUI;
         }
 
         public void UpdateUI()
@@ -46,15 +35,15 @@ namespace RTS_System.AI
 
         void GetDisplayAgent()
         {
-            DisplayedUnit = Helper.GetComponent<UnitHandler>(DisplayedSelector.GetFirstSelected);
+            DisplayedUnit = Helper.GetComponent<UnitHandler>(Selector.ClientInstance.GetFirstSelected);
             if (DisplayedUnit == null)
             {
-                Helper.LoopList_ForEach<GameObject>(DisplayedSelector.SelectedObjects, 
+                Helper.LoopList_ForEach<GameObject>(Selector.ClientInstance.SelectedObjects,
                 // Loop Action
                 (GameObject go) =>
                 {
                     DisplayedUnit = Helper.GetComponent<UnitHandler>(go);
-                }, 
+                },
                 // BreakOut Action
                 () =>
                 {

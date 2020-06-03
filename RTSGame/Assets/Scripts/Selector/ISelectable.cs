@@ -4,6 +4,14 @@ using UnityEngine;
 
 namespace RTS_System.Selection
 {
+    /// <summary>
+    /// This is to make it safer for SendMessage calls
+    /// </summary>
+    public enum ISelectableEnum
+    {
+        SetHover, SetSelected, SetDeselected,
+        OnHover, OffHover, OnSelect, OnDeselect, OnExecute
+    }
     public interface ISelectable
     {
         #region Materials

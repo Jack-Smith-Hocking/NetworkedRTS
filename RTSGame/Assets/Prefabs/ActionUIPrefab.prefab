@@ -123,6 +123,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e50a9d198d7fb674299b5137208c2a9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WordsToExcludeInActionName:
+  - Action
+  - (Clone)
   ActionDisplayText: {fileID: 4452088925282424933}
   ActionDisplayImage: {fileID: 0}
   ImageAlpha: 255
