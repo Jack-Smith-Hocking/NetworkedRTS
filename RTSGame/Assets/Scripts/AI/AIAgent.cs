@@ -21,6 +21,8 @@ namespace RTS_System.AI
 
         private AIAction cachedAction = null;
 
+        private Dictionary<string, AIAction> possibleActionsDict = new Dictionary<string, AIAction>();
+
         // Start is called before the first frame update
         protected override IEnumerator Start()
         {
@@ -30,6 +32,8 @@ namespace RTS_System.AI
             for (int i = 0; i < PossibleActions.Count; i++)
             {
                 PossibleActions[i] = Instantiate(PossibleActions[i]);
+
+                possibleActionsDict[PossibleActions[i].ActionName] = PossibleActions[i];
             }
 
             if (AgentOwner)
@@ -114,13 +118,13 @@ namespace RTS_System.AI
         /// </summary>
         /// <param name="action">Action to add</param>
         /// <param name="addToList">If set to false, will set the current action. Otherwise will add to queue</param>
-        public void SetAction(AIAction action, bool addToList)
+        public void SetAction(AIAction action, bool addToList, bool checkInList = true)
         {
             if (!action)
             {
                 return;
             }
-            if (currentAction && currentAction.Equals(action))
+            if (currentAction && currentAction.Equals(action) && checkInList)
             {
                 return;
             }
@@ -200,6 +204,30 @@ namespace RTS_System.AI
                 }
             }
         }
+
+        public void AddAction(string actionName, bool addToList, GameObject go, Vector3 vec3, int integer)
+        {
+            if (possibleActionsDict.ContainsKey(actionName))
+            {
+                AIAction action = possibleActionsDict[actionName];
+
+                if (action)
+                {
+                    action = Instantiate(action);
+                    action.InitialiseAction(this);
+
+                    if (action.SetVariables(this, go, vec3, integer))
+                    {
+                        SetAction(action, addToList, false);
+                    }
+                    else
+                    {
+                        action.CancelAction(this);
+                    }
+                }
+            }
+        }
+
         private void OnDestroy()
         {
             Helper.LoopList_ForEach<AIAction>(actionQueue, (AIAction a) => { a.CancelAction(this); });

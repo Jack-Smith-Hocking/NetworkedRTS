@@ -11,7 +11,7 @@ namespace RTS_System.AI
         [Header("Unit Data")]
         [Tooltip("The AIAgent that this unit is managing")] public AIAgent Agent = null;
         [Tooltip("Whether or not this unit will implement the DefaultUnitHandler's actions")] public bool UseDefaultActions = true;
-        [Tooltip("List of actions that this unit can perform")] public List<SelectorInput> SelectionInputs = new List<SelectorInput>();
+        [Tooltip("List of actions that this unit can perform")] public List<ActionInput> SelectionInputs = new List<ActionInput>();
 
         // Start is called before the first frame update
         protected override IEnumerator Start()
@@ -22,34 +22,26 @@ namespace RTS_System.AI
 
             if (UseDefaultActions)
             {
-                Helper.LoopList_ForEach<SelectorInput>(DefaultUnitHandler.Instance.SelectionInputs, (SelectorInput s) =>
+                Helper.LoopList_ForEach<ActionInput>(DefaultUnitHandler.Instance.SelectionInputs, (ActionInput s) =>
                 {
-                    SelectionInputs.Add(new SelectorInput(s));
+                    SelectionInputs.Add(new ActionInput(s));
                 });
             }
  
-            Helper.LoopList_ForEach<SelectorInput>(SelectionInputs, (SelectorInput s) => 
-            {
-                if (s.Action != null)
-                {
-                    s.Action = Instantiate(s.Action);
-                }
-            });
-
-            Helper.LoopList_ForEach<SelectorInput>(SelectionInputs, (SelectorInput s) => 
+            Helper.LoopList_ForEach<ActionInput>(SelectionInputs, (ActionInput s) => 
             { 
                 DefaultUnitHandler.AddPerformedAction(s, PerformedAction); 
             });
         }
 
-        public void PerformedAction(SelectorInput s)
+        public void PerformedAction(ActionInput s)
         {
-            if (s != null && s.Action != null)
+            if (s != null && s.ActionName.Length > 0)
             {
                 RaycastHit rayHit;
                 if (Physics.Raycast(Agent.AgentOwner.PlayerSelector.SelectorCam.ScreenPointToRay(Input.mousePosition), out rayHit))
                 {
-                    Agent.AgentOwner.PlayerSelector.CmdAddAction(Agent.gameObject, s.Action.ActionName, rayHit.collider.gameObject, rayHit.point, rayHit.collider.gameObject.layer, Agent.AgentOwner.PlayerSelector.AddToActionList);
+                    Agent.AgentOwner.PlayerSelector.CmdAddAction(Agent.gameObject, s.ActionName, rayHit.collider.gameObject, rayHit.point, rayHit.collider.gameObject.layer, Agent.AgentOwner.PlayerSelector.AddToActionList);
                 }
             }
         }

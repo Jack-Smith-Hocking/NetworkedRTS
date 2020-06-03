@@ -101,11 +101,11 @@ MonoBehaviour:
   UseDefaultActions: 0
   SelectionInputs:
   - SelectorInputName: CreateWorker
-    InputAction: {fileID: 2207451653104450684, guid: b995a5cde5930cc47a278e015840fdd7,
+    InputActionRef: {fileID: 2207451653104450684, guid: b995a5cde5930cc47a278e015840fdd7,
       type: 3}
     Action: {fileID: 11400000, guid: 997c9b3bdb01f0644a751a50e64ece11, type: 2}
   - SelectorInputName: CreateFighter
-    InputAction: {fileID: 5514273164105147810, guid: b995a5cde5930cc47a278e015840fdd7,
+    InputActionRef: {fileID: 5514273164105147810, guid: b995a5cde5930cc47a278e015840fdd7,
       type: 3}
     Action: {fileID: 11400000, guid: 5b815cb6a1b797c4e81b02da398b85f4, type: 2}
 --- !u!114 &564297420
@@ -137,6 +137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4863f7271395e804d8cd537aee75898c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   MaxHealth: 10
   OnTakeDamageEvent:
     m_PersistentCalls:
@@ -185,6 +187,7 @@ MonoBehaviour:
   HitFXPosition: {fileID: 0}
   UseHitFXPoint: 1
   HealthState: 0
+  CurrentHealth: 0
 --- !u!114 &564297423
 MonoBehaviour:
   m_ObjectHideFlags: 0

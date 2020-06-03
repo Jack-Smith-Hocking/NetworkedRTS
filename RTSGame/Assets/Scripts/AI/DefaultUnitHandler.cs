@@ -8,20 +8,37 @@ using RTS_System;
 namespace RTS_System.AI
 {
     [System.Serializable]
-    public class SelectorInput
+    public class ActionInput
     {
         [Tooltip("Identifier for long inspector lists")] public string SelectorInputName;
-        [Tooltip("Input to bind to")] public InputActionReference InputAction = null;
-        [Tooltip("Action to perform on key press")] public AIAction Action = null;
+        [Tooltip("Input to bind to")] public InputActionReference InputActionRef = null;
+
+        [SerializeField]
+        [Tooltip("Action to perform on key press")] private AIAction Action = null;
+
         public BoundInput BoundInput = new BoundInput();
 
-        public SelectorInput() { }
-        public SelectorInput(SelectorInput selectorInput)
+        public string ActionName
+        {
+            get
+            {
+                if (Action)
+                {
+                    return Action.ActionName;
+                }
+                return string.Empty;
+            }
+        }
+
+        public ActionInput() { }
+
+        // Make a copy
+        public ActionInput(ActionInput selectorInput)
         {
             if (selectorInput == null) return;
 
             SelectorInputName = selectorInput.SelectorInputName;
-            InputAction = selectorInput.InputAction;
+            InputActionRef = selectorInput.InputActionRef;
             Action = selectorInput.Action;
         }
     }
@@ -29,8 +46,8 @@ namespace RTS_System.AI
     public class DefaultUnitHandler : MonoBehaviour
     {
         public static DefaultUnitHandler Instance = null;
-        
-        [Tooltip("List of actions that can be performed by all Units if they choose")] public List<SelectorInput> SelectionInputs = new List<SelectorInput>();
+
+        [Tooltip("List of actions that can be performed by all Units if they choose")] public List<ActionInput> SelectionInputs = new List<ActionInput>();
 
         private bool isBound = false;
 
@@ -39,7 +56,7 @@ namespace RTS_System.AI
         {
             Instance = this;
         }
-        public static void AddPerformedAction(SelectorInput s, Action<SelectorInput> performedAction)
+        public static void AddPerformedAction(ActionInput s, Action<ActionInput> performedAction)
         {
             if (s == null || performedAction == null) return;
 
@@ -70,11 +87,11 @@ namespace RTS_System.AI
         /// Bind the PerformedActions of the SelectorInput to their InputAction
         /// </summary>
         /// <param name="s">SelectorInput to bind</param>
-        public static void BindInput(SelectorInput s)
+        public static void BindInput(ActionInput s)
         {
             if (s != null)
             {
-                s.BoundInput.Bind(s.InputAction);
+                s.BoundInput.Bind(s.InputActionRef);
             }
         }
 
@@ -82,9 +99,9 @@ namespace RTS_System.AI
         /// Bind the PerformedActions of the SelectorInputs to their InputAction
         /// </summary>
         /// <param name="inputs">SelectorInput list to bind</param>
-        public static void BindAllInputs(List<SelectorInput> inputs)
+        public static void BindAllInputs(List<ActionInput> inputs)
         {
-            Helper.LoopList_ForEach<SelectorInput>(inputs, BindInput);
+            Helper.LoopList_ForEach<ActionInput>(inputs, BindInput);
         }
 
 
@@ -92,20 +109,20 @@ namespace RTS_System.AI
         /// Unbind the PerformedActions of the SelectorInput to their InputAction
         /// </summary>
         /// <param name="s">SelectorInput to unbind</param>
-        public static void UnbindInput(SelectorInput s)
+        public static void UnbindInput(ActionInput s)
         {
             if (s != null)
             {
-                s.BoundInput.Unbind(s.InputAction);
+                s.BoundInput.Unbind(s.InputActionRef);
             }
         }
         /// <summary>
         /// Unbind the PerformedActions of the SelectorInputs to their InputAction
         /// </summary>
         /// <param name="inputs">SelectorInput list to unbind</param>
-        public static void UnbindAllInputs(List<SelectorInput> inputs)
+        public static void UnbindAllInputs(List<ActionInput> inputs)
         {
-            Helper.LoopList_ForEach<SelectorInput>(inputs, UnbindInput);
+            Helper.LoopList_ForEach<ActionInput>(inputs, UnbindInput);
         }
     }
 }

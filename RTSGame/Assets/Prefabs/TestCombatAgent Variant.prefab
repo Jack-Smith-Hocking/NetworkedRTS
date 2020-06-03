@@ -415,7 +415,7 @@ MonoBehaviour:
   UseDefaultActions: 1
   SelectionInputs:
   - SelectorInputName: DirectedAttack
-    InputAction: {fileID: 570080351422657074, guid: b995a5cde5930cc47a278e015840fdd7,
+    InputActionRef: {fileID: 570080351422657074, guid: b995a5cde5930cc47a278e015840fdd7,
       type: 3}
     Action: {fileID: 11400000, guid: ecf1859e4b1f94d47bd0ebffa40627d1, type: 2}
 --- !u!114 &767273180226058105

@@ -239,17 +239,19 @@ namespace RTS_System.Selection
 
             AIAgent ai = agent.GetComponent<AIAgent>();
 
-            if (ai && AIAction.ActionTable.ContainsKey(actionName))
+            if (ai /*&& AIAction.ActionTable.ContainsKey(actionName)*/)
             {
-                AIAction action = Instantiate(AIAction.ActionTable[actionName]);
+                ai.AddAction(actionName, addToList, target, targetPos, layer);
 
-                action.InitialiseAction(ai);
-                bool valid = action.SetVariables(ai, target, targetPos, layer);
+                //AIAction action = Instantiate(AIAction.ActionTable[actionName]);
 
-                if (valid)
-                {
-                    ai.AddAction(action, addToList, false, false);
-                }
+                //action.InitialiseAction(ai);
+                //bool valid = action.SetVariables(ai, target, targetPos, layer);
+
+                //if (valid)
+                //{
+                //    ai.AddAction(action, addToList, false, false);
+                //}
             }
         }
 
