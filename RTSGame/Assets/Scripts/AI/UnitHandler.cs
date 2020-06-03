@@ -11,7 +11,7 @@ namespace RTS_System.AI
         [Header("Unit Data")]
         [Tooltip("The AIAgent that this unit is managing")] public AIAgent Agent = null;
         [Tooltip("Whether or not this unit will implement the DefaultUnitHandler's actions")] public bool UseDefaultActions = true;
-        [Tooltip("List of actions that this unit can perform")] public List<ActionInput> SelectionInputs = new List<ActionInput>();
+        [Tooltip("List of actions that this unit can perform")] public List<ActionInput> ActionInputs = new List<ActionInput>();
 
         // Start is called before the first frame update
         protected override IEnumerator Start()
@@ -24,12 +24,12 @@ namespace RTS_System.AI
             {
                 Helper.LoopList_ForEach<ActionInput>(DefaultUnitHandler.Instance.SelectionInputs, (ActionInput s) =>
                 {
-                    SelectionInputs.Add(new ActionInput(s));
+                    ActionInputs.Add(new ActionInput(s));
                 });
             }
 
             AIAction tempAction = null;
-            Helper.LoopList_ForEach<ActionInput>(SelectionInputs, (ActionInput s) => 
+            Helper.LoopList_ForEach<ActionInput>(ActionInputs, (ActionInput s) => 
             {
                 tempAction = s.GetActionClone;
                 if (tempAction)
@@ -59,20 +59,20 @@ namespace RTS_System.AI
         {
             base.OnSelect();
 
-            DefaultUnitHandler.BindAllInputs(SelectionInputs);
+            DefaultUnitHandler.BindAllInputs(ActionInputs);
         }
 
         public override void OnDeselect()
         {
             base.OnDeselect();
 
-            DefaultUnitHandler.UnbindAllInputs(SelectionInputs);
+            DefaultUnitHandler.UnbindAllInputs(ActionInputs);
         }
         #endregion
 
         private void OnDestroy()
         {
-            DefaultUnitHandler.UnbindAllInputs(SelectionInputs);
+            DefaultUnitHandler.UnbindAllInputs(ActionInputs);
         }
     }
 }

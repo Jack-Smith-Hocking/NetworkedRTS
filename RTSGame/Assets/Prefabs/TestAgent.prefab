@@ -117,8 +117,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NavAgent: {fileID: 589809937}
   PossibleActions: []
-  actionQueue: []
-  currentAction: {fileID: 0}
+  ActionQueue: []
+  CurrentAction: {fileID: 0}
   AgentOwner: {fileID: 0}
 --- !u!195 &589809937
 NavMeshAgent:
@@ -156,12 +156,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Agent: {fileID: 0}
   UseDefaultActions: 1
-  SelectionInputs:
-  - SelectorInputName: Building
+  ActionInputs:
+  - SelectorInputName: BuildSpawner
     InputActionRef: {fileID: 2207451653104450684, guid: b995a5cde5930cc47a278e015840fdd7,
       type: 3}
     Action: {fileID: 11400000, guid: 7aed48dab0f87ab42a35d592ec70c2e8, type: 2}
-  - SelectorInputName: CollectResource
+  - SelectorInputName: CollectResources
     InputActionRef: {fileID: 5514273164105147810, guid: b995a5cde5930cc47a278e015840fdd7,
       type: 3}
     Action: {fileID: 11400000, guid: 480ca6ec2574b9441be9e5a84f574462, type: 2}

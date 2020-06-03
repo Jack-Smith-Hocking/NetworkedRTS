@@ -184,7 +184,7 @@ MonoBehaviour:
     type: 3}
   ActionQueueInput: {fileID: -7048009427773694730, guid: b995a5cde5930cc47a278e015840fdd7,
     type: 3}
-  DragDelay: 0.05
+  DragDelay: 0.1
 --- !u!114 &3181192423382323896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,8 +197,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b60b1e8a1cdee874b863aac316f03b82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   PlayerSelector: {fileID: 1784272296464814925}
   PlayerResourceManager: {fileID: 8218140697292008112}
+  FriendlyLayer: Unit
+  EnemyLayer: EnemyUnit
 --- !u!114 &8218140697292008112
 MonoBehaviour:
   m_ObjectHideFlags: 0

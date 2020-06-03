@@ -19,7 +19,7 @@ namespace RTS_System.AI
 
         [Space]
         public List<GameObject> DisplayedActions = new List<GameObject>();
-        public AIAgent DisplayedAgent = null;
+        public UnitHandler DisplayedUnit = null;
         public Selector DisplayedSelector = null;
 
         private void Start()
@@ -46,19 +46,19 @@ namespace RTS_System.AI
 
         void GetDisplayAgent()
         {
-            DisplayedAgent = Helper.GetComponent<AIAgent>(DisplayedSelector.GetFirstSelected);
-            if (DisplayedAgent == null)
+            DisplayedUnit = Helper.GetComponent<UnitHandler>(DisplayedSelector.GetFirstSelected);
+            if (DisplayedUnit == null)
             {
                 Helper.LoopList_ForEach<GameObject>(DisplayedSelector.SelectedObjects, 
                 // Loop Action
                 (GameObject go) =>
                 {
-                    DisplayedAgent = Helper.GetComponent<AIAgent>(go);
+                    DisplayedUnit = Helper.GetComponent<UnitHandler>(go);
                 }, 
                 // BreakOut Action
                 () =>
                 {
-                    return DisplayedAgent;
+                    return DisplayedUnit;
                 });
             }
         }
@@ -71,14 +71,14 @@ namespace RTS_System.AI
             {
                 GetDisplayAgent();
 
-                if (DisplayedAgent)
+                if (DisplayedUnit)
                 {
                     GameObject displayPrefab = null;
                     ActionUI actionUI = null;
 
                     if (ActionDisplayParent)
                     {
-                        Helper.LoopList_ForEach<AIAction>(DisplayedAgent.PossibleActions, (AIAction action) =>
+                        Helper.LoopList_ForEach<ActionInput>(DisplayedUnit.ActionInputs, (ActionInput actionInput) =>
                         {
                             displayPrefab = Instantiate(ActionDisplayPrefab, ActionDisplayParent.transform);
                             actionUI = Helper.GetComponent<ActionUI>(displayPrefab);
@@ -87,13 +87,13 @@ namespace RTS_System.AI
 
                             if (actionUI)
                             {
-                                actionUI.ActionToDisplay = action;
-                                actionUI.UpdateActionUI();
+                                string inputButton = "\n( " + actionInput.InputActionRef.ToInputAction().name + " )";
+                                actionUI.UpdateActionUI(actionInput.GetActionClone, inputButton);
                             }
                         });
                     }
 
-                    if (CurrentActionDisplayParent && DisplayedAgent.CurrentAction)
+                    if (CurrentActionDisplayParent && DisplayedUnit.Agent.CurrentAction)
                     {
                         displayPrefab = Instantiate(ActionDisplayPrefab, CurrentActionDisplayParent.transform);
                         actionUI = Helper.GetComponent<ActionUI>(displayPrefab);
@@ -102,8 +102,7 @@ namespace RTS_System.AI
 
                         if (actionUI)
                         {
-                            actionUI.ActionToDisplay = DisplayedAgent.CurrentAction;
-                            actionUI.UpdateActionUI();
+                            actionUI.UpdateActionUI(DisplayedUnit.Agent.CurrentAction);
                         }
                     }
                 }
@@ -118,7 +117,7 @@ namespace RTS_System.AI
             });
 
             DisplayedActions.Clear();
-            DisplayedAgent = null;
+            DisplayedUnit = null;
         }
     }
 }
