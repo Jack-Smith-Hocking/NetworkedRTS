@@ -545,7 +545,9 @@ namespace RTS_System.AI
             ValidTarget = MoveToPoint.SetVariables(agent, obj, vec3, num);
 
             // if there was a valid target and the spawn location is in range, attempt to buy it
-            if (ValidTarget && (!StopDistanceAsSpawnDist || MoveToPoint.HasCompleted(agent)))
+            ValidTarget = ValidTarget && (!StopDistanceAsSpawnDist || MoveToPoint.HasCompleted(agent));
+            
+            if (ValidTarget)
             {
                 BuyBuilding(agent);
             }
