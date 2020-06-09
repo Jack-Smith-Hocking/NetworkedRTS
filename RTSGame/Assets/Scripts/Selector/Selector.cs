@@ -7,7 +7,7 @@ using System.Linq;
 using Mirror;
 using RTS_System.AI;
 using System;
-using UnityEngine.XR.WSA.Input;
+using UnityEngine.EventSystems;
 
 namespace RTS_System.Selection
 {
@@ -334,6 +334,40 @@ namespace RTS_System.Selection
             if (ai)
             {
                 ai.AddAction(actionName, addToList, target, targetPos, layer);
+            }
+        }
+        [Command]
+        public void CmdClearActions(GameObject agent)
+        {
+            if (Helper.IsNullOrDestroyed(agent))
+            {
+                DebugManager.WarningMessage("Attempting to add an AIAction to an AIAgent Server side!");
+                return;
+            }
+
+            AIAgent ai = agent.GetComponent<AIAgent>();
+
+            if (ai)
+            {
+                ai.ClearAllActions();
+            }
+        }
+
+        [ClientRpc]
+        public void RpcRefreshAgentActions(GameObject agent, string currentAction, string[] actionQueue)
+        {
+            if (Helper.IsNullOrDestroyed(agent))
+            {
+                DebugManager.WarningMessage("Attempting to refresh actions on an AIAgent Client side!");
+                return;
+            }
+
+            AIAgent ai = agent.GetComponent<AIAgent>();
+
+            if (ai)
+            {
+                ai.SetCurrentActionRef(currentAction);
+                ai.SetActionQueueRef(actionQueue.ToList());
             }
         }
 

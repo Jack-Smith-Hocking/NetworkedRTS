@@ -22,8 +22,6 @@ namespace RTS_System.Resource
 
         private void Awake()
         {
-            //if (!isServer) return;
-            
             MaxResources = ResourceData.RawValue;
             ResourceData.RawValue = Mathf.Clamp(ResourceData.RawValue, 0, MaxResources);
             
@@ -32,13 +30,16 @@ namespace RTS_System.Resource
                 ResourceCountDisplayer.MaxHealth = MaxResources;
             }
 
-            InvokeRepeating("ServReplenishResources", 0, ReplenishTime);
+            if (ResourcesReplenished != 0)
+            {
+                InvokeRepeating("ServReplenishResources", 0, ReplenishTime);
+            }
         }
 
         [ServerCallback]
         void ServReplenishResources()
         {
-            if (ResourceData.RawValue < MaxResources)
+            if (ResourceData.RawValue < MaxResources && ResourceData.RawValue > 0)
             {
                 ResourceData.RawValue += ResourcesReplenished;
                 ResourceData.RawValue = Mathf.Clamp(ResourceData.RawValue, 0, MaxResources);

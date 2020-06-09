@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.AI;
 using RTS_System.Selection;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Configuration;
 
 namespace RTS_System.AI
 {
@@ -25,11 +27,15 @@ namespace RTS_System.AI
 
         public TimerDict ActionTimer = new TimerDict();
 
+        [Space]
+        public string CurrentActionRef;
+        public List<string> ActionQueueRef = new List<string>();
+
         // Start is called before the first frame update
         protected override IEnumerator Start()
         {
             yield return base.Start();
-            
+
             // Get copies of the PossibleActions list
             //for (int i = 0; i < PossibleActions.Count; i++)
             //{
@@ -47,6 +53,69 @@ namespace RTS_System.AI
             if (AIManager.Instance)
             {
                 Helper.ListAdd<AIAgent>(ref AIManager.Instance.SceneAI, this);
+            }
+        }
+
+        public void SetCurrentActionRef(string actionName)
+        {
+            CurrentActionRef = actionName;
+        }
+        public void SetActionQueueRef(List<string> actionNames)
+        {
+            ActionQueueRef = actionNames;
+        }
+
+        public AIAction GetActionFromDict(string actionName)
+        {
+            if (PossibleActionsDict.ContainsKey(actionName))
+            {
+                return PossibleActionsDict[actionName];
+            }
+
+            return null;
+        }
+
+        public AIAction GetCurrentAction()
+        {
+            return GetActionFromDict(CurrentActionRef);
+        }
+        public List<AIAction> GetActionQueue()
+        {
+            List<AIAction> actionQueue = new List<AIAction>(ActionQueueRef.Count);
+
+            Helper.LoopList_ForEach<string>(ActionQueueRef, (string actionName) =>
+            {
+                actionQueue.Add(GetActionFromDict(actionName));
+            });
+
+            return actionQueue;
+        }
+
+        IEnumerator RefreshActionRefs()
+        {
+            if (Selector.ClientInstance)
+            {
+                string currentAction = "";
+                List<string> actionQueue = new List<string>(ActionQueue.Count);
+
+                if (CurrentAction)
+                {
+                    currentAction = CurrentAction.ActionName;
+                }
+
+                Helper.LoopList_ForEach<AIAction>(ActionQueue, (AIAction action) =>
+                {
+                    actionQueue.Add(action.ActionName);
+                });
+
+                Selector.ClientInstance.RpcRefreshAgentActions(gameObject, currentAction, actionQueue.ToArray());
+
+                yield return new WaitWhile(() => { return CurrentActionRef.Length == 0; });
+
+                if (Selector.ClientInstance.Equals(AgentOwner.PlayerSelector))
+                {
+                    ActionUIManager.Instance.UpdateUI();
+                }
             }
         }
 
@@ -75,6 +144,8 @@ namespace RTS_System.AI
                     {
                         CurrentAction = null;
                     }
+
+                    StartCoroutine(RefreshActionRefs());
                 }
             }
         }
@@ -156,7 +227,7 @@ namespace RTS_System.AI
                 {
                     a.CancelAction(this);
                 });
-                
+
                 ActionQueue.Clear();
                 CurrentAction = action;
             }
@@ -167,6 +238,8 @@ namespace RTS_System.AI
                 CurrentAction.EnterAction(this);
                 CurrentAction.ExecuteAction(this);
             }
+
+            StartCoroutine(RefreshActionRefs());
         }
 
         /// <summary>
@@ -230,9 +303,26 @@ namespace RTS_System.AI
             }
         }
 
+        public void ClearAllActions(bool refresh = true)
+        {
+            if (CurrentAction)
+            {
+                CurrentAction.ExitAction(this);
+                CurrentAction = null;
+            }
+
+            Helper.LoopList_ForEach<AIAction>(ActionQueue, (AIAction a) => { a.CancelAction(this); });
+            ActionQueue.Clear();
+
+            if (refresh)
+            {
+                StartCoroutine(RefreshActionRefs());
+            }
+        }
+
         private void OnDestroy()
         {
-            Helper.LoopList_ForEach<AIAction>(ActionQueue, (AIAction a) => { a.CancelAction(this); });
+            ClearAllActions(false);
 
             if (AIManager.Instance)
             {

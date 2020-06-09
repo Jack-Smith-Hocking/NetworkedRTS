@@ -125,14 +125,25 @@ MonoBehaviour:
   OnTakeDamageEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7020588623901446499}
-        m_MethodName: SetActive
+      - m_Target: {fileID: 3204608229925566905}
+        m_MethodName: ToggleDisplay
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 3204608229925566905}
+        m_MethodName: TurnOffAfterDelay
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 2
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
@@ -185,8 +196,8 @@ MonoBehaviour:
   OnHoverEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7020588623901446499}
-        m_MethodName: SetActive
+      - m_Target: {fileID: 3204608229925566905}
+        m_MethodName: ToggleDisplay
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -211,8 +222,8 @@ MonoBehaviour:
   OnSelectEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7020588623901446499}
-        m_MethodName: SetActive
+      - m_Target: {fileID: 3204608229925566905}
+        m_MethodName: ToggleDisplay
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -237,8 +248,8 @@ MonoBehaviour:
   OnDeselectEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7020588623901446499}
-        m_MethodName: SetActive
+      - m_Target: {fileID: 3204608229925566905}
+        m_MethodName: ToggleDisplay
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -496,7 +507,7 @@ PrefabInstance:
     - target: {fileID: 695301994221368011, guid: 7e804b2f05e2b3e459e97e8e6f513691,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 695301994221368011, guid: 7e804b2f05e2b3e459e97e8e6f513691,
         type: 3}
@@ -507,6 +518,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592574292198696722, guid: 7e804b2f05e2b3e459e97e8e6f513691,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2319158499463854821, guid: 7e804b2f05e2b3e459e97e8e6f513691,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3273998611920155173, guid: 7e804b2f05e2b3e459e97e8e6f513691,
         type: 3}
@@ -635,15 +656,21 @@ PrefabInstance:
       objectReference: {fileID: 564297422}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e804b2f05e2b3e459e97e8e6f513691, type: 3}
---- !u!1 &7020588623901446499 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 695301994221368011, guid: 7e804b2f05e2b3e459e97e8e6f513691,
-    type: 3}
-  m_PrefabInstance: {fileID: 7550303823347327912}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &5019126780367950221 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3273998611920155173, guid: 7e804b2f05e2b3e459e97e8e6f513691,
     type: 3}
   m_PrefabInstance: {fileID: 7550303823347327912}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3204608229925566905 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4949771989174032913, guid: 7e804b2f05e2b3e459e97e8e6f513691,
+    type: 3}
+  m_PrefabInstance: {fileID: 7550303823347327912}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f554669cdc2face4d8f64f20463bb5d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -13,7 +13,7 @@ namespace RTS_System.Resource
     public struct Mod_ResourceValue
     {
         [Tooltip("Ease of use in inspector")] public string ListIdentifier;
-        [Tooltip("The type of resource.ResourceName that this relates to")] public RTS_System.Mod_Resource ResourceType;
+        [Tooltip("The type of resource.ResourceName that this relates to")] public Mod_Resource ResourceType;
         [Tooltip("The value of the resource.ResourceName, whether it adds or subtracts depends on DecreaseResource")] [Min(0)] public int RawValue;
 
         [Tooltip("True = Value will be subtracted from player total, false = add to player total")] public bool DecreaseResource;

@@ -59,6 +59,8 @@ namespace RTS_System.AI
     {
         public static DefaultUnitHandler Instance = null;
 
+        public InputActionReference ClearActionQueueInput = null;
+
         [Tooltip("List of actions that can be performed by all Units if they choose")] public List<ActionInput> SelectionInputs = new List<ActionInput>();
 
         private bool isBound = false;

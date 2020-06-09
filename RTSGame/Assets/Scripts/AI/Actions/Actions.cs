@@ -131,11 +131,6 @@ namespace RTS_System.AI
                     ValidTarget = true;
                 }
             }
-            else
-            {
-                CurrentTarget = vec3;
-                ValidTarget = true;
-            }
 
             return ValidTarget;
         }

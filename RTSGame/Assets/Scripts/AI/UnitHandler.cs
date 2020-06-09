@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RTS_System.Selection;
+using UnityEngine.InputSystem;
 
 namespace RTS_System.AI
 {
@@ -12,6 +13,8 @@ namespace RTS_System.AI
         [Tooltip("The AIAgent that this unit is managing")] public AIAgent Agent = null;
         [Tooltip("Whether or not this unit will implement the DefaultUnitHandler's actions")] public bool UseDefaultActions = true;
         [Tooltip("List of actions that this unit can perform")] public List<ActionInput> ActionInputs = new List<ActionInput>();
+
+        public BoundInput ClearActionInput = new BoundInput();
 
         // Start is called before the first frame update
         protected override IEnumerator Start()
@@ -40,6 +43,14 @@ namespace RTS_System.AI
 
                 DefaultUnitHandler.AddPerformedAction(s, PerformedAction); 
             });
+
+            if (DefaultUnitHandler.Instance.ClearActionQueueInput)
+            {
+                ClearActionInput.PerformedActions += (InputAction.CallbackContext cc) =>
+                {
+                    Agent.AgentOwner.PlayerSelector.CmdClearActions(Agent.gameObject);
+                };
+            }
         }
 
         public void PerformedAction(ActionInput s)
@@ -60,6 +71,7 @@ namespace RTS_System.AI
             base.OnSelect();
 
             DefaultUnitHandler.BindAllInputs(ActionInputs);
+            ClearActionInput.Bind(DefaultUnitHandler.Instance.ClearActionQueueInput);
         }
 
         public override void OnDeselect()
@@ -67,6 +79,7 @@ namespace RTS_System.AI
             base.OnDeselect();
 
             DefaultUnitHandler.UnbindAllInputs(ActionInputs);
+            ClearActionInput.Unbind(DefaultUnitHandler.Instance.ClearActionQueueInput);
         }
         #endregion
 

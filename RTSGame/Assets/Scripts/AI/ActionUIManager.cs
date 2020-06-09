@@ -11,7 +11,9 @@ namespace RTS_System.AI
     {
         public static ActionUIManager Instance = null;
 
-        [Tooltip("This will be the GameObject that is used to display the currently run action of an AI (using the ActionDisplayPrefab")] public GameObject CurrentActionDisplayParent = null;
+        [Tooltip("This will be the GameObject that is used to display the currently run action of an AIAgent (using the ActionDisplayPrefab")] public GameObject CurrentActionDisplayParent = null;
+        [Tooltip("This will be the UI GameObject that will be the parent for the ActionQueue of the AIAgent (using the ActionDisplayPrefab)")] public GameObject ActionQueueDisplayParent = null;
+        [Space]
         [Tooltip("The GameObject that will show all of the current actions of an AIAgent")] public GameObject ActionDisplayParent = null;
         [Tooltip("The prefab that will display AIActions")] public GameObject ActionDisplayPrefab = null;
 
@@ -52,6 +54,30 @@ namespace RTS_System.AI
             }
         }
 
+        void CreateActionUI(GameObject parent, GameObject prefab, AIAction action, string text = "")
+        {
+            if (!parent || !prefab || !action) return;
+
+            prefab = Instantiate(prefab, parent.transform);
+            ActionUI actionUI = Helper.GetComponent<ActionUI>(prefab);
+
+            DisplayedActions.Add(prefab);
+
+            if (actionUI)
+            {
+                actionUI.UpdateActionUI(action, text);
+            }
+        }
+        void CreateActionUIs(GameObject parent, GameObject prefab, List<AIAction> actions)
+        {
+            if (!parent || !prefab) return;
+
+            Helper.LoopList_ForEach<AIAction>(actions, (AIAction action) =>
+            {
+                CreateActionUI(parent, prefab, action);
+            });
+        }
+
         void DisplayAgentActions()
         {
             ClearDisplayedActions();
@@ -62,36 +88,23 @@ namespace RTS_System.AI
 
                 if (DisplayedUnit)
                 {
-                    GameObject displayPrefab = null;
-                    ActionUI actionUI = null;
-
                     if (ActionDisplayParent)
                     {
                         Helper.LoopList_ForEach<ActionInput>(DisplayedUnit.ActionInputs, (ActionInput actionInput) =>
                         {
-                            displayPrefab = Instantiate(ActionDisplayPrefab, ActionDisplayParent.transform);
-                            actionUI = Helper.GetComponent<ActionUI>(displayPrefab);
-
-                            DisplayedActions.Add(displayPrefab);
-
-                            if (actionUI)
-                            {
-                                string inputButton = "\n( " + actionInput.InputActionRef.ToInputAction().name + " )";
-                                actionUI.UpdateActionUI(actionInput.GetActionClone, inputButton);
-                            }
+                            CreateActionUI(ActionDisplayParent, ActionDisplayPrefab, actionInput.GetActionClone, "\n( " + actionInput.InputActionRef.ToInputAction().name + " )");
                         });
                     }
 
-                    if (CurrentActionDisplayParent && DisplayedUnit.Agent.CurrentAction)
+                    if (DisplayedUnit.Agent.CurrentAction)
                     {
-                        displayPrefab = Instantiate(ActionDisplayPrefab, CurrentActionDisplayParent.transform);
-                        actionUI = Helper.GetComponent<ActionUI>(displayPrefab);
-
-                        DisplayedActions.Add(displayPrefab);
-
-                        if (actionUI)
+                        if (CurrentActionDisplayParent)
                         {
-                            actionUI.UpdateActionUI(DisplayedUnit.Agent.CurrentAction);
+                            CreateActionUI(CurrentActionDisplayParent, ActionDisplayPrefab, DisplayedUnit.Agent.GetCurrentAction());
+                        }
+                        if (ActionQueueDisplayParent)
+                        {
+                            CreateActionUIs(ActionQueueDisplayParent, ActionDisplayPrefab, DisplayedUnit.Agent.GetActionQueue());
                         }
                     }
                 }
