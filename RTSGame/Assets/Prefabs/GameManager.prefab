@@ -730,6 +730,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b3c13299530e2346b835aed489622b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ClearActionQueueInput: {fileID: 0}
   SelectionInputs:
   - SelectorInputName: MoveToTarget
     InputActionRef: {fileID: -5801330800459790725, guid: b995a5cde5930cc47a278e015840fdd7,
@@ -794,8 +795,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -293, y: 25}
-  m_SizeDelta: {x: 300, y: 200}
+  m_AnchoredPosition: {x: -273.1, y: 30.2}
+  m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &6922012572245203422
 CanvasRenderer:
@@ -957,12 +958,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 2
-    m_Right: 2
-    m_Top: 2
-    m_Bottom: 2
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 10
+  m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0

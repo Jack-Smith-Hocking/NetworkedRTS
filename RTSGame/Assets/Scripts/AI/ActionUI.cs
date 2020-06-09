@@ -24,7 +24,7 @@ namespace RTS_System.AI
                 ActionDisplayImage.sprite = actionToDisplay.ActionIcon;
                 
                 Color newAlpha = ActionDisplayImage.color;
-                newAlpha.a = ImageAlpha;
+                newAlpha.a = ImageAlpha / 255.0f;
                 ActionDisplayImage.color = newAlpha;
             }
 
@@ -36,8 +36,11 @@ namespace RTS_System.AI
                 {
                     actionName = Helper.MultiExludeInString(actionName, WordsToExcludeInDisplayName);
                 }
+                
+                actionInput = Helper.SeparateByUpperCase(actionInput);
+                actionName = actionName + " " + actionInput;
 
-                ActionDisplayText.text =  actionName + " " + actionInput;
+                ActionDisplayText.text =  actionName;
             }
         }
     }

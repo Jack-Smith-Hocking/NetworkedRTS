@@ -630,6 +630,7 @@ public static class Helper
         }
     }
 
+    #region StringFunctions
     public static string ExcludeInString(string original, string toExclude)
     {
         return original.Replace(toExclude, "");
@@ -643,6 +644,23 @@ public static class Helper
 
         return original;
     }
+    public static string SeparateByUpperCase(string text)
+    {
+        string newText = "";
+
+        for (int i = 0; i < text.Length; i++)
+        {
+            if (char.IsUpper(text[i]) && i > 0)
+            {
+                newText += " ";
+            }
+         
+            newText += text[i];
+        }
+
+        return newText;
+    }
+    #endregion
 
     #region SetMaterials
     /// <summary>
