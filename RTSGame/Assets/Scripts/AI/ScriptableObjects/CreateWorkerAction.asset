@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e41c6a08a2e6e984a8792527da849c08, type: 3}
   m_Name: CreateWorkerAction
   m_EditorClassIdentifier: 
-  ActionIcon: {fileID: 21300000, guid: 5e62bcdf8c78e3c4cb5050b67712dbe6, type: 3}
+  ActionIcon: {fileID: 21300000, guid: e870c8b628382b04f9b2655792d05111, type: 3}
   ActionDescription: 
   ActionName: Create Worker Action
   CreateBuilding:

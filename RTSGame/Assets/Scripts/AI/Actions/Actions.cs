@@ -96,7 +96,7 @@ namespace RTS_System.AI
         public override void Execute(AIAgent agent)
         {
             // Update the NavMeshAgent's destination 
-            if (agent.NavAgent)
+            if (agent.NavAgent && agent.NavAgent.isActiveAndEnabled)
             {
                 agent.NavAgent.SetDestination(CurrentTarget);
             }

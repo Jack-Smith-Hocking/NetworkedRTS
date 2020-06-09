@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &767273180226058234
 Transform:
   m_ObjectHideFlags: 0
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 767273180226058109}
   - component: {fileID: 767273180226058103}
   - component: {fileID: 767273180226058086}
-  - component: {fileID: 1945230864884603509}
+  - component: {fileID: 5312860206476655084}
   m_Layer: 10
   m_Name: TestCombatAgent Variant
   m_TagString: Untagged
@@ -115,7 +115,7 @@ Transform:
   m_GameObject: {fileID: 767273180226058222}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -8.6, y: 54.8, z: -68.8}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 25, y: 25, z: 25}
   m_Children:
   - {fileID: 767273180226058234}
   - {fileID: 6910990137324535165}
@@ -129,7 +129,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 767273180226058222}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -2432090755550338912, guid: 8c521e88a17abf94d890eff930fc258d, type: 3}
 --- !u!23 &767273180226058226
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -148,7 +148,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1032d41f900276c40a9dd24f55b7d420, type: 2}
+  - {fileID: 2100000, guid: aa7656087180d864bb51625329d1b0ed, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -186,6 +186,8 @@ MonoBehaviour:
   ActionQueue: []
   CurrentAction: {fileID: 0}
   AgentOwner: {fileID: 0}
+  CurrentActionRef: 
+  ActionQueueRef: []
 --- !u!195 &767273180226058143
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -204,8 +206,8 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
+  m_Height: 0.75
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &767273180226058077
@@ -224,7 +226,7 @@ MonoBehaviour:
   UseDefaultActions: 1
   ActionInputs:
   - SelectorInputName: Attack
-    InputActionRef: {fileID: 570080351422657074, guid: b995a5cde5930cc47a278e015840fdd7,
+    InputActionRef: {fileID: -595309359941966064, guid: b995a5cde5930cc47a278e015840fdd7,
       type: 3}
     Action: {fileID: 11400000, guid: ecf1859e4b1f94d47bd0ebffa40627d1, type: 2}
 --- !u!114 &767273180226058105
@@ -383,7 +385,7 @@ MonoBehaviour:
         m_MethodName: set_material
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 2100000, guid: 1032d41f900276c40a9dd24f55b7d420,
+          m_ObjectArgument: {fileID: 2100000, guid: aa7656087180d864bb51625329d1b0ed,
             type: 2}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
           m_IntArgument: 0
@@ -437,8 +439,8 @@ MonoBehaviour:
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
---- !u!136 &1945230864884603509
-CapsuleCollider:
+--- !u!135 &5312860206476655084
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -447,10 +449,9 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 2
+  m_Radius: 0.51109856
+  m_Center: {x: 0, y: 0.34477544, z: -0.2134942}
 --- !u!1001 &8252653412322873176
 PrefabInstance:
   m_ObjectHideFlags: 0

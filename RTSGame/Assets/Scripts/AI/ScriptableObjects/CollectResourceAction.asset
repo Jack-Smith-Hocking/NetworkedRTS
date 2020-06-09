@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4ca193a496fed42b00e05aeb45887e, type: 3}
   m_Name: CollectResourceAction
   m_EditorClassIdentifier: 
-  ActionIcon: {fileID: 21300044, guid: 9ba453ff7c6124209b57da4cd176d458, type: 3}
+  ActionIcon: {fileID: 21300000, guid: 6b3ae93bbac44134dad733f4ef6e80b0, type: 3}
   ActionDescription: 
   ActionName: Collect Resource Action
   CollectResource:
@@ -30,7 +30,7 @@ MonoBehaviour:
       RepositionTime: 1
       CurrentTarget: {fileID: 0}
       CurrentRepositionTime: 0
-    CollectionAmount: 15
+    CollectionAmount: 5
     CollectionTime: 1
     CompleteOnEmpty: 1
     ResourcePile: {fileID: 0}
@@ -39,4 +39,3 @@ MonoBehaviour:
       ResourceType: {fileID: 0}
       RawValue: 0
       DecreaseResource: 0
-    CurrentCollectionTime: 0
