@@ -536,6 +536,10 @@ namespace RTS_System.AI
                         agent.AgentOwner.PlayerSelector.ServSpawnObject(TempIndicator);
                     }
                 }
+                else
+                {
+                    ValidTarget = false;
+                }
             }
         }
 
