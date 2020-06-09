@@ -353,6 +353,17 @@ namespace RTS_System.Selection
             }
         }
 
+        [Command]
+        public void CmdRefreshAgentActions(GameObject agent, string currentAction, string[] actionQueue)
+        {
+            if (Helper.IsNullOrDestroyed(agent))
+            {
+                DebugManager.WarningMessage("Attempting to refresh actions on an AIAgent Server side!");
+                return;
+            }
+
+            RpcRefreshAgentActions(agent, currentAction, actionQueue);
+        }
         [ClientRpc]
         public void RpcRefreshAgentActions(GameObject agent, string currentAction, string[] actionQueue)
         {
@@ -368,6 +379,8 @@ namespace RTS_System.Selection
             {
                 ai.SetCurrentActionRef(currentAction);
                 ai.SetActionQueueRef(actionQueue.ToList());
+
+                ai.RefreshActionRefs(false);
             }
         }
 

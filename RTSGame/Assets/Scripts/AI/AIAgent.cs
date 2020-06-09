@@ -91,7 +91,7 @@ namespace RTS_System.AI
             return actionQueue;
         }
 
-        IEnumerator RefreshActionRefs()
+        public void RefreshActionRefs(bool sendToClients = true)
         {
             if (Selector.ClientInstance)
             {
@@ -108,15 +108,22 @@ namespace RTS_System.AI
                     actionQueue.Add(action.ActionName);
                 });
 
-                Selector.ClientInstance.RpcRefreshAgentActions(gameObject, currentAction, actionQueue.ToArray());
-
-                yield return new WaitWhile(() => { return CurrentActionRef.Length == 0; });
+                if (sendToClients)
+                {
+                    Selector.ClientInstance.CmdRefreshAgentActions(gameObject, currentAction, actionQueue.ToArray());
+                }
 
                 if (Selector.ClientInstance.Equals(AgentOwner.PlayerSelector))
                 {
-                    ActionUIManager.Instance.UpdateUI();
+                    StartCoroutine(RefreshUI());
                 }
             }
+        }
+        IEnumerator RefreshUI()
+        {
+            yield return new WaitWhile(() => { return CurrentActionRef.Length == 0; });
+
+            ActionUIManager.Instance.UpdateUI();
         }
 
         public void UpdateAction()
@@ -145,7 +152,7 @@ namespace RTS_System.AI
                         CurrentAction = null;
                     }
 
-                    StartCoroutine(RefreshActionRefs());
+                    RefreshActionRefs();
                 }
             }
         }
@@ -239,7 +246,7 @@ namespace RTS_System.AI
                 CurrentAction.ExecuteAction(this);
             }
 
-            StartCoroutine(RefreshActionRefs());
+            RefreshActionRefs();
         }
 
         /// <summary>
@@ -316,7 +323,7 @@ namespace RTS_System.AI
 
             if (refresh)
             {
-                StartCoroutine(RefreshActionRefs());
+                RefreshActionRefs();
             }
         }
 

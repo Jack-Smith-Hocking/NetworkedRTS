@@ -105,7 +105,7 @@ namespace RTS_System.AI
         public override void Enter(AIAgent agent)
         {
             // Reset the current path and update the stopping distance of the NavMeshAgent
-            if (agent.NavAgent)
+            if (agent.NavAgent && agent.NavAgent.isActiveAndEnabled)
             {
                 agent.NavAgent.ResetPath();
                 agent.NavAgent.stoppingDistance = StoppingDistance;

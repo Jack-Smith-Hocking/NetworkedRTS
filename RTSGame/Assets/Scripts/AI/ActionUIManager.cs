@@ -96,7 +96,8 @@ namespace RTS_System.AI
                         });
                     }
 
-                    if (DisplayedUnit.Agent.CurrentAction)
+                    // Update queue and current action UI
+                    if (DisplayedUnit.Agent.CurrentActionRef.Length > 0)
                     {
                         if (CurrentActionDisplayParent)
                         {
