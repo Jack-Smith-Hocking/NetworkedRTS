@@ -4812,7 +4812,7 @@ PrefabInstance:
     - target: {fileID: 502595491378954909, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
         type: 3}
       propertyPath: sceneId
-      value: 548012574
+      value: 3099942581
       objectReference: {fileID: 0}
     - target: {fileID: 647073040694798300, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
         type: 3}
@@ -4833,11 +4833,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4380317989587182521, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 12.299988
       objectReference: {fileID: 0}
     - target: {fileID: 4401052552219417439, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
         type: 3}
@@ -4914,12 +4909,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9111330394299802199, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-        type: 3}
-      propertyPath: ClearActionQueueInput
-      value: 
-      objectReference: {fileID: 570080351422657074, guid: b995a5cde5930cc47a278e015840fdd7,
-        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fcf9d440d8e2d0418bd72e17a0a7637, type: 3}
 --- !u!114 &828008777
@@ -6884,6 +6873,11 @@ PrefabInstance:
         type: 3}
       propertyPath: sceneId
       value: 2574456007
+      objectReference: {fileID: 0}
+    - target: {fileID: 677750415392009556, guid: cbda11e88a36d4c4682a86982c1b0bed,
+        type: 3}
+      propertyPath: sceneId
+      value: 3485161845
       objectReference: {fileID: 0}
     - target: {fileID: 8521305779882383554, guid: cbda11e88a36d4c4682a86982c1b0bed,
         type: 3}
@@ -11714,6 +11708,11 @@ PrefabInstance:
         type: 3}
       propertyPath: sceneId
       value: 3783047845
+      objectReference: {fileID: 0}
+    - target: {fileID: 677750415392009556, guid: cbda11e88a36d4c4682a86982c1b0bed,
+        type: 3}
+      propertyPath: sceneId
+      value: 3902025010
       objectReference: {fileID: 0}
     - target: {fileID: 8521305779882383554, guid: cbda11e88a36d4c4682a86982c1b0bed,
         type: 3}

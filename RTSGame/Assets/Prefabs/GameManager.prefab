@@ -1732,9 +1732,14 @@ MonoBehaviour:
   ActionDisplayParent: {fileID: 502595491047949330}
   ActionDisplayPrefab: {fileID: 7953763012360893525, guid: 2243094515dd16542a1d158e84893a54,
     type: 3}
+  ObjectsToToggle:
+  - {fileID: 502595492286166883}
+  - {fileID: 4472484996924485363}
+  - {fileID: 3297673592595909359}
+  - {fileID: 8965510408289068547}
+  - {fileID: 4855244062822865358}
   DisplayedActions: []
   DisplayedUnit: {fileID: 0}
-  ObjectsToToggle: []
 --- !u!114 &6885137782029669927
 MonoBehaviour:
   m_ObjectHideFlags: 0

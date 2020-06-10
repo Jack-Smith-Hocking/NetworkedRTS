@@ -2586,6 +2586,11 @@ PrefabInstance:
       propertyPath: m_AssetId
       value: cbda11e88a36d4c4682a86982c1b0bed
       objectReference: {fileID: 0}
+    - target: {fileID: 677750415392009556, guid: cbda11e88a36d4c4682a86982c1b0bed,
+        type: 3}
+      propertyPath: sceneId
+      value: 2471030952
+      objectReference: {fileID: 0}
     - target: {fileID: 3842801174696658138, guid: cbda11e88a36d4c4682a86982c1b0bed,
         type: 3}
       propertyPath: m_textInfo.characterCount

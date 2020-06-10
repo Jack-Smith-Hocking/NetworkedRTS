@@ -8,10 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 0
-    path: Assets/Scenes/Test_Map.unity
-    guid: c989afe3ebe9bdf42ac7b56356183ee4
   - enabled: 1
     path: Assets/Scenes/Map_Rooftop.unity
     guid: eba185aee341efe4ab65325edafec658
+  - enabled: 1
+    path: Assets/Scenes/Test_Map.unity
+    guid: c989afe3ebe9bdf42ac7b56356183ee4
   m_configObjects: {}
