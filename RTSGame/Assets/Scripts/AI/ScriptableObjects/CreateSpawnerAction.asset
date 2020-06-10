@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e41c6a08a2e6e984a8792527da849c08, type: 3}
   m_Name: CreateSpawnerAction
   m_EditorClassIdentifier: 
-  ActionIcon: {fileID: 21300000, guid: 98c4f12071ab24442ae0c79db93df3a3, type: 3}
+  ActionIcon: {fileID: 21300000, guid: 21f3d11e9922cd24798a0f266eeb8714, type: 3}
   ActionDescription: 
   ActionName: Create Spawner Action
   CreateBuilding:

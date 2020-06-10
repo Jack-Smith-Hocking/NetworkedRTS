@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0c48aa74906a6e4d8fad41a7e67cc33, type: 3}
   m_Name: DirectedAttackAction
   m_EditorClassIdentifier: 
-  ActionIcon: {fileID: 21300000, guid: ab4e6dab9e109694ca1c2bdf8b6fd2d0, type: 3}
+  ActionIcon: {fileID: 21300000, guid: 830723ceed7b4084bb76d8cf3d4385c7, type: 3}
   ActionDescription: 
   ActionName: Directed Attack Action
   DirectedAttack:

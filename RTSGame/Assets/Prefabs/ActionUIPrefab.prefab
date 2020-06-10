@@ -128,7 +128,7 @@ MonoBehaviour:
   - Clone
   ActionDisplayText: {fileID: 4452088925282424933}
   ActionDisplayImage: {fileID: 3231944117834942072}
-  WriteActionName: 0
+  WriteActionName: 1
   ImageAlpha: 255
 --- !u!1 &8202463458671211361
 GameObject:

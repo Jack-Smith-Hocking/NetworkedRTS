@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4ca193a496fed42b00e05aeb45887e, type: 3}
   m_Name: CollectResourceAction
   m_EditorClassIdentifier: 
-  ActionIcon: {fileID: 21300000, guid: 6b3ae93bbac44134dad733f4ef6e80b0, type: 3}
+  ActionIcon: {fileID: 21300000, guid: 774e70c143a1030479cdaaceeec47633, type: 3}
   ActionDescription: 
   ActionName: Collect Resource Action
   CollectResource:
