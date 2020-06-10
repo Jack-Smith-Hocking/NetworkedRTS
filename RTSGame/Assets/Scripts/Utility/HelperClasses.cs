@@ -243,7 +243,7 @@ public static class Helper
 
     public static TimerDict StaticTimerInstance = new TimerDict();
 
-    #region HelpfulListFunctions
+    #region ListFunctions
     /// <summary>
     /// Will add a list to another list, but will check if each element of the additive list is already in the original
     /// </summary>
@@ -369,9 +369,29 @@ public static class Helper
             }
         }
     }
+
+    public static List<T> GetNullOrDestroyed<T>(List<T> listToCheck)
+    {
+        if (listToCheck == null || listToCheck.Count == 0)
+        {
+            return null;
+        }
+
+        List<T> nullList = new List<T>(listToCheck.Count);
+
+        foreach (T elem in listToCheck)
+        {
+            if (IsNullOrDestroyed<T>(elem))
+            {
+                nullList.Add(elem);
+            }
+        }
+
+        return nullList;
+    }
     #endregion
 
-    #region HelpfulVectorFunctions
+    #region VectorFunctions
     /// <summary>
     /// Get the distance between two GameObjects
     /// </summary>
@@ -478,12 +498,16 @@ public static class Helper
 
         return inList;
     }
-
     public static bool IsInLayerMask(LayerMask mask, int layer)
     {
         return mask == (mask | (1 << layer));
     }
+    public static bool IsNullOrDestroyed<T>(T obj)
+    {
+        return (obj == null) || (obj.Equals(null));
+    }
 
+    #region GameObjectFunctions
     /// <summary>
     /// Will return all the GameObjects within a selection area (Modifies 'CachedList')
     /// </summary>
@@ -557,30 +581,6 @@ public static class Helper
         return CachedList;
     }
 
-    public static bool IsNullOrDestroyed<T>(T obj)
-    {
-        return (obj == null) || (obj.Equals(null));
-    }
-    public static List<T> GetNullOrDestroyed<T>(List<T> listToCheck)
-    {
-        if (listToCheck == null || listToCheck.Count == 0)
-        {
-            return null;
-        }
-
-        List<T> nullList = new List<T>(listToCheck.Count);
-
-        foreach (T elem in listToCheck)
-        {
-            if (IsNullOrDestroyed<T>(elem))
-            {
-                nullList.Add(elem);
-            }
-        }
-
-        return nullList;
-    }
-
     /// <summary>
     /// Only pass in MonoBehaviour as type parameter otherwise there will be errors!
     /// </summary>
@@ -616,7 +616,6 @@ public static class Helper
 
         return componentList;
     }
-
     public static void SendMessageToChain(GameObject go, string message, SendMessageOptions options = SendMessageOptions.DontRequireReceiver)
     {
         if (go && message.Length > 0)
@@ -629,6 +628,7 @@ public static class Helper
             }
         }
     }
+    #endregion
 
     #region StringFunctions
     public static string ExcludeInString(string original, string toExclude)

@@ -11,15 +11,25 @@ namespace RTS_System.AI
     {
         public static ActionUIManager Instance = null;
 
+        [Header("Current Action UI")]
         [Tooltip("This will be the GameObject that is used to display the currently run action of an AIAgent (using the ActionDisplayPrefab")] public GameObject CurrentActionDisplayParent = null;
+        public GameObject CurrentActionDisplayPrefab = null;
+
+        [Header("Queued Action UI")]
         [Tooltip("This will be the UI GameObject that will be the parent for the ActionQueue of the AIAgent (using the ActionDisplayPrefab)")] public GameObject ActionQueueDisplayParent = null;
-        [Space]
+        public GameObject ActionQueueDisplayPrefab = null;
+
+        [Header("Available Actions UI")]
         [Tooltip("The GameObject that will show all of the current actions of an AIAgent")] public GameObject ActionDisplayParent = null;
         [Tooltip("The prefab that will display AIActions")] public GameObject ActionDisplayPrefab = null;
+
+        [Header("Other")]
+        public List<GameObject> ObjectsToToggle = new List<GameObject>();
 
         [Space]
         public List<GameObject> DisplayedActions = new List<GameObject>();
         public UnitHandler DisplayedUnit = null;
+
 
         private IEnumerator Start()
         {
@@ -28,11 +38,18 @@ namespace RTS_System.AI
             Instance = this;
 
             Selector.ClientInstance.OnSelectedChange += UpdateUI;
+
+            UpdateUI();
         }
 
         public void UpdateUI()
         {
             DisplayAgentActions();
+
+            Helper.LoopList_ForEach<GameObject>(ObjectsToToggle, (GameObject obj) =>
+            {
+                obj.SetActive(DisplayedUnit != null);
+            });
         }
 
         void GetDisplayAgent()
@@ -101,11 +118,11 @@ namespace RTS_System.AI
                     {
                         if (CurrentActionDisplayParent)
                         {
-                            CreateActionUI(CurrentActionDisplayParent, ActionDisplayPrefab, DisplayedUnit.Agent.GetCurrentAction());
+                            CreateActionUI(CurrentActionDisplayParent, CurrentActionDisplayPrefab, DisplayedUnit.Agent.GetCurrentAction());
                         }
                         if (ActionQueueDisplayParent)
                         {
-                            CreateActionUIs(ActionQueueDisplayParent, ActionDisplayPrefab, DisplayedUnit.Agent.GetActionQueue());
+                            CreateActionUIs(ActionQueueDisplayParent, ActionQueueDisplayPrefab, DisplayedUnit.Agent.GetActionQueue());
                         }
                     }
                 }

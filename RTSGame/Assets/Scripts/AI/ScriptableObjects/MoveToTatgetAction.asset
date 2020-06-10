@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17ccce55900ad3a4297d3e92011cb334, type: 3}
   m_Name: MoveToTatgetAction
   m_EditorClassIdentifier: 
-  ActionIcon: {fileID: 21300000, guid: 9731ea98772b87a4abd3fc66be919cf1, type: 3}
+  ActionIcon: {fileID: 21300000, guid: 72c8a7c9467f19249be9e49973be02a3, type: 3}
   ActionDescription: 
   ActionName: Move To Target Action
   MoveToTarget:
@@ -22,7 +22,7 @@ MonoBehaviour:
       MovementLayers:
         serializedVersion: 2
         m_Bits: 1536
-      StoppingDistance: 10
+      StoppingDistance: 25
       CurrentTarget: {x: 0, y: 0, z: 0}
     MaxFollowDistance: 500
     RepositionTime: 0

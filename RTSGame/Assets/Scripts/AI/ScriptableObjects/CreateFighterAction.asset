@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e41c6a08a2e6e984a8792527da849c08, type: 3}
   m_Name: CreateFighterAction
   m_EditorClassIdentifier: 
-  ActionIcon: {fileID: 21300000, guid: e6c9ee7bc17f27443a0fc0598971b6d1, type: 3}
+  ActionIcon: {fileID: 21300000, guid: edf3de23b2f8bc249a09c72fa8fb0a84, type: 3}
   ActionDescription: 
   ActionName: Create Fighter Action
   CreateBuilding:

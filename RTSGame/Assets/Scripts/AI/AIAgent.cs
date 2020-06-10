@@ -347,5 +347,19 @@ namespace RTS_System.AI
 
             AgentOwner.PlayerSelector.ServDestroyObject(gameObject);
         }
+
+        public void MoveToPoint(Vector3 pos)
+        {
+            if (NavAgent && NavAgent.isActiveAndEnabled)
+            {
+                NavAgent.SetDestination(pos);
+            }
+        }
+        public void MoveToTransform(Transform target)
+        {
+            if (!target) return;
+
+            MoveToPoint(target.position);
+        }
     }
 }

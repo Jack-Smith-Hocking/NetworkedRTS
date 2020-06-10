@@ -12,6 +12,7 @@ namespace RTS_System.AI
         [Space]
         public TextMeshProUGUI ActionDisplayText = null;
         public Image ActionDisplayImage = null;
+        public bool WriteActionName = true;
         [Space]
         [Range(0, 255)] public int ImageAlpha = 255;
 
@@ -38,7 +39,7 @@ namespace RTS_System.AI
                 }
                 
                 actionInput = Helper.SeparateByUpperCase(actionInput);
-                actionName = actionName + " " + actionInput;
+                actionName = (WriteActionName ? actionName + " " : "" )+ actionInput;
 
                 ActionDisplayText.text =  actionName;
             }
