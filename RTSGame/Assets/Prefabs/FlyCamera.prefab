@@ -114,112 +114,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectorCam: {fileID: 0}
   SelectorTrans: {fileID: 8527218986871720804}
---- !u!135 &8274184983346697815
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499115266880009311}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1074542819
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499115266880009311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  serverOnly: 0
-  m_AssetId: 
-  hasSpawned: 0
---- !u!114 &1912701085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499115266880009311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c449ddefdcabbf24f99ee90fdab66944, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  Character: {fileID: 205026839551598461}
-  AllowInputs: 1
---- !u!114 &1784272296464814925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499115266880009311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b81478a959427944862b5cc3047ede7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  SelectorCam: {fileID: 0}
-  SelectionMask:
-    serializedVersion: 2
-    m_Bits: 512
-  SceneSelectables: []
-  MainSelectButton: {fileID: -197531129902685789, guid: b995a5cde5930cc47a278e015840fdd7,
-    type: 3}
-  MultiSelectInput: {fileID: -104322088107776011, guid: b995a5cde5930cc47a278e015840fdd7,
-    type: 3}
-  ActionQueueInput: {fileID: -7048009427773694730, guid: b995a5cde5930cc47a278e015840fdd7,
-    type: 3}
-  DragDelay: 0.1
---- !u!114 &3181192423382323896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499115266880009311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b60b1e8a1cdee874b863aac316f03b82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  PlayerSelector: {fileID: 1784272296464814925}
-  PlayerResourceManager: {fileID: 8218140697292008112}
-  FriendlyLayer: Unit
-  EnemyLayer: EnemyUnit
---- !u!114 &8218140697292008112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7499115266880009311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0bf2b3a46e3904644b69659140890e72, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  Resources:
-  - {fileID: 11400000, guid: 1bb8be234f70c5a4a9f962764b376dcc, type: 2}
-  - {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
 --- !u!1 &3180872864487280673
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,6 +187,113 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!135 &8274184983346697815
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7499115266880009311}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1074542819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7499115266880009311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  m_AssetId: 
+  hasSpawned: 0
+--- !u!114 &1912701085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7499115266880009311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c449ddefdcabbf24f99ee90fdab66944, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  Character: {fileID: 205026839551598461}
+  AllowInputs: 1
+--- !u!114 &1784272296464814925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7499115266880009311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b81478a959427944862b5cc3047ede7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  SelectorCam: {fileID: 0}
+  SelectionMask:
+    serializedVersion: 2
+    m_Bits: 512
+  MinDragDistance: 0.1
+  MainSelectButton: {fileID: -197531129902685789, guid: b995a5cde5930cc47a278e015840fdd7,
+    type: 3}
+  MultiSelectInput: {fileID: -104322088107776011, guid: b995a5cde5930cc47a278e015840fdd7,
+    type: 3}
+  ActionQueueInput: {fileID: -7048009427773694730, guid: b995a5cde5930cc47a278e015840fdd7,
+    type: 3}
+  SceneSelectables: []
+  SelectedObjects: []
+--- !u!114 &3181192423382323896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7499115266880009311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b60b1e8a1cdee874b863aac316f03b82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  PlayerSelector: {fileID: 1784272296464814925}
+  PlayerResourceManager: {fileID: 8218140697292008112}
+  FriendlyLayer: Unit
+  EnemyLayer: EnemyUnit
+--- !u!114 &8218140697292008112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7499115266880009311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bf2b3a46e3904644b69659140890e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  Resources:
+  - {fileID: 11400000, guid: 1bb8be234f70c5a4a9f962764b376dcc, type: 2}
+  - {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
 --- !u!1001 &919006466616964437
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -410,17 +411,17 @@ PrefabInstance:
     - target: {fileID: 4586871434865420188, guid: 5211a350486fa0c43a46d9b73f28e94d,
         type: 3}
       propertyPath: StartCameraDistance
-      value: 150
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 4586871434865420188, guid: 5211a350486fa0c43a46d9b73f28e94d,
         type: 3}
       propertyPath: MaxCameraDistance
-      value: 150
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 4586871434865420188, guid: 5211a350486fa0c43a46d9b73f28e94d,
         type: 3}
       propertyPath: MinCameraDistance
-      value: 75
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4586871434865420188, guid: 5211a350486fa0c43a46d9b73f28e94d,
         type: 3}
