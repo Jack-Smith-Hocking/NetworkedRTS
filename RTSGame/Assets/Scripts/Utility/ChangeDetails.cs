@@ -10,6 +10,7 @@ public class ChangeDetails : MonoBehaviour
     public string Name;
     public string LayerName;
     public Transform NewParent = null;
+    [Space]
     public bool InverseOperation = false;
     public bool ChangeAll = false;
 
@@ -59,9 +60,9 @@ public class ChangeDetails : MonoBehaviour
 
     public void ToggleRenderer(bool state)
     {
-        List<Renderer> Renderers = new List<Renderer>(Helper.GetComponents<Renderer>(gameObject));
+        List<Renderer> renderers = new List<Renderer>(Helper.GetComponents<Renderer>(gameObject));
 
-        Helper.LoopList_ForEach<Renderer>(Renderers, (Renderer rend) =>
+        Helper.LoopList_ForEach<Renderer>(renderers, (Renderer rend) =>
         {
             rend.enabled = state;
         });

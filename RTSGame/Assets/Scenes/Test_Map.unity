@@ -283,12 +283,6 @@ MonoBehaviour:
   serverOnly: 0
   m_AssetId: f5729e419f02c5c4799576490bd5fc8e
   hasSpawned: 0
---- !u!1 &153499859 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8965510408289068547, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-    type: 3}
-  m_PrefabInstance: {fileID: 502595491494358232}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &173413633
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,12 +622,6 @@ MonoBehaviour:
   serverOnly: 0
   m_AssetId: f5729e419f02c5c4799576490bd5fc8e
   hasSpawned: 0
---- !u!1 &393715434 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4472484996924485363, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-    type: 3}
-  m_PrefabInstance: {fileID: 502595491494358232}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &395556264 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1494461286675910970, guid: f5729e419f02c5c4799576490bd5fc8e,
@@ -661,12 +649,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: ab33e6080ae416b4d899f39fa8951b98,
     type: 3}
   m_PrefabInstance: {fileID: 1890441911}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &544347085 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4855244062822865358, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-    type: 3}
-  m_PrefabInstance: {fileID: 502595491494358232}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &561196841
 PrefabInstance:
@@ -954,12 +936,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 1332792463959386444, guid: f5729e419f02c5c4799576490bd5fc8e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f5729e419f02c5c4799576490bd5fc8e, type: 3}
---- !u!1 &991386408 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3297673592595909359, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-    type: 3}
-  m_PrefabInstance: {fileID: 502595491494358232}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1057928431
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1716,12 +1692,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 561196841}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1875447148 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 502595492286166883, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-    type: 3}
-  m_PrefabInstance: {fileID: 502595491494358232}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1890441911
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2170,7 +2140,7 @@ PrefabInstance:
     - target: {fileID: 502595491378954909, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
         type: 3}
       propertyPath: sceneId
-      value: 1245733372
+      value: 101235658
       objectReference: {fileID: 0}
     - target: {fileID: 502595491378954909, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
         type: 3}
@@ -2197,41 +2167,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4401052552219417439, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4612014878659633372, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-        type: 3}
-      propertyPath: ObjectsToToggle.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4612014878659633372, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-        type: 3}
-      propertyPath: ObjectsToToggle.Array.data[0]
-      value: 
-      objectReference: {fileID: 1875447148}
-    - target: {fileID: 4612014878659633372, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-        type: 3}
-      propertyPath: ObjectsToToggle.Array.data[1]
-      value: 
-      objectReference: {fileID: 393715434}
-    - target: {fileID: 4612014878659633372, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-        type: 3}
-      propertyPath: ObjectsToToggle.Array.data[2]
-      value: 
-      objectReference: {fileID: 991386408}
-    - target: {fileID: 4612014878659633372, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-        type: 3}
-      propertyPath: ObjectsToToggle.Array.data[3]
-      value: 
-      objectReference: {fileID: 153499859}
-    - target: {fileID: 4612014878659633372, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
-        type: 3}
-      propertyPath: ObjectsToToggle.Array.data[4]
-      value: 
-      objectReference: {fileID: 544347085}
     - target: {fileID: 6814651577478697745, guid: 4fcf9d440d8e2d0418bd72e17a0a7637,
         type: 3}
       propertyPath: m_Name
