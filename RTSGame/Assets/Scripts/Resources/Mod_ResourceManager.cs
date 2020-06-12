@@ -109,7 +109,8 @@ namespace RTS_System.Resource
                         Mod_ResourceUI.Instance.AddResourceUI(resource);
 
                         // Add resource cache to dictionary
-                        CmdAddToSyncDict(resource.ResourceName, resource.ResourceStartCount);
+                        AddResource(resource, resource.ResourceStartCount, true);
+                        //CmdAddToSyncDict(resource.ResourceName, resource.ResourceStartCount);
                     }
                 });
             }
@@ -120,84 +121,26 @@ namespace RTS_System.Resource
             Mod_ResourceUI.Instance.UpdateResourceUI(key, value);
         }
 
-        [ClientRpc]
-        public void RpcSetResource(string resourceName, int resourceAmount)
-        {
-            if (isLocalPlayer)
-            {
-                if (SyncedResources.ContainsKey(resourceName))
-                {
-                    SyncedResources[resourceName].CurrentResourceValue = resourceAmount;
-                }
-                else
-                {
-                    Mod_ResourceCache cache = new Mod_ResourceCache();
-                    cache.CurrentResourceValue = resourceAmount;
-
-                }
-                UpdateUI(resourceName, resourceAmount);
-            }
-        }
-
-        [Command]
-        public void CmdAddToSyncDict(string resourceName, int resourceAmount)
-        {
-            bool canAfford = false;
-
-            Mod_ResourceCache cache = new Mod_ResourceCache();
-            if (!SyncedResources.ContainsKey(resourceName))
-            {
-                canAfford = cache.IncreaseValue(resourceAmount);
-            }
-            else
-            {
-                canAfford = SyncedResources[resourceName].IncreaseValue(resourceAmount);
-                cache.CurrentResourceValue = SyncedResources[resourceName].CurrentResourceValue;
-            }
-
-            if (canAfford)
-            {
-                SyncedResources[resourceName] = cache;
-                RpcSetResource(resourceName, cache.CurrentResourceValue);
-            }
-        }
-
-        [Server]
-        public void ServAddToSynceDict(string resourceName, int resourceAmount)
-        {
-            bool canAfford = false;
-
-            Mod_ResourceCache cache = new Mod_ResourceCache();
-            if (!SyncedResources.ContainsKey(resourceName))
-            {
-                canAfford = cache.IncreaseValue(resourceAmount);
-            }
-            else
-            {
-                canAfford = SyncedResources[resourceName].IncreaseValue(resourceAmount);
-                cache.CurrentResourceValue = SyncedResources[resourceName].CurrentResourceValue;
-            }
-
-            if (canAfford)
-            {
-                SyncedResources[resourceName] = cache;
-                RpcSetResource(resourceName, cache.CurrentResourceValue);
-            }
-        }
-
         /// <summary>
         /// Adds an amount of resources to a resource.ResourceName type
         /// </summary>
         /// <param name="resource">The type of resource.ResourceName to add to</param>
         /// <param name="amount">The amount to add</param>
         /// <returns>Whether the amount was successfully added</returns>
-        public bool AddResource(Mod_Resource resource, int amount)
+        public bool AddResource(Mod_Resource resource, int amount, bool overwrite = false)
         {
             if (!resource) return false;
 
-            if (SyncedResources.ContainsKey(resource.ResourceName))
+            if (SyncedResources.ContainsKey(resource.ResourceName) || overwrite)
             {
-                CmdAddToSyncDict(resource.ResourceName, amount);
+                if (!isServer)
+                {
+                    CmdAddToSyncDict(resource.ResourceName, amount);
+                }
+                else
+                { 
+                    ServAddToSynceDict(resource.ResourceName, amount);
+                }
             }
 
             return false;
@@ -210,26 +153,6 @@ namespace RTS_System.Resource
         public bool AddResource(Mod_ResourceValue resourceValue)
         {
             return AddResource(resourceValue.ResourceType, resourceValue.TrueValue);
-        }
-
-        /// <summary>
-        /// Adds a list of Mod_ResourceValues to their respective caches
-        /// </summary>
-        /// <param name="resourceValues">Mod_ResourceValue to add</param>
-        /// <returns></returns>
-        public bool AddResources(List<Mod_ResourceValue> resourceValues)
-        {
-            bool canAfford = false;
-            Helper.LoopList_ForEach<Mod_ResourceValue>(resourceValues, (Mod_ResourceValue rc) => { canAfford = CanAfford(rc); }, () => { return !canAfford; });
-
-            if (canAfford)
-            {
-                Helper.LoopList_ForEach<Mod_ResourceValue>(resourceValues, (Mod_ResourceValue rc) => { AddResource(rc); });
-
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -260,5 +183,87 @@ namespace RTS_System.Resource
         {
             return CanAfford(resourceValue.ResourceType, (trueCost ? resourceValue.TrueValue : resourceValue.RawValue));
         }
+
+        #region NetworkFunctions
+        /// <summary>
+        /// Tell all clients to update their resource count
+        /// </summary>
+        /// <param name="resourceName">Name of resource to set</param>
+        /// <param name="resourceAmount">Amount to set to</param>
+        [ClientRpc]
+        public void RpcSetResource(string resourceName, int resourceAmount)
+        {
+            if (isLocalPlayer)
+            {
+                // If the resource is in the dictionary then set it to the new value
+                if (SyncedResources.ContainsKey(resourceName))
+                {
+                    SyncedResources[resourceName].CurrentResourceValue = resourceAmount;
+                }
+                // Else just add a new entry to the dictionary
+                else
+                {
+                    Mod_ResourceCache cache = new Mod_ResourceCache();
+                    cache.CurrentResourceValue = resourceAmount;
+
+                }
+
+                // Uodate the UI
+                UpdateUI(resourceName, resourceAmount);
+            }
+        }
+
+        /// <summary>
+        /// Tell the server to add a new entry to the synced dictionary
+        /// </summary>
+        /// <param name="resourceName">The name of the resource to add</param>
+        /// <param name="resourceAmount"></param>
+        [Command]
+        public void CmdAddToSyncDict(string resourceName, int resourceAmount)
+        {
+            AddToSynceDict(resourceName, resourceAmount);
+        }
+
+        /// <summary>
+        /// Have the server (this) add a new entry to the resource dictionary
+        /// </summary>
+        /// <param name="resourceName">Name of the resource to add</param>
+        /// <param name="resourceAmount">Amount of resource to make it</param>
+        [Server]
+        public void ServAddToSynceDict(string resourceName, int resourceAmount)
+        {
+            AddToSynceDict(resourceName, resourceAmount);
+        }
+
+        /// <summary>
+        /// Add a new entry to the resource dictionary
+        /// </summary>
+        /// <param name="resourceName">Name of resource to add</param>
+        /// <param name="resourceAmount">Amount of resource to add</param>
+        public void AddToSynceDict(string resourceName, int resourceAmount)
+        {
+            bool canAfford = false;
+
+            Mod_ResourceCache cache = new Mod_ResourceCache();
+            // Check if the resource is in the dictionary
+            if (!SyncedResources.ContainsKey(resourceName))
+            {
+                canAfford = cache.IncreaseValue(resourceAmount);
+            }
+            // Check if the increase/decrease can be afforded 
+            else
+            {
+                canAfford = SyncedResources[resourceName].IncreaseValue(resourceAmount);
+                cache.CurrentResourceValue = SyncedResources[resourceName].CurrentResourceValue;
+            }
+
+            // Tell all clients to update their dictionaries
+            if (canAfford)
+            {
+                SyncedResources[resourceName] = cache;
+                RpcSetResource(resourceName, cache.CurrentResourceValue);
+            }
+        }
+        #endregion
     }
 }

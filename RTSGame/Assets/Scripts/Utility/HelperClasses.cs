@@ -1,10 +1,8 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 /// <summary>
 /// Binds and unbinds actions to inputs
@@ -194,24 +192,35 @@ public class BoundInput
     }
 }
 
-public class TimerDict
+/// <summary>
+/// Helps to keep track of many timers, stored in a dictionary
+/// </summary>
+public class TimerTracker
 {
-    public Dictionary<string, float> StaticTimerDict = new Dictionary<string, float>();
+    private Dictionary<string, float> StaticTimerDict = new Dictionary<string, float>();
 
+    /// <summary>
+    /// Will add a timer (or overwrite) to the dictionary
+    /// </summary>
+    /// <param name="timerName">The key in the dictionary</param>
+    /// <param name="time">The value to be held</param>
+    /// <param name="overwrite">Whether or not to overwrite a timer that is held already</param>
     public void SetTimer(string timerName, float time, bool overwrite = false)
     {
-        if (StaticTimerDict.ContainsKey(timerName))
+        if (StaticTimerDict.ContainsKey(timerName) && overwrite)
         {
-            if (overwrite)
-            {
-                StaticTimerDict[timerName] = time;
-            }
-
+            StaticTimerDict[timerName] = time;
             return;
         }
 
         StaticTimerDict[timerName] = time;
     }
+
+    /// <summary>
+    /// Get the value of a timer 
+    /// </summary>
+    /// <param name="timerName">The key of the timer in the dictionary</param>
+    /// <returns>Returns the value of the timer, or -1 if there is no timer</returns>
     public float GetTimer(string timerName)
     {
         if (StaticTimerDict.ContainsKey(timerName))
@@ -234,14 +243,20 @@ public class TimerDict
     }
 }
 
+/// <summary>
+/// Collection of useful functions
+/// </summary>
 public static class Helper
 {
+    // Reduces memory allocation
+    #region VariableCaches
     public static Renderer CachedRenderer = null;
     public static MonoBehaviour CachedMono = null;
     public static List<GameObject> CachedList = new List<GameObject>();
     public static Rect CachedRect;
+    #endregion
 
-    public static TimerDict StaticTimerInstance = new TimerDict();
+    public static TimerTracker TimerInstance = new TimerTracker();
 
     #region ListFunctions
     /// <summary>
@@ -289,15 +304,28 @@ public static class Helper
         return false;
     }
 
-    public static void TrimElement<T>(ref List<T> trimList, T trimObj)
+    /// <summary>
+    /// Remove an element from a list
+    /// </summary>
+    /// <typeparam name="T">The type of data in the lsit</typeparam>
+    /// <param name="trimList">The list to be 'trimmed'</param>
+    /// <param name="trimElem">The element to remove from the list</param>
+    public static void TrimElement<T>(ref List<T> trimList, T trimElem)
     {
         if (trimList != null && trimList.Count > 0)
         {
-            trimList.Remove(trimObj);
+            trimList.Remove(trimElem);
         }
     }
+    /// <summary>
+    /// Remove a list of objects from another list
+    /// </summary>
+    /// <typeparam name="T">The type of data in the list</typeparam>
+    /// <param name="listToTrim">The list to have elements removed from</param>
+    /// <param name="trimList">The list of elements to remove</param>
     public static void TrimElements<T>(ref List<T> listToTrim, List<T> trimList)
     {
+        // If both lists are valid
         if (listToTrim != null && trimList != null)
         {
             foreach (T elem in trimList)
@@ -307,6 +335,11 @@ public static class Helper
         }
     }
 
+    /// <summary>
+    /// Remove all of the null or destroyed elements from a list
+    /// </summary>
+    /// <typeparam name="T">The type of data in the list</typeparam>
+    /// <param name="listToTrim">The list to trim</param>
     public static void TrimList<T>(ref List<T> listToTrim)
     {
         if (listToTrim != null)
@@ -370,11 +403,17 @@ public static class Helper
         }
     }
 
+    /// <summary>
+    /// Get a list of all the null or destroyed elements in a list
+    /// </summary>
+    /// <typeparam name="T">The type of data in the list</typeparam>
+    /// <param name="listToCheck">The list to get null or destroyed elements from</param>
+    /// <returns>A list of all null or destroyed elements in the list</returns>
     public static List<T> GetNullOrDestroyed<T>(List<T> listToCheck)
     {
         if (listToCheck == null || listToCheck.Count == 0)
         {
-            return null;
+            return new List<T>(0);
         }
 
         List<T> nullList = new List<T>(listToCheck.Count);
@@ -389,73 +428,6 @@ public static class Helper
 
         return nullList;
     }
-    #endregion
-
-    #region VectorFunctions
-    /// <summary>
-    /// Get the distance between two GameObjects
-    /// </summary>
-    /// <param name="objOne">First object</param>
-    /// <param name="objTwo">Second object</param>
-    /// <returns>Returns -1 if either object is null</returns>
-    public static float Distance(GameObject objOne, GameObject objTwo)
-    {
-        if (!objOne || !objTwo) return -1;
-
-        return Distance(objOne.transform, objTwo.transform);
-    }
-    /// <summary>
-    /// Get the distance between two Transforms
-    /// </summary>
-    /// <param name="transOne">First object</param>
-    /// <param name="transTwo">Second object</param>
-    /// <returns>Returns -1 if either object is null</returns>
-    public static float Distance(Transform transOne, Transform transTwo)
-    {
-        if (!transOne || !transTwo) return -1;
-
-        return Vector3.Distance(transOne.position, transTwo.position);
-    }
-
-    public static bool InDistance(Vector3 start, Vector3 end, float dist)
-    {
-        return (Vector3.Distance(start, end) <= dist);
-    }
-    public static bool OutDistance(Vector3 start, Vector3 end, float dist)
-    {
-        return !InDistance(start, end, dist);
-    }
-    #endregion
-
-    /// <summary>
-    /// Get a random point on a NavMesh
-    /// </summary>
-    /// <param name="origin">The original point of the object</param>
-    /// <param name="dist">The max distance away from the origin to test for</param>
-    /// <param name="areaMask">The area to test</param>
-    /// <returns>A valid position on the NavMesh</returns>
-    public static Vector3 RandomNavSphere(Vector3 origin, float dist, int areaMask)
-    {
-        Vector3 rand_direction = UnityEngine.Random.insideUnitSphere * Mathf.Abs(dist);
-
-        rand_direction += origin;
-
-        NavMeshHit navHit;
-
-        bool foundPos = NavMesh.SamplePosition(rand_direction, out navHit, Mathf.Abs(dist), areaMask);
-        if (foundPos == false)
-        {
-            foundPos = NavMesh.SamplePosition(origin, out navHit, Mathf.Abs(dist), areaMask);
-
-            if (foundPos == false)
-            {
-                return RandomNavSphere(origin, dist * 1.5f, areaMask);
-            }
-        }
-
-        return navHit.position;
-    }
-
     /// <summary>
     /// Will loop (For Each) through a list and see if the GameObject is in it. Ensure the list is a list of MonoBehavioours, checks are in place to reject anything else (Modifies 'CachedList')
     /// </summary>
@@ -465,7 +437,7 @@ public static class Helper
     /// <returns>Returns true if the GameObject is in the list</returns>
     public static bool ObjectInMonoList<T>(List<T> monoList, GameObject obj)
     {
-        if (obj == null && monoList != null) return false;
+        if (obj == null || monoList == null) return false;
 
         bool inList = false;
 
@@ -483,7 +455,8 @@ public static class Helper
         }
 
         Helper.LoopList_ForEach<T>(monoList,
-        (T mono) => // LoopAction
+        (T mono) => 
+        // LoopAction
         {
             CachedMono = mono as MonoBehaviour;
             if (CachedMono)
@@ -494,18 +467,70 @@ public static class Helper
                 }
             }
         },
-        () => { return inList; }); // BreakOut action
+        // BreakOut action
+        () => { return inList; }); 
 
         return inList;
     }
-    public static bool IsInLayerMask(LayerMask mask, int layer)
+    #endregion
+
+    #region VectorFunctions
+    /// <summary>
+    /// Get the distance between two GameObjects
+    /// </summary>
+    /// <param name="objOne">First object</param>
+    /// <param name="objTwo">Second object</param>
+    /// <returns>Returns -1 if either object is null</returns>
+    public static float Distance(GameObject objOne, GameObject objTwo)
     {
-        return mask == (mask | (1 << layer));
+        if (!objOne || !objTwo)
+        {
+            DebugManager.WarningMessage("Tried to get the distance between null GameObjects");
+            return -1;
+        }
+
+        return Distance(objOne.transform, objTwo.transform);
     }
-    public static bool IsNullOrDestroyed<T>(T obj)
+    /// <summary>
+    /// Get the distance between two Transforms
+    /// </summary>
+    /// <param name="transOne">First object</param>
+    /// <param name="transTwo">Second object</param>
+    /// <returns>Returns -1 if either object is null</returns>
+    public static float Distance(Transform transOne, Transform transTwo)
     {
-        return (obj == null) || (obj.Equals(null));
+        if (!transOne || !transTwo)
+        {
+            DebugManager.WarningMessage("Tried to get the distance between null GameObjects");
+            return -1;
+        }
+
+        return Vector3.Distance(transOne.position, transTwo.position);
     }
+
+    /// <summary>
+    /// Return whether two points are within 'dist' of each other 
+    /// </summary>
+    /// <param name="start">The start position</param>
+    /// <param name="end">The end position</param>
+    /// <param name="dist">The distance to check against</param>
+    /// <returns>Whether the two points are within 'dist'</returns>
+    public static bool InDistance(Vector3 start, Vector3 end, float dist)
+    {
+        return (Vector3.Distance(start, end) <= dist);
+    }
+    /// <summary>
+    /// Returns whether two points are further away than 'dist'
+    /// </summary>
+    /// <param name="start">The start position</param>
+    /// <param name="end">The end position</param>
+    /// <param name="dist">The distance to check against</param>
+    /// <returns>Whether the two points are further than 'dist' apart</returns>
+    public static bool OutDistance(Vector3 start, Vector3 end, float dist)
+    {
+        return !InDistance(start, end, dist);
+    }
+    #endregion
 
     #region GameObjectFunctions
     /// <summary>
@@ -523,7 +548,10 @@ public static class Helper
             return null;
         }
 
-        CachedRect = new Rect(startPos.x, startPos.y, (endPos.x - startPos.x), (endPos.y - startPos.y));
+        CachedRect.x = startPos.x;
+        CachedRect.y = startPos.y;
+        CachedRect.width = (endPos.x - startPos.x);
+        CachedRect.height = (endPos.y - startPos.y);
 
         CachedList.Clear();
 
@@ -557,7 +585,10 @@ public static class Helper
             return new List<GameObject>(0);
         }
 
-        CachedRect = new Rect(startPos.x, startPos.y, (endPos.x - startPos.x), (endPos.y - startPos.y));
+        CachedRect.x = startPos.x;
+        CachedRect.y = startPos.y;
+        CachedRect.width = (endPos.x - startPos.x);
+        CachedRect.height = (endPos.y - startPos.y);
 
         CachedList.Clear();
 
@@ -604,6 +635,12 @@ public static class Helper
 
         return type;
     }
+    /// <summary>
+    /// Only pass in MonoBehaviour as type parameter otherwise there will be errors! Gets all of the components in a GameObject hierarchy 
+    /// </summary>
+    /// <typeparam name="T">The type of MonoBehaviour to get</typeparam>
+    /// <param name="obj">The GameObject to get the MonoBehaviours from</param>
+    /// <returns>A list of found MonoBehaviours</returns>
     public static List<T> GetComponents<T>(GameObject obj)
     {
         if (IsNullOrDestroyed(obj)) return new List<T>(0);
@@ -616,12 +653,21 @@ public static class Helper
 
         return componentList;
     }
+    /// <summary>
+    /// Will send a message up and down a GameObject hierarchy 
+    /// </summary>
+    /// <param name="go">GameObject to send message to</param>
+    /// <param name="message">Message to be sent</param>
+    /// <param name="options">Whether there will be a warning message if there is no receiver</param>
     public static void SendMessageToChain(GameObject go, string message, SendMessageOptions options = SendMessageOptions.DontRequireReceiver)
     {
-        if (go && message.Length > 0)
+        // Check if the message and GameObject are both valid
+        if (!IsNullOrDestroyed<GameObject>(go) && message.Length > 0)
         {
+            // Send the message to all children
             go.BroadcastMessage(message, options);
 
+            // Send the message to parent if it has one
             if (go.transform.parent)
             {
                 go.transform.parent.SendMessageUpwards(message, options);
@@ -631,12 +677,25 @@ public static class Helper
     #endregion
 
     #region StringFunctions
+    /// <summary>
+    /// Remove a string from another string
+    /// </summary>
+    /// <param name="original">The string to remove from</param>
+    /// <param name="toExclude">The string to remove</param>
+    /// <returns>The original string after toExclude is removed</returns>
     public static string ExcludeInString(string original, string toExclude)
     {
         return original.Replace(toExclude, "");
     }
+    /// <summary>
+    /// Remove a list of strings from a list
+    /// </summary>
+    /// <param name="original">The string to remove from</param>
+    /// <param name="toExclude">The list of strings to remove</param>
+    /// <returns>The original string after all exclusions are done</returns>
     public static string MultiExludeInString(string original, List<string> toExclude)
     {
+        // Go through each element in toExclude and remove it from the original string
         Helper.LoopList_ForEach<string>(toExclude, (string s) =>
         {
             original = Helper.ExcludeInString(original, s);
@@ -644,17 +703,25 @@ public static class Helper
 
         return original;
     }
+    /// <summary>
+    /// Separate a string by upper cases (place a space before every upper case)
+    /// </summary>
+    /// <param name="text">The text to change</param>
+    /// <returns>The text with spaces before every upper case</returns>
     public static string SeparateByUpperCase(string text)
     {
         string newText = "";
 
         for (int i = 0; i < text.Length; i++)
         {
+            // Check if the character is upper case
+            // Add a space if it is
             if (char.IsUpper(text[i]) && i > 0)
             {
                 newText += " ";
             }
          
+            // Add the character to the new string
             newText += text[i];
         }
 
@@ -662,7 +729,7 @@ public static class Helper
     }
     #endregion
 
-    #region SetMaterials
+    #region MaterialFunctions
     /// <summary>
     /// Set the material of all Renderers in the list
     /// </summary>
@@ -715,4 +782,54 @@ public static class Helper
         }
     }
     #endregion
+
+    /// <summary>
+    /// Get a random point on a NavMesh
+    /// </summary>
+    /// <param name="origin">The original point of the object</param>
+    /// <param name="dist">The max distance away from the origin to test for</param>
+    /// <param name="areaMask">The area to test</param>
+    /// <returns>A valid position on the NavMesh</returns>
+    public static Vector3 RandomNavSphere(Vector3 origin, float dist, int areaMask)
+    {
+        Vector3 rand_direction = UnityEngine.Random.insideUnitSphere * Mathf.Abs(dist);
+
+        rand_direction += origin;
+
+        NavMeshHit navHit;
+
+        bool foundPos = NavMesh.SamplePosition(rand_direction, out navHit, Mathf.Abs(dist), areaMask);
+        if (foundPos == false)
+        {
+            foundPos = NavMesh.SamplePosition(origin, out navHit, Mathf.Abs(dist), areaMask);
+
+            if (foundPos == false)
+            {
+                return RandomNavSphere(origin, dist * 1.5f, areaMask);
+            }
+        }
+
+        return navHit.position;
+    }
+
+    /// <summary>
+    /// Get whether a Layer is in a LayerMask
+    /// </summary>
+    /// <param name="mask">The mask to check against</param>
+    /// <param name="layer">The layer to check</param>
+    /// <returns>Whether the layer is in the mask</returns>
+    public static bool IsInLayerMask(LayerMask mask, int layer)
+    {
+        return mask == (mask | (1 << layer));
+    }
+    /// <summary>
+    /// Determine whether an object is null or has been destroyed 
+    /// </summary>
+    /// <typeparam name="T">The type of data being worked with</typeparam>
+    /// <param name="obj">The object to test</param>
+    /// <returns>Returns true if it was null or destroyed</returns>
+    public static bool IsNullOrDestroyed<T>(T obj)
+    {
+        return (obj == null) || (obj.Equals(null));
+    }
 }

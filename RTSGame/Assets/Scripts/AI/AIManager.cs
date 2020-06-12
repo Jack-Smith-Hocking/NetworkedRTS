@@ -7,13 +7,12 @@ using Mirror;
 namespace RTS_System.AI
 {
     public class AIManager : NetworkBehaviour
-
     {
         public static AIManager Instance = null;
 
         public bool SkipEvaluations = false;
         public bool EvalInUpdate = false;
-        public float EvalUpdateIntervals = 0.1f;
+        [Min(0)] public float EvalUpdateIntervals = 0.1f;
         [Range(0, 100)] public int EvalUpdatePercentage = 25;
         [Space]
 
@@ -35,6 +34,7 @@ namespace RTS_System.AI
 
         private void Update()
         {
+            // Loop through AIAgents in the scene and update them
             Helper.LoopList_ForEach<AIAgent>(SceneAI, (AIAgent agent) => { agent.UpdateAction(); });
 
             if (!SkipEvaluations)

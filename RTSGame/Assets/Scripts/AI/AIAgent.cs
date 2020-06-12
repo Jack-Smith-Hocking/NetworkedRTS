@@ -17,19 +17,19 @@ namespace RTS_System.AI
         [Tooltip("List of possible actions")] public List<AIAction> PossibleActions = new List<AIAction>();
         [Space]
         [Tooltip("Current actions")] public List<AIAction> ActionQueue = new List<AIAction>();
-        public AIAction CurrentAction = null;
+        [Tooltip("Current action")] public AIAction CurrentAction = null;
 
+        // These don't need to be public, but will remain public for testing
+        [Space]
         public NetworkPlayer AgentOwner = null;
-
-        private AIAction cachedAction = null;
-
         public Dictionary<string, AIAction> PossibleActionsDict = new Dictionary<string, AIAction>();
-
-        public TimerDict ActionTimer = new TimerDict();
+        public TimerTracker ActionTimer = new TimerTracker();
 
         [Space]
         public string CurrentActionRef;
         public List<string> ActionQueueRef = new List<string>();
+
+        private AIAction cachedAction = null;
 
         // Start is called before the first frame update
         protected override IEnumerator Start()
@@ -49,22 +49,36 @@ namespace RTS_System.AI
                 Helper.ListAdd<GameObject>(ref AgentOwner.PlayerSelector.SceneSelectables, gameObject);
             }
 
-            // Give management of this AIAgent to the AIManager instance
+            // Give management of this AIAgent to the AIManager instance, only really matters if this is being run on the server
             if (AIManager.Instance)
             {
                 Helper.ListAdd<AIAgent>(ref AIManager.Instance.SceneAI, this);
             }
         }
 
+        #region ActionRefFunctions
+        /// <summary>
+        /// Set the name of the currently active action, useful for non-server clients
+        /// </summary>
+        /// <param name="actionName">The name of the current action</param>
         public void SetCurrentActionRef(string actionName)
         {
             CurrentActionRef = actionName;
         }
+        /// <summary>
+        /// Set the names of the actions in the queue
+        /// </summary>
+        /// <param name="actionNames">List of action names</param>
         public void SetActionQueueRef(List<string> actionNames)
         {
             ActionQueueRef = actionNames;
         }
 
+        /// <summary>
+        /// Gets an action from the list of possible actions
+        /// </summary>
+        /// <param name="actionName">The name of the action to get</param>
+        /// <returns></returns>
         public AIAction GetActionFromDict(string actionName)
         {
             if (PossibleActionsDict.ContainsKey(actionName))
@@ -75,10 +89,19 @@ namespace RTS_System.AI
             return null;
         }
 
+        /// <summary>
+        /// Get the currently active action
+        /// </summary>
+        /// <returns>The currently active action</returns>
         public AIAction GetCurrentAction()
         {
+            // Will get the currently active action based on what the server has said the name of the action is
             return GetActionFromDict(CurrentActionRef);
         }
+        /// <summary>
+        /// Get the list of actions that are currently active based on what the server has said is in the queue
+        /// </summary>
+        /// <returns>The queue of actions</returns>
         public List<AIAction> GetActionQueue()
         {
             List<AIAction> actionQueue = new List<AIAction>(ActionQueueRef.Count);
@@ -91,34 +114,49 @@ namespace RTS_System.AI
             return actionQueue;
         }
 
+        /// <summary>
+        /// Refreshes the names of the current action and action queue that is held by clients
+        /// </summary>
+        /// <param name="sendToClients">Whether to get clients to refresh, this is here to stop a stack overflow or worse</param>
         public void RefreshActionRefs(bool sendToClients = true)
         {
+            // Get the client selector instance so that commands can be used
             if (Selector.ClientInstance)
             {
                 string currentAction = "";
                 List<string> actionQueue = new List<string>(ActionQueue.Count);
 
+                // Get the name of the current action
                 if (CurrentAction)
                 {
                     currentAction = CurrentAction.ActionName;
+
+                    // If there is no CurrentAction than it is safe to assume there is no queue
+                    Helper.LoopList_ForEach<AIAction>(ActionQueue, (AIAction action) =>
+                    {
+                        actionQueue.Add(action.ActionName);
+                    });
                 }
 
-                Helper.LoopList_ForEach<AIAction>(ActionQueue, (AIAction action) =>
-                {
-                    actionQueue.Add(action.ActionName);
-                });
-
+                // Get the server to update all clients
                 if (sendToClients)
                 {
-                    Selector.ClientInstance.CmdRefreshAgentActions(gameObject, currentAction, actionQueue.ToArray());
+                    NetworkHandler.ClientInstance.CmdRefreshAgentActions(gameObject, currentAction, actionQueue.ToArray());
                 }
 
+                // If this is a client agent then refresh the UI instance 
                 if (Selector.ClientInstance.Equals(AgentOwner.PlayerSelector))
                 {
                     StartCoroutine(RefreshUI());
                 }
             }
         }
+        #endregion
+
+        /// <summary>
+        /// Refresh the UI instance 
+        /// </summary>
+        /// <returns>Will wait until there is a valid CurrentActionRef due to network lag</returns>
         IEnumerator RefreshUI()
         {
             yield return new WaitWhile(() => { return CurrentActionRef.Length == 0; });
@@ -156,6 +194,7 @@ namespace RTS_System.AI
                 }
             }
         }
+
         public void EvaluateActions()
         {
             SetAction(GetBestAction(), false);
@@ -194,7 +233,7 @@ namespace RTS_System.AI
         }
 
         /// <summary>
-        /// THis will take an action and either set the current action or add it to the queue
+        /// This will take an action and either set the current action or add it to the queue
         /// </summary>
         /// <param name="action">Action to add</param>
         /// <param name="addToList">If set to false, will set the current action. Otherwise will add to queue</param>
@@ -287,40 +326,61 @@ namespace RTS_System.AI
             }
         }
 
+        /// <summary>
+        /// Add am action to the queue or set it as the current action
+        /// </summary>
+        /// <param name="actionName">The name of the action in the PossiblActions queue</param>
+        /// <param name="addToList">Whether to add it to the list or set as current action</param>
+        /// <param name="go">GameObejct to be passed to the action</param>
+        /// <param name="vec3">Vector3 to be passed to the action</param>
+        /// <param name="integer">Integer to be passed to the action</param>
         public void AddAction(string actionName, bool addToList, GameObject go, Vector3 vec3, int integer)
         {
+            // Check whether the action is valid
             if (PossibleActionsDict.ContainsKey(actionName))
             {
                 AIAction action = PossibleActionsDict[actionName];
 
                 if (action)
                 {
+                    // Get a copy
                     action = Instantiate(action);
+                    // Initialise 
                     action.InitialiseAction(this);
 
+                    // Set the internal data of the action and see if it can be performed
                     if (action.SetVariables(this, go, vec3, integer))
                     {
+                        // If it can be performed then handle it appropriately 
                         SetAction(action, addToList, false);
                     }
                     else
                     {
+                        // Else cancel the action and move on
                         action.CancelAction(this);
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Clears the current action and the queue and then refreshes clients 
+        /// </summary>
+        /// <param name="refresh"></param>
         public void ClearAllActions(bool refresh = true)
         {
+            // If there is a current action then exit it and set to null
             if (CurrentAction)
             {
                 CurrentAction.ExitAction(this);
                 CurrentAction = null;
             }
 
+            // Loop through the queue and cancel each action
             Helper.LoopList_ForEach<AIAction>(ActionQueue, (AIAction a) => { a.CancelAction(this); });
             ActionQueue.Clear();
 
+            // Refresh ActionRefs
             if (refresh)
             {
                 RefreshActionRefs();
@@ -329,25 +389,40 @@ namespace RTS_System.AI
 
         private void OnDestroy()
         {
+            // Safely clear all actions from the list when destroyed
             ClearAllActions(false);
 
+            // Remove from the AIManager
             if (AIManager.Instance)
             {
                 AIManager.Instance.SceneAI.Remove(this);
             }
         }
 
+        /// <summary>
+        /// Destroy this Agent on the server
+        /// </summary>
+        /// <param name="delay">Delay before destroying</param>
         public void ServerDestroy(float delay)
         {
-            ServerDestroyDelayed(delay);
+            StartCoroutine(ServerDestroyDelayed(delay));
         }
+        /// <summary>
+        /// Server destroy after delay
+        /// </summary>
+        /// <param name="delay">Time until destroy</param>
+        /// <returns></returns>
         IEnumerator ServerDestroyDelayed(float delay)
         {
             yield return new WaitForSecondsRealtime(delay);
 
-            AgentOwner.PlayerSelector.ServDestroyObject(gameObject);
+            NetworkHandler.ClientInstance.ServDestroyObject(gameObject);
         }
 
+        /// <summary>
+        /// Move the Agent to a position
+        /// </summary>
+        /// <param name="pos">Position to move to</param>
         public void MoveToPoint(Vector3 pos)
         {
             if (NavAgent && NavAgent.isActiveAndEnabled)
@@ -355,6 +430,10 @@ namespace RTS_System.AI
                 NavAgent.SetDestination(pos);
             }
         }
+        /// <summary>
+        /// Move the Agent to a transform
+        /// </summary>
+        /// <param name="target">Transform to move towards</param>
         public void MoveToTransform(Transform target)
         {
             if (!target) return;

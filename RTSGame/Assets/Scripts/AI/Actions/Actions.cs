@@ -449,14 +449,14 @@ namespace RTS_System.AI
                     // Destroy the TempIndicator across the server
                     if (TempIndicator)
                     {
-                        agent.AgentOwner.PlayerSelector.ServDestroyObject(TempIndicator);
+                        NetworkHandler.ClientInstance.ServDestroyObject(TempIndicator);
                     }
                     // Instantiate Building then spawn it across the server
                     Building = GameObject.Instantiate(BuildingPrefab, MoveToPoint.CurrentTarget, Quaternion.identity);
-                    agent.AgentOwner.PlayerSelector.ServSpawnObject(Building);
+                    NetworkHandler.ClientInstance.ServSpawnObject(Building);
 
                     // Tell the Building who its owner is
-                    agent.AgentOwner.PlayerSelector.RpcSetAgentOwner(Building, agent.AgentOwner.gameObject);
+                    NetworkHandler.ClientInstance.RpcSetAgentOwner(Building, agent.AgentOwner.gameObject);
 
                     AttemptBuild = false;
                 }
@@ -496,7 +496,7 @@ namespace RTS_System.AI
             // Destroy the TempIndicator across the server
             if (TempIndicator)
             {
-                agent.AgentOwner.PlayerSelector.ServDestroyObject(TempIndicator);
+                NetworkHandler.ClientInstance.ServDestroyObject(TempIndicator);
             }
 
             // Reset data
@@ -530,7 +530,7 @@ namespace RTS_System.AI
                     if (BuildingIndicator)
                     {
                         TempIndicator = GameObject.Instantiate(BuildingIndicator, MoveToPoint.CurrentTarget, Quaternion.identity);
-                        agent.AgentOwner.PlayerSelector.ServSpawnObject(TempIndicator);
+                        NetworkHandler.ClientInstance.ServSpawnObject(TempIndicator);
                     }
                 }
                 else

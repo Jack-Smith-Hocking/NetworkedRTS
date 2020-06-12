@@ -9,6 +9,7 @@ using Mirror;
 
 namespace RTS_System
 {
+    [RequireComponent(typeof(NetworkHandler))]
     public class NetworkPlayer : NetworkBehaviour
     {
 
@@ -33,7 +34,7 @@ namespace RTS_System
 
                 if (agent && !agent.AgentOwner)
                 {
-                    Selector.ClientInstance.CmdSetAgentOwner(col.gameObject, gameObject);
+                    NetworkHandler.ClientInstance.CmdSetAgentOwner(col.gameObject, gameObject);
 
                     Helper.ListAdd<GameObject>(ref PlayerSelector.SceneSelectables, agent.gameObject);
                 }

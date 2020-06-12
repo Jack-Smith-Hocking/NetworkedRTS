@@ -23,6 +23,7 @@ namespace RTS_System.AI
 
             if (!Agent) Agent = gameObject.GetComponent<AIAgent>();
 
+            // If this unit is using the set of default actions then add them to this unit's list of available actions
             if (UseDefaultActions)
             {
                 Helper.LoopList_ForEach<ActionInput>(DefaultUnitHandler.Instance.SelectionInputs, (ActionInput s) =>
@@ -32,8 +33,9 @@ namespace RTS_System.AI
             }
 
             AIAction tempAction = null;
-            Helper.LoopList_ForEach<ActionInput>(ActionInputs, (ActionInput s) => 
+            Helper.LoopList_ForEach<ActionInput>(ActionInputs, (ActionInput s) =>
             {
+                // Get a copy of the action associated and add it to the AIAgent's dictionary of possible actions
                 tempAction = s.GetActionClone;
                 if (tempAction)
                 {
@@ -41,14 +43,15 @@ namespace RTS_System.AI
                     Agent.PossibleActions.Add(tempAction);
                 }
 
-                DefaultUnitHandler.AddPerformedAction(s, PerformedAction); 
+                // Set up the input callback for this action
+                DefaultUnitHandler.AddPerformedAction(s, PerformedAction);
             });
 
             if (DefaultUnitHandler.Instance.ClearActionQueueInput)
             {
                 ClearActionInput.PerformedActions += (InputAction.CallbackContext cc) =>
                 {
-                    Agent.AgentOwner.PlayerSelector.CmdClearActions(Agent.gameObject);
+                    NetworkHandler.ClientInstance.CmdClearActions(Agent.gameObject);
                 };
             }
         }
@@ -57,10 +60,14 @@ namespace RTS_System.AI
         {
             if (s != null && s.ActionName.Length > 0)
             {
+                // Raycast into the world on the client to get the data needed for the action
                 RaycastHit rayHit;
-                if (Physics.Raycast(Agent.AgentOwner.PlayerSelector.SelectorCam.ScreenPointToRay(Input.mousePosition), out rayHit))
+                if (Physics.Raycast(Selector.ClientInstance.SelectorCam.ScreenPointToRay(Input.mousePosition), out rayHit))
                 {
-                    Agent.AgentOwner.PlayerSelector.CmdAddAction(Agent.gameObject, s.ActionName, rayHit.collider.gameObject, rayHit.point, rayHit.collider.gameObject.layer, Agent.AgentOwner.PlayerSelector.AddToActionList);
+                    GameObject go = rayHit.collider.gameObject;
+
+                    // Tell the server to add the action to this AIAgent with all the passed data
+                   NetworkHandler.ClientInstance.CmdAddAction(Agent.gameObject, s.ActionName, go, rayHit.point, go.layer, Selector.ClientInstance.AddToActionList);
                 }
             }
         }
@@ -70,6 +77,7 @@ namespace RTS_System.AI
         {
             base.OnSelect();
 
+            // Bind all the inputs on this UnitHandler (meaning that callbacks will now be invoked for this Unit on input)
             DefaultUnitHandler.BindAllInputs(ActionInputs);
             ClearActionInput.Bind(DefaultUnitHandler.Instance.ClearActionQueueInput);
         }
@@ -78,6 +86,7 @@ namespace RTS_System.AI
         {
             base.OnDeselect();
 
+            // Unbind all inputs on this UnitHandler (meaning that callbacks will now longer be invoked for this unit on input)
             DefaultUnitHandler.UnbindAllInputs(ActionInputs);
             ClearActionInput.Unbind(DefaultUnitHandler.Instance.ClearActionQueueInput);
         }
@@ -85,6 +94,7 @@ namespace RTS_System.AI
 
         private void OnDestroy()
         {
+            // Safely unbind all the associated inputs of this UnitHandler
             DefaultUnitHandler.UnbindAllInputs(ActionInputs);
         }
     }

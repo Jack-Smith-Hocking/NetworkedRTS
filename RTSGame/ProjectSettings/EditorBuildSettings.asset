@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Map_Rooftop.unity
     guid: eba185aee341efe4ab65325edafec658
   - enabled: 1
