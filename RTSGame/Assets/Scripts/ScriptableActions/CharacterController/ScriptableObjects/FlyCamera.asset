@@ -19,7 +19,7 @@ MonoBehaviour:
   SecondaryActionName: 
   AnimatorValName: 
   AnimatorEventName: 
-  MaxSpeed: 100
+  MaxSpeed: 125
   Acceleration: 200
   AccelerationCurve:
     serializedVersion: 2

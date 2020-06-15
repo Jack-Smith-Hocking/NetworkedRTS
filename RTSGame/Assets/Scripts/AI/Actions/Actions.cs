@@ -85,8 +85,13 @@ namespace RTS_System.AI
             // Check if the AIAgent has a NavMeshAgent
             if (agent.NavAgent)
             {
-                // Check if the AIAgent is close enough to its target, or if there is no ValidTarget
-                return agent.NavAgent.remainingDistance <= StoppingDistance || !ValidTarget;
+                if (!agent.NavAgent.pathPending)
+                {
+                    // Check if the AIAgent is close enough to its target, or if there is no ValidTarget
+                    return agent.NavAgent.remainingDistance <= StoppingDistance || !ValidTarget;
+                }
+
+                return false;
             }
 
             // If there is no NavMeshAgent then a manual check between the target and AIAgent position
