@@ -15,4 +15,4 @@ MonoBehaviour:
   ResourceName: Seed
   ResourceColour: {r: 1, g: 1, b: 1, a: 1}
   ResourceIcon: {fileID: 21300000, guid: 0459198d57b46b6429df01ca357c3d0e, type: 3}
-  ResourceStartCount: 5000
+  ResourceStartCount: 100

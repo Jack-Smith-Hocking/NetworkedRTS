@@ -28,8 +28,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 695301994221368011}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 7.28}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.1}
   m_Children:
   - {fileID: 3144364715165523096}
   m_Father: {fileID: 0}
@@ -37,7 +37,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -148.66, y: 63.77}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1921522917690117725
@@ -112,13 +112,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f554669cdc2face4d8f64f20463bb5d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HealthDisplay: {fileID: 0}
-  HealthRotateObject: {fileID: 695301994221368011}
-  HealthImage: {fileID: 8027208218837272256}
-  HealthImageColour: {r: 0.40771866, g: 1, b: 0, a: 1}
-  HealthText: {fileID: 0}
-  HealthBarCamera: {fileID: 0}
-  HealthBarFollowCamera: 1
+  DisplayImage: {fileID: 8027208218837272256}
+  ImageColour: {r: 0.09066808, g: 1, b: 0, a: 1}
+  DisplayText: {fileID: 6123651350636776130}
+  PreDisplayText: 'Value: '
+  RotateObject: {fileID: 695301994221368011}
+  FollowCamera: {fileID: 0}
+  DoFollowCamera: 1
 --- !u!1 &1592574292198696722
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5254102929024904408
 RectTransform:
   m_ObjectHideFlags: 0
@@ -209,7 +209,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2704888086671823779
 RectTransform:
   m_ObjectHideFlags: 0

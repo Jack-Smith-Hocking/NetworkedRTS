@@ -28,7 +28,7 @@ MonoBehaviour:
       type: 3}
     BuildingIndicator: {fileID: 7350694739302784146, guid: 353ae9e06b3167c40bd115ef8ef90388,
       type: 3}
-    BuildingCost: {fileID: 11400000, guid: 2fb5720a0581644439b0cfdcc0bbc60c, type: 2}
+    BuildingCost: {fileID: 11400000, guid: 89d06d8df220c024c9de82baa8b035ae, type: 2}
     BuildCompletionTime: 1
     StopDistanceAsSpawnDist: 0
     Building: {fileID: 0}

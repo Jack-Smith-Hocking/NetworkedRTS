@@ -36,7 +36,7 @@ Transform:
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 83.314766, y: 143.26181, z: -241.87976}
-  m_LocalScale: {x: 20, y: 20, z: 20}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children:
   - {fileID: 485748327}
   - {fileID: 8672304758992897971}
@@ -182,6 +182,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   MaxHealth: 10
+  HealthDisplay: {fileID: 1262340748314505095}
   OnTakeDamageEvent:
     m_PersistentCalls:
       m_Calls:

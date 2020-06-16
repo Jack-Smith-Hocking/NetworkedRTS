@@ -15,6 +15,7 @@ public class Health : NetworkBehaviour
     }
 
     [Tooltip("Maximum health to have")] public float MaxHealth = 10;
+    public DisplayCounterUI HealthDisplay = null;
     [Space]
     [Tooltip("Events to happen when hit, will receive the damage taken")] public UnityEvent OnTakeDamageEvent = null;
     [Tooltip("Event to be called when health is below or equal to zero")] public UnityEvent OnDeathEvent = null;
@@ -63,14 +64,22 @@ public class Health : NetworkBehaviour
 
         if (DeathFX) DeathFX = Instantiate(DeathFX);
         if (HitFX) HitFX = Instantiate(HitFX);
+
+        if (HealthDisplay)
+        {
+            HealthDisplay.UpdateDisplay(CurrentHealth, MaxHealth);
+        }
+
+        if (HealthDisplay)
+        {
+            OnTakeDamageEvent.AddListener(() =>
+            {
+                HealthDisplay.UpdateDisplay(CurrentHealth, MaxHealth);
+            });
+        }
     }
 
-    /// <summary>
-    /// A simple 'TakeDamage' only takes a float damage input, will invoke OnTakeDamageSimple callback
-    /// </summary>
-    /// <param name="damage">Amount of damage to take, below zero will heal</param>
-    [ClientRpc]
-    public void RpcTakeDamageSimple(float damage)
+    public void TakeDamageSimple(float damage)
     {
         // Check if damage/healing can be done
         if (HealthState == DamageState.NO_DAMAGE && damage > 0) return;
@@ -82,6 +91,16 @@ public class Health : NetworkBehaviour
         OnTakeDamageSimple?.Invoke(damage);
         OnTakeDamageEvent?.Invoke();
     }
+
+    /// <summary>
+    /// A simple 'TakeDamage' only takes a float damage input, will invoke OnTakeDamageSimple callback
+    /// </summary>
+    /// <param name="damage">Amount of damage to take, below zero will heal</param>
+    [ClientRpc]
+    public void RpcTakeDamageSimple(float damage)
+    {
+        TakeDamageSimple(damage);
+    }
     /// <summary>
     /// A more complex 'TakeDamage' which will take the collision point and the object that dealt the damage, will invoke OnTakeDamage callback
     /// </summary>
@@ -91,7 +110,7 @@ public class Health : NetworkBehaviour
     [ClientRpc]
     public void RpcTakeDamage(float damage, Vector3 collisionPoint, GameObject damageDealer)
     {
-        RpcTakeDamageSimple(damage);
+        TakeDamageSimple(damage);
 
         OnTakeDamage?.Invoke(damage, collisionPoint, damageDealer);
 

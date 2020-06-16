@@ -3,14 +3,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace RTS_System.Resource
 {
     public class Mod_ResourceCollection : NetworkBehaviour
     {
-        public Mod_ResourceValue ResourceData;
+        public DisplayCounterUI ResourceDisplay = null;
         [Space]
-        public Health ResourceCountDisplayer = null;
+        public UnityEvent OnResourceChangeEvent;
+        [Space]
+        public Mod_ResourceValue ResourceData;
         [Space]
         public int ResourcesReplenished = 1;
         [Min(0.1f)] public float ReplenishTime = 0.1f;
@@ -25,11 +28,6 @@ namespace RTS_System.Resource
             MaxResources = ResourceData.RawValue;
             ResourceData.RawValue = Mathf.Clamp(ResourceData.RawValue, 0, MaxResources);
             
-            if (ResourceCountDisplayer)
-            {
-                ResourceCountDisplayer.MaxHealth = MaxResources;
-            }
-
             if (ResourcesReplenished != 0)
             {
                 InvokeRepeating("ServReplenishResources", 0, ReplenishTime);
@@ -44,11 +42,6 @@ namespace RTS_System.Resource
                 ResourceData.RawValue += ResourcesReplenished;
                 ResourceData.RawValue = Mathf.Clamp(ResourceData.RawValue, 0, MaxResources);
 
-                if (ResourceCountDisplayer)
-                {
-                    ResourceCountDisplayer.RpcTakeDamageSimple(-ResourcesReplenished);
-                }
-
                 RpcUpdateResourcePile(ResourceData.RawValue);
             }
         }
@@ -57,6 +50,13 @@ namespace RTS_System.Resource
         public void RpcUpdateResourcePile(int resourceCount)
         {
             ResourceData.RawValue = resourceCount;
+
+            if (ResourceDisplay)
+            {
+                ResourceDisplay.UpdateDisplay(resourceCount, MaxResources);
+            }
+
+            OnResourceChangeEvent.Invoke();
         }
 
         public Mod_ResourceValue CollectResources(int collectedAmount)
@@ -78,11 +78,6 @@ namespace RTS_System.Resource
             else
             {
                 CollectedResource.RawValue = 0;
-            }
-
-            if (ResourceCountDisplayer)
-            {
-                ResourceCountDisplayer.RpcTakeDamageSimple(collectedAmount);
             }
 
             return CollectedResource;

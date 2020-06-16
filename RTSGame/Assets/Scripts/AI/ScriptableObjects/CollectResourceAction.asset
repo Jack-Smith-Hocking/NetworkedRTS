@@ -30,7 +30,7 @@ MonoBehaviour:
       RepositionTime: 1
       CurrentTarget: {fileID: 0}
       CurrentRepositionTime: 0
-    CollectionAmount: 5
+    CollectionAmount: 1
     CollectionTime: 1
     CompleteOnEmpty: 1
     ResourcePile: {fileID: 0}
