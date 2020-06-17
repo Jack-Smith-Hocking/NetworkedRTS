@@ -66,6 +66,13 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   ResourceDisplay: {fileID: 3101227243888133829}
+  ResourceData:
+    ListIdentifier: Seed
+    ResourceType: {fileID: 11400000, guid: 1bb8be234f70c5a4a9f962764b376dcc, type: 2}
+    RawValue: 500
+    DecreaseResource: 0
+  ResourcesReplenished: 0
+  ReplenishTime: 0.1
   OnResourceChangeEvent:
     m_PersistentCalls:
       m_Calls:
@@ -91,19 +98,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  ResourceData:
-    ListIdentifier: Twig
-    ResourceType: {fileID: 11400000, guid: 1bb8be234f70c5a4a9f962764b376dcc, type: 2}
-    RawValue: 500
-    DecreaseResource: 0
-  ResourcesReplenished: 0
-  ReplenishTime: 0.1
-  CollectedResource:
-    ListIdentifier: 
-    ResourceType: {fileID: 0}
-    RawValue: 0
-    DecreaseResource: 0
-  MaxResources: 100
 --- !u!65 &1091526101335405920
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -442,7 +436,7 @@ PrefabInstance:
     - target: {fileID: 4949771989174032913, guid: 7e804b2f05e2b3e459e97e8e6f513691,
         type: 3}
       propertyPath: PreDisplayText
-      value: 'Twigs: '
+      value: 'Seeds: '
       objectReference: {fileID: 0}
     - target: {fileID: 4949771989174032913, guid: 7e804b2f05e2b3e459e97e8e6f513691,
         type: 3}

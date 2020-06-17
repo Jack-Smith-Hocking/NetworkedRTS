@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
-using UnityEngine.iOS;
 
 /// <summary>
 /// Binds and unbinds actions to inputs
