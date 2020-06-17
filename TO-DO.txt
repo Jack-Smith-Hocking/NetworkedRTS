@@ -1,0 +1,16 @@
+== Mechanics == 
+- Change how AIActions are managed
+  - Instead of having a different button for each action have it so that each object will hold the action that a unit can perform on it
+  - To test if the AIAgent can perform the action check their PossibleActionsDict against the action that can be performed
+  - Initial method will stil be used for buildings so that you know which unit will be built
+    - Perhaps develope a better way for this to work
+    - Have it so that a building has a position that new units will be spawned at, so when you press a button to spawn a unit
+    - It will spawn and then walk to that position
+    - Can then have this position confirgurable using the other proposed idea for input management
+- See about getting actual networking to work, Cross-Network rather than simply on the same network
+
+== Looks ==
+- Change how objects look when selected
+  - Instead of turning them blue and green, have a marker appear under/above them
+  - Possibly use rim lighting or an outline effect as well/instead
+- Make ResourcePiles more stand out more so that players can tell that resources can be collected from them
