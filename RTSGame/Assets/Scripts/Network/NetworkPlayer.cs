@@ -24,6 +24,11 @@ namespace RTS_System
 
             AIAgent agent = null;
 
+            if (Mod_ResourceUI.Instance)
+            {
+                Mod_ResourceUI.Instance.gameObject.SetActive(true);
+            }
+
             // Collect all the starting units and tell them that they belong to this NetworkPlayer
             // Probably a bad way of doing it but it will work for now
             Collider[] cols = Physics.OverlapSphere(transform.position, 200);

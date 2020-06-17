@@ -19,6 +19,7 @@ namespace RTS_System.Resource
         private void Awake()
         {
             Instance = this;
+            gameObject.SetActive(false);
         }
 
         /// <summary>
