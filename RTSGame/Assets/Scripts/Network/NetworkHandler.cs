@@ -64,6 +64,12 @@ namespace RTS_System
             }
         }
 
+        /// <summary>
+        /// Refresh the CurrentActionRef, and ActionQueueRef for an AIAgent
+        /// </summary>
+        /// <param name="agent">The AIAgent to refresh</param>
+        /// <param name="currentAction">CurrentActionRef to set</param>
+        /// <param name="actionQueue">ActionQueueRef to set</param>
         [Command]
         public void CmdRefreshAgentActions(GameObject agent, string currentAction, string[] actionQueue)
         {
@@ -75,6 +81,13 @@ namespace RTS_System
 
             RpcRefreshAgentActions(agent, currentAction, actionQueue);
         }
+
+        /// <summary>
+        /// Refresh the CurrentActionRef, and ActionQueueRef for an AIAgent
+        /// </summary>
+        /// <param name="agent">The AIAgent to refresh</param>
+        /// <param name="currentAction">CurrentActionRef to set</param>
+        /// <param name="actionQueue">ActionQueueRef to set</param>
         [ClientRpc]
         public void RpcRefreshAgentActions(GameObject agent, string currentAction, string[] actionQueue)
         {

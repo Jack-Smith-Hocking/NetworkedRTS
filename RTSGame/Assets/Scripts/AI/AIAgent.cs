@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using RTS_System.Selection;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Configuration;
 
 namespace RTS_System.AI
 {
@@ -19,15 +16,15 @@ namespace RTS_System.AI
         [Tooltip("Current actions")] public List<AIAction> ActionQueue = new List<AIAction>();
         [Tooltip("Current action")] public AIAction CurrentAction = null;
 
-        // These don't need to be public, but will remain public for testing
         [Space]
-        public NetworkPlayer AgentOwner = null;
-        public Dictionary<string, AIAction> PossibleActionsDict = new Dictionary<string, AIAction>();
-        public TimerTracker ActionTimer = new TimerTracker();
+        [HideInInspector] public NetworkPlayer AgentOwner = null;
+        [HideInInspector] public TimerTracker ActionTimer = new TimerTracker();
 
-        [Space]
-        public string CurrentActionRef;
-        public List<string> ActionQueueRef = new List<string>();
+        public bool HasCurrentActionRef { get { return CurrentActionRef.Length > 0; } }
+        private string CurrentActionRef = "";
+        
+        private List<string> ActionQueueRef = new List<string>();
+        private Dictionary<string, AIAction> PossibleActionsDict = new Dictionary<string, AIAction>();
 
         private AIAction cachedAction = null;
 
@@ -46,7 +43,7 @@ namespace RTS_System.AI
 
             if (AgentOwner)
             {
-                Helper.ListAdd<GameObject>(ref AgentOwner.PlayerSelector.SceneSelectables, gameObject);
+                AgentOwner.PlayerSelector.AddSelectable(gameObject);
             }
 
             // Give management of this AIAgent to the AIManager instance, only really matters if this is being run on the server
@@ -81,12 +78,17 @@ namespace RTS_System.AI
         /// <returns></returns>
         public AIAction GetActionFromDict(string actionName)
         {
-            if (PossibleActionsDict.ContainsKey(actionName))
-            {
-                return PossibleActionsDict[actionName];
-            }
-
-            return null;
+            return Helper.GetFromDictionary<string, AIAction>(PossibleActionsDict, actionName);
+        }
+        /// <summary>
+        /// Set an action in the PossibleActionsDict
+        /// </summary>
+        /// <param name="actionName">Name of the action</param>
+        /// <param name="action">Action to set</param>
+        /// <param name="overwrite">Whether or not to replace a value that is already in the dictionary</param>
+        public void SetActionInDict(string actionName, AIAction action, bool overwrite = false)
+        {
+            Helper.SetInDictionary<string, AIAction>(ref PossibleActionsDict, actionName, action, overwrite);
         }
 
         /// <summary>
@@ -387,18 +389,6 @@ namespace RTS_System.AI
             }
         }
 
-        private void OnDestroy()
-        {
-            // Safely clear all actions from the list when destroyed
-            ClearAllActions(false);
-
-            // Remove from the AIManager
-            if (AIManager.Instance)
-            {
-                AIManager.Instance.SceneAI.Remove(this);
-            }
-        }
-
         /// <summary>
         /// Destroy this Agent on the server
         /// </summary>
@@ -439,6 +429,18 @@ namespace RTS_System.AI
             if (!target) return;
 
             MoveToPoint(target.position);
+        }
+
+        private void OnDestroy()
+        {
+            // Safely clear all actions from the list when destroyed
+            ClearAllActions(false);
+
+            // Remove from the AIManager
+            if (AIManager.Instance)
+            {
+                AIManager.Instance.SceneAI.Remove(this);
+            }
         }
     }
 }

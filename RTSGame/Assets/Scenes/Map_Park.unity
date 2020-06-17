@@ -2028,6 +2028,13 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   ResourceDisplay: {fileID: 1271161744}
+  ResourceData:
+    ListIdentifier: Twig
+    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
+    RawValue: 500
+    DecreaseResource: 0
+  ResourcesReplenished: 0
+  ReplenishTime: 0.1
   OnResourceChangeEvent:
     m_PersistentCalls:
       m_Calls:
@@ -2053,19 +2060,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  ResourceData:
-    ListIdentifier: Twig
-    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
-    RawValue: 500
-    DecreaseResource: 0
-  ResourcesReplenished: 0
-  ReplenishTime: 0.1
-  CollectedResource:
-    ListIdentifier: 
-    ResourceType: {fileID: 0}
-    RawValue: 0
-    DecreaseResource: 0
-  MaxResources: 100
 --- !u!114 &204164932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9125,7 +9119,7 @@ MonoBehaviour:
   Name: NavMeshPlane
   LayerName: 
   NewParent: {fileID: 2031733098}
-  InverseOperation: 0
+  ContainName: 0
   ChangeAll: 0
 --- !u!4 &871226188 stripped
 Transform:
@@ -9235,6 +9229,13 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   ResourceDisplay: {fileID: 571888758}
+  ResourceData:
+    ListIdentifier: Twig
+    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
+    RawValue: 500
+    DecreaseResource: 0
+  ResourcesReplenished: 0
+  ReplenishTime: 0.1
   OnResourceChangeEvent:
     m_PersistentCalls:
       m_Calls:
@@ -9260,19 +9261,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  ResourceData:
-    ListIdentifier: Twig
-    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
-    RawValue: 500
-    DecreaseResource: 0
-  ResourcesReplenished: 0
-  ReplenishTime: 0.1
-  CollectedResource:
-    ListIdentifier: 
-    ResourceType: {fileID: 0}
-    RawValue: 0
-    DecreaseResource: 0
-  MaxResources: 100
 --- !u!114 &874918286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13619,6 +13607,13 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   ResourceDisplay: {fileID: 2071353194}
+  ResourceData:
+    ListIdentifier: Twig
+    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
+    RawValue: 500
+    DecreaseResource: 0
+  ResourcesReplenished: 0
+  ReplenishTime: 0.1
   OnResourceChangeEvent:
     m_PersistentCalls:
       m_Calls:
@@ -13644,19 +13639,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  ResourceData:
-    ListIdentifier: Twig
-    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
-    RawValue: 500
-    DecreaseResource: 0
-  ResourcesReplenished: 0
-  ReplenishTime: 0.1
-  CollectedResource:
-    ListIdentifier: 
-    ResourceType: {fileID: 0}
-    RawValue: 0
-    DecreaseResource: 0
-  MaxResources: 100
 --- !u!114 &1310259912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15307,6 +15289,13 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   ResourceDisplay: {fileID: 707774120}
+  ResourceData:
+    ListIdentifier: Twig
+    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
+    RawValue: 500
+    DecreaseResource: 0
+  ResourcesReplenished: 0
+  ReplenishTime: 0.1
   OnResourceChangeEvent:
     m_PersistentCalls:
       m_Calls:
@@ -15332,19 +15321,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  ResourceData:
-    ListIdentifier: Twig
-    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
-    RawValue: 500
-    DecreaseResource: 0
-  ResourcesReplenished: 0
-  ReplenishTime: 0.1
-  CollectedResource:
-    ListIdentifier: 
-    ResourceType: {fileID: 0}
-    RawValue: 0
-    DecreaseResource: 0
-  MaxResources: 100
 --- !u!114 &1476102547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17822,6 +17798,13 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   ResourceDisplay: {fileID: 1590780422}
+  ResourceData:
+    ListIdentifier: Twig
+    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
+    RawValue: 500
+    DecreaseResource: 0
+  ResourcesReplenished: 0
+  ReplenishTime: 0.1
   OnResourceChangeEvent:
     m_PersistentCalls:
       m_Calls:
@@ -17847,19 +17830,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  ResourceData:
-    ListIdentifier: Twig
-    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
-    RawValue: 500
-    DecreaseResource: 0
-  ResourcesReplenished: 0
-  ReplenishTime: 0.1
-  CollectedResource:
-    ListIdentifier: 
-    ResourceType: {fileID: 0}
-    RawValue: 0
-    DecreaseResource: 0
-  MaxResources: 100
 --- !u!114 &1670304484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17992,6 +17962,13 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   ResourceDisplay: {fileID: 55504109}
+  ResourceData:
+    ListIdentifier: Twig
+    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
+    RawValue: 500
+    DecreaseResource: 0
+  ResourcesReplenished: 0
+  ReplenishTime: 0.1
   OnResourceChangeEvent:
     m_PersistentCalls:
       m_Calls:
@@ -18017,19 +17994,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  ResourceData:
-    ListIdentifier: Twig
-    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
-    RawValue: 500
-    DecreaseResource: 0
-  ResourcesReplenished: 0
-  ReplenishTime: 0.1
-  CollectedResource:
-    ListIdentifier: 
-    ResourceType: {fileID: 0}
-    RawValue: 0
-    DecreaseResource: 0
-  MaxResources: 100
 --- !u!114 &1679922213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20664,6 +20628,13 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   ResourceDisplay: {fileID: 241021773}
+  ResourceData:
+    ListIdentifier: Twig
+    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
+    RawValue: 500
+    DecreaseResource: 0
+  ResourcesReplenished: 0
+  ReplenishTime: 0.1
   OnResourceChangeEvent:
     m_PersistentCalls:
       m_Calls:
@@ -20689,19 +20660,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  ResourceData:
-    ListIdentifier: Twig
-    ResourceType: {fileID: 11400000, guid: 8aecea96f27cba04881bee4d57376d38, type: 2}
-    RawValue: 500
-    DecreaseResource: 0
-  ResourcesReplenished: 0
-  ReplenishTime: 0.1
-  CollectedResource:
-    ListIdentifier: 
-    ResourceType: {fileID: 0}
-    RawValue: 0
-    DecreaseResource: 0
-  MaxResources: 100
 --- !u!114 &1931890517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21486,7 +21444,7 @@ MonoBehaviour:
   Name: NavMeshPlane
   LayerName: 
   NewParent: {fileID: 0}
-  InverseOperation: 0
+  ContainName: 0
   ChangeAll: 0
 --- !u!4 &2037084600 stripped
 Transform:

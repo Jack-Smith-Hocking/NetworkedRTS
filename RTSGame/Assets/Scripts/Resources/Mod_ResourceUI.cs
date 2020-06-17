@@ -1,9 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
-using Mirror;
 
 namespace RTS_System.Resource
 {
@@ -14,11 +11,10 @@ namespace RTS_System.Resource
         [Tooltip("The prefab to display resources with, should have an Image and a TextMeshProUGUI")] public GameObject ResourceUIPrefab = null;
         [Tooltip("The canvas object that will manage all of the ResourceUIPrefabs spawned")] public GameObject ResourceUIOwner = null;
 
-        private Dictionary<string, TextMeshProUGUI> resourceUIDict = new Dictionary<string, TextMeshProUGUI>();
+        private Dictionary<string, UIDisplay> resourceUIDict = new Dictionary<string, UIDisplay>();
 
         private GameObject resourcePrefab = null;
-        private TextMeshProUGUI resourceText = null;
-        private Image resourceImage = null;
+        private UIDisplay resourceDisplay = null;
 
         private void Awake()
         {
@@ -42,19 +38,13 @@ namespace RTS_System.Resource
                     // Create a new prefab and set the parent
                     resourcePrefab = Instantiate(ResourceUIPrefab, ResourceUIOwner.transform);
 
-                    // Get the text and image components off of the newly created prefab
-                    resourceText = resourcePrefab.GetComponentInChildren<TextMeshProUGUI>();
-                    resourceImage = resourcePrefab.GetComponentInChildren<Image>();
+                    resourceDisplay = Helper.GetComponent<UIDisplay>(resourcePrefab);
 
-                    // Add the text component to the dictionary
-                    if (resourceText)
+                    // Add the display to the dictionary
+                    if (resourceDisplay)
                     {
-                        resourceUIDict.Add(resource.ResourceName, resourceText);
-                    }
-                    // Set the image to the resource icon
-                    if (resourceImage)
-                    {
-                        resourceImage.sprite = resource.ResourceIcon;
+                        resourceDisplay.InitialiseUI(resource.ResourceIcon, "");
+                        resourceUIDict.Add(resource.ResourceName, resourceDisplay);
                     }
                 }
             }
@@ -64,10 +54,7 @@ namespace RTS_System.Resource
         {
             if (!resource) return;
 
-            if (resourceUIDict.ContainsKey(resource.ResourceName))
-            {
-                resourceUIDict[resource.ResourceName].text = $"{resource.ResourceName}: {resourceCount}";
-            }
+            UpdateResourceUI(resource.ResourceName, resourceCount);
         }
 
         /// <summary>
@@ -80,7 +67,7 @@ namespace RTS_System.Resource
             // Check if in the dictionary
             if (resourceUIDict.ContainsKey(resource))
             {
-                resourceUIDict[resource].text = $"{resource}: {resourceCount}";
+                resourceUIDict[resource].UpdateText($"{resource}: {resourceCount}");
             }
         }
 

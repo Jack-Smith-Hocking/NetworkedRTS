@@ -6,8 +6,8 @@ namespace RTS_System.Selection
 {
     public class SelectorUI : MonoBehaviour
     {
-        public Camera SelectorCam = null;
-        public RectTransform SelectorTrans = null;
+        [Tooltip("The camera to use for selecting, if left null will use Camera.main")] public Camera SelectorCam = null;
+        [Tooltip("Transform of the UI element to manipulate")] public RectTransform SelectorTrans = null;
 
         private Vector3 startPos;
         private Vector3 endPos;

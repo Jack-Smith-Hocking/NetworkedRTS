@@ -82,9 +82,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4459656844531157893}
-  - component: {fileID: 3962045678909542917}
+  - component: {fileID: 8321014612338580455}
   m_Layer: 5
-  m_Name: ActionUIPrefab Variant
+  m_Name: ActionUIPrefab (No Text)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -110,7 +110,7 @@ RectTransform:
   m_AnchoredPosition: {x: 776.6055, y: 497.91858}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3962045678909542917
+--- !u!114 &8321014612338580455
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,13 +119,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8115706529500466708}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e50a9d198d7fb674299b5137208c2a9e, type: 3}
+  m_Script: {fileID: 11500000, guid: 42a1d9aaf528a02469af6c17146903da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WordsToExcludeInDisplayName:
-  - Action
-  - Clone
-  ActionDisplayText: {fileID: 0}
-  ActionDisplayImage: {fileID: 3610643673176341561}
-  WriteActionName: 0
+  WordsToExcludeInDisplayName: []
+  DisplayText: {fileID: 0}
+  DisplayImage: {fileID: 3610643673176341561}
+  WriteName: 0
   ImageAlpha: 255

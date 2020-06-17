@@ -11,7 +11,7 @@ public class ChangeDetails : MonoBehaviour
     public string LayerName;
     public Transform NewParent = null;
     [Space]
-    public bool InverseOperation = false;
+    public bool ContainName = false;
     public bool ChangeAll = false;
 
     [ContextMenu("MakeStatic")]
@@ -58,6 +58,10 @@ public class ChangeDetails : MonoBehaviour
         ToggleRenderer(true);
     }
 
+    /// <summary>
+    /// Turn all of the Renderers on this GameObject and children on/off
+    /// </summary>
+    /// <param name="state">Active state of the Renderers</param>
     public void ToggleRenderer(bool state)
     {
         List<Renderer> renderers = new List<Renderer>(Helper.GetComponents<Renderer>(gameObject));
@@ -68,18 +72,34 @@ public class ChangeDetails : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// Make a change to a GameObject and all the children of this GameObject recursively 
+    /// </summary>
+    /// <param name="obj">GameObject to start with</param>
+    /// <param name="action">The change to make</param>
     public void MakeChange(GameObject obj, Action<GameObject> action)
     {
-        if (!obj) return;
+        if (!Helper.IsNullOrDestroyed<GameObject>(obj)) return;
 
-        if ((obj.name.Contains(Name) && !InverseOperation) || InverseOperation || ChangeAll)
-        {
-            action?.Invoke(obj);
-        }
+        MakeSingleChange(obj, action);
 
         for (int i = 0; i < obj.transform.childCount; i++)
         {
             MakeChange(obj.transform.GetChild(i).gameObject, action);
+        }
+    }
+    /// <summary>
+    /// Make a change to a GameObject
+    /// </summary>
+    /// <param name="obj">GameObject to change</param>
+    /// <param name="action">The change to make</param>
+    public void MakeSingleChange(GameObject obj, Action<GameObject> action)
+    {
+        if (!Helper.IsNullOrDestroyed<GameObject>(obj)) return;
+
+        if ((obj.name.Contains(Name) && ContainName) || !ContainName || ChangeAll)
+        {
+            action?.Invoke(obj);
         }
     }
 }

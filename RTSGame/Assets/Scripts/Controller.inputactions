@@ -14,7 +14,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "LeftShift",
+                    "name": "Shift",
                     "type": "Button",
                     "id": "1b44f48c-90f1-4e4d-bb6c-c71ffa660c1c",
                     "expectedControlType": "",
@@ -126,7 +126,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "LeftCtr",
+                    "name": "Ctr",
                     "type": "Button",
                     "id": "17113bd5-802c-4583-922a-b5810140ec00",
                     "expectedControlType": "Button",
@@ -229,7 +229,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "LeftShift",
+                    "action": "Shift",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "67c12732-b5f8-45ca-b7d5-e2493281f0c7",
+                    "path": "<Keyboard>/rightShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shift",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -471,7 +482,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "LeftCtr",
+                    "action": "Ctr",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0b06d9db-8643-4667-98e6-49a447980462",
+                    "path": "<Keyboard>/rightCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Ctr",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -518,6 +540,61 @@
                     "action": "Num3",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "WASD",
+                    "id": "f05b068a-342f-445d-8a07-cc707ad172b8",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Arrows",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "03a95205-a210-4d56-88dc-a342aea16977",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Arrows",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "45d70a9b-122a-4d88-bf09-5840033ae32a",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Arrows",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "8fc57e68-682c-4cff-8e6e-da686552f6dc",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Arrows",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "11cab30d-e62d-443b-bd46-7a2a80243855",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Arrows",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }

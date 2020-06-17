@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using UnityEngine.iOS;
 
 /// <summary>
 /// Binds and unbinds actions to inputs
@@ -780,6 +781,35 @@ public static class Helper
         {
             CachedRenderer.material = mat;
         }
+    }
+    #endregion
+
+    #region DictionaryFunctions
+    public static void SetInDictionary<Key, Value>(ref Dictionary<Key, Value> dict, Key key, Value value, bool overwrite = false)
+    {
+        if (!IsNullOrDestroyed<Key>(key) && !IsNullOrDestroyed<Value>(value))
+        {
+            if (overwrite)
+            {
+                dict[key] = value;
+            }
+            else if (!dict.ContainsKey(key))
+            {
+                dict[key] = value;
+            }
+        }
+    }
+    public static Value GetFromDictionary<Key, Value>(Dictionary<Key, Value> dict, Key key)
+    {
+        if (!IsNullOrDestroyed<Key>(key))
+        {
+            if (dict.ContainsKey(key))
+            {
+                return dict[key]; 
+            }
+        }
+
+        return default;
     }
     #endregion
 

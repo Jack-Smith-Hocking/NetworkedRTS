@@ -7,8 +7,8 @@ namespace RTS_System.Resource
     [CreateAssetMenu(fileName = "New ResourceCon", menuName = "ScriptableObject/RTS/Conditionals/ResourceCon")]
     public class ResourceConditional : ConditionalAction
     {
-        public List<Mod_ResourceValue> ResourceCosts = new List<Mod_ResourceValue>();
-        public Mod_ResourceManager ResourceManager = null;
+        [Tooltip("Data for each resource that this conditional will evaluate")] public List<Mod_ResourceValue> ResourceCosts = new List<Mod_ResourceValue>();
+        [HideInInspector] public Mod_ResourceManager ResourceManager = null;
 
         public override bool EvaluateConditional()
         {

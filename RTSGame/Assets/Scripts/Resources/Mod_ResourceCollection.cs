@@ -1,7 +1,4 @@
 ﻿using Mirror;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,19 +6,19 @@ namespace RTS_System.Resource
 {
     public class Mod_ResourceCollection : NetworkBehaviour
     {
-        public DisplayCounterUI ResourceDisplay = null;
+        [Tooltip("The DisplayCounterUI to display the amount of resources")] public DisplayCounterUI ResourceDisplay = null;
         [Space]
-        public UnityEvent OnResourceChangeEvent;
+        [Tooltip("Data to set use to set up collection")] public Mod_ResourceValue ResourceData;
         [Space]
-        public Mod_ResourceValue ResourceData;
+        [Tooltip("Amount of resources to replenish ever #seconds")] public int ResourcesReplenished = 1;
+        [Min(0.1f)] [Tooltip("The amount of time before resources will be replenished again")] public float ReplenishTime = 0.1f;
         [Space]
-        public int ResourcesReplenished = 1;
-        [Min(0.1f)] public float ReplenishTime = 0.1f;
-        [Space]
-        public Mod_ResourceValue CollectedResource;
-        public int MaxResources = 100;
-
+        [Tooltip("Event to be called when resources are changed")] public UnityEvent OnResourceChangeEvent;
+        
         public bool IsEmpty { get { return ResourceData.RawValue == 0; } }
+
+        private Mod_ResourceValue CollectedResource;
+        private int MaxResources = 100;
 
         private void Awake()
         {
@@ -34,6 +31,9 @@ namespace RTS_System.Resource
             }
         }
 
+        /// <summary>
+        /// Will only happen on server, replenish the ResourcePile by some amount then update all clients
+        /// </summary>
         [ServerCallback]
         void ServReplenishResources()
         {
@@ -46,6 +46,10 @@ namespace RTS_System.Resource
             }
         }
 
+        /// <summary>
+        /// Tell each client to set their current resource amount
+        /// </summary>
+        /// <param name="resourceCount">Amount to set to</param>
         [ClientRpc]
         public void RpcUpdateResourcePile(int resourceCount)
         {
@@ -59,10 +63,16 @@ namespace RTS_System.Resource
             OnResourceChangeEvent.Invoke();
         }
 
+        /// <summary>
+        /// Take resources away from the ResourcePile
+        /// </summary>
+        /// <param name="collectedAmount">Resources to take away</param>
+        /// <returns>Return a data structure containing the type and amount of resources colelcted</returns>
         public Mod_ResourceValue CollectResources(int collectedAmount)
         {
             CollectedResource.ResourceType = ResourceData.ResourceType;
 
+            // If the ResourcePile has enough resources, collect them
             if (ResourceData.RawValue >= collectedAmount)
             {
                 CollectedResource.RawValue = collectedAmount;
@@ -70,6 +80,8 @@ namespace RTS_System.Resource
 
                 RpcUpdateResourcePile(ResourceData.RawValue);
             }
+            // Else if attempting collect more resources than the ResourcePile has left
+            // Then collect the remaining amount
             else if (ResourceData.RawValue > 0)
             {
                 CollectedResource.RawValue = ResourceData.RawValue;
@@ -80,6 +92,7 @@ namespace RTS_System.Resource
                 CollectedResource.RawValue = 0;
             }
 
+            // Return the amount collected and the type of the resource
             return CollectedResource;
         }
     }

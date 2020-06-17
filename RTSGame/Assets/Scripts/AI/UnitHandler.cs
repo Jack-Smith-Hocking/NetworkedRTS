@@ -39,7 +39,7 @@ namespace RTS_System.AI
                 tempAction = s.GetActionClone;
                 if (tempAction)
                 {
-                    Agent.PossibleActionsDict[s.ActionName] = tempAction;
+                    Agent.SetActionInDict(s.ActionName, tempAction, true);
                     Agent.PossibleActions.Add(tempAction);
                 }
 

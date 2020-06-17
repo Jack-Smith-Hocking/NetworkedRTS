@@ -7,12 +7,8 @@ namespace ScriptableActions.Character
 {
     public class SimpleCharacterUpdater : NetworkBehaviour
     {
-        public CharacterManager Character = null;
+        [Tooltip("Character to manage")] public CharacterManager Character = null;
         public bool AllowInputs = true;
-
-        private void Start()
-        {
-        }
 
         public void Update()
         {

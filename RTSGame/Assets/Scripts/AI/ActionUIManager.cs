@@ -13,23 +13,21 @@ namespace RTS_System.AI
 
         [Header("Current Action UI")]
         [Tooltip("This will be the GameObject that is used to display the currently run action of an AIAgent (using the ActionDisplayPrefab")] public GameObject CurrentActionDisplayParent = null;
-        public GameObject CurrentActionDisplayPrefab = null;
+        [Tooltip("The prefab that will display the current AIAction")] public GameObject CurrentActionDisplayPrefab = null;
 
         [Header("Queued Action UI")]
         [Tooltip("This will be the UI GameObject that will be the parent for the ActionQueue of the AIAgent (using the ActionDisplayPrefab)")] public GameObject ActionQueueDisplayParent = null;
-        public GameObject ActionQueueDisplayPrefab = null;
+        [Tooltip("The prefab that will display the queued AIActions")] public GameObject ActionQueueDisplayPrefab = null;
 
         [Header("Available Actions UI")]
         [Tooltip("The GameObject that will show all of the current actions of an AIAgent")] public GameObject ActionDisplayParent = null;
-        [Tooltip("The prefab that will display AIActions")] public GameObject ActionDisplayPrefab = null;
+        [Tooltip("The prefab that will display the possible AIActions")] public GameObject ActionDisplayPrefab = null;
 
         [Header("Other")]
-        public List<GameObject> ObjectsToToggle = new List<GameObject>();
+        [Tooltip("List of GameObjects to turn on/off when the ActionUIManager detects no selected GameObjects")] public List<GameObject> ObjectsToToggle = new List<GameObject>();
 
-        [Space]
-        public List<GameObject> DisplayedActions = new List<GameObject>();
-        public UnitHandler DisplayedUnit = null;
-
+        private List<GameObject> DisplayedActions = new List<GameObject>();
+        private UnitHandler DisplayedUnit = null;
 
         private IEnumerator Start()
         {
@@ -42,6 +40,9 @@ namespace RTS_System.AI
             UpdateUI();
         }
 
+        /// <summary>
+        /// Destroy the old UI prefabs and make new ones to display
+        /// </summary>
         public void UpdateUI()
         {
             DisplayAgentActions();
@@ -52,6 +53,9 @@ namespace RTS_System.AI
             });
         }
 
+        /// <summary>
+        /// Get the AIAgent to display the actions of
+        /// </summary>
         void GetDisplayAgent()
         {
             DisplayedUnit = Helper.GetComponent<UnitHandler>(Selector.ClientInstance.GetFirstSelected);
@@ -71,36 +75,59 @@ namespace RTS_System.AI
             }
         }
 
+        /// <summary>
+        /// Create and set up a UI prefab for displaying an AIAction
+        /// </summary>
+        /// <param name="parent">The parent GameObject to bind to</param>
+        /// <param name="prefab">The prefab to instantiate</param>
+        /// <param name="action">The AIAction to display</param>
+        /// <param name="text">The text to display</param>
         void CreateActionUI(GameObject parent, GameObject prefab, AIAction action, string text = "")
         {
-            if (!parent || !prefab || !action) return;
+            if (Helper.IsNullOrDestroyed<GameObject>(parent) || Helper.IsNullOrDestroyed<GameObject>(prefab) || Helper.IsNullOrDestroyed<AIAction>(action)) return;
 
+            // Create prefab instance
             prefab = Instantiate(prefab, parent.transform);
-            ActionUI actionUI = Helper.GetComponent<ActionUI>(prefab);
+            // Get the ActionUI component from the prefab instance
+            UIDisplay actionUI = Helper.GetComponent<UIDisplay>(prefab);
 
+            // Add the prefab instance to the list to display
             DisplayedActions.Add(prefab);
 
             if (actionUI)
             {
-                actionUI.UpdateActionUI(action, text);
+                actionUI.InitialiseUI(action.ActionIcon, action.ActionName, text);
             }
         }
+        
+        /// <summary>
+        /// Create all the ActionUIs for a list of AIAction 
+        /// </summary>
+        /// <param name="parent">The parent to bind to</param>
+        /// <param name="prefab">The prefab to instantiate</param>
+        /// <param name="actions">List of actions to display</param>
         void CreateActionUIs(GameObject parent, GameObject prefab, List<AIAction> actions)
         {
-            if (!parent || !prefab) return;
+            if (Helper.IsNullOrDestroyed<GameObject>(parent) || Helper.IsNullOrDestroyed<GameObject>(prefab)) return;
 
+            // Loop through and create an ActionUI for each AIAction
             Helper.LoopList_ForEach<AIAction>(actions, (AIAction action) =>
             {
                 CreateActionUI(parent, prefab, action);
             });
         }
 
+        /// <summary>
+        /// Display the CurrentAction, PossibleActions and QueuedActions of the currently selected AIAgent
+        /// </summary>
         void DisplayAgentActions()
         {
+            // Clear the currently displayed AIActions
             ClearDisplayedActions();
 
             if (ActionDisplayPrefab)
             {
+                // Get the current AIAgent to display
                 GetDisplayAgent();
 
                 if (DisplayedUnit)
@@ -114,7 +141,7 @@ namespace RTS_System.AI
                     }
 
                     // Update queue and current action UI
-                    if (DisplayedUnit.Agent.CurrentActionRef.Length > 0)
+                    if (DisplayedUnit.Agent.HasCurrentActionRef)
                     {
                         if (CurrentActionDisplayParent)
                         {
@@ -129,6 +156,9 @@ namespace RTS_System.AI
             }
         }
 
+        /// <summary>
+        /// Clear all of the currently displayed ActionUIs
+        /// </summary>
         void ClearDisplayedActions()
         {
             Helper.LoopList_ForEach<GameObject>(DisplayedActions, (GameObject da) =>

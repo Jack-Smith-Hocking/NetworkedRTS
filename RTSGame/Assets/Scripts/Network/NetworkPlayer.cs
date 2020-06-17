@@ -1,23 +1,21 @@
-﻿using RTS_System.Selection;
-using RTS_System.Resource;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Mirror;
 using RTS_System.AI;
+using RTS_System.Resource;
+using RTS_System.Selection;
+using System.Collections;
 using System.Linq;
-using Mirror;
+using UnityEngine;
 
 namespace RTS_System
 {
     [RequireComponent(typeof(NetworkHandler))]
     public class NetworkPlayer : NetworkBehaviour
     {
-
-        public Selector PlayerSelector = null;
-        public Mod_ResourceManager PlayerResourceManager = null;
+        [Tooltip("The Selector associated with this NetworkPlayer")] public Selector PlayerSelector = null;
+        [Tooltip("The ResourceManager associated with this NetworkPlayer")] public Mod_ResourceManager PlayerResourceManager = null;
         [Space]
-        public string FriendlyLayer = "Unit";
-        public string EnemyLayer = "EnemyUnit";
+        [Tooltip("The layer that units should be in if they are client owned")] public string FriendlyLayer = "Unit";
+        [Tooltip("The layer that units should be in if they are not client owned")] public string EnemyLayer = "EnemyUnit";
 
         IEnumerator Start()
         {
@@ -26,6 +24,8 @@ namespace RTS_System
 
             AIAgent agent = null;
 
+            // Collect all the starting units and tell them that they belong to this NetworkPlayer
+            // Probably a bad way of doing it but it will work for now
             Collider[] cols = Physics.OverlapSphere(transform.position, 200);
             Helper.LoopList_ForEach<Collider>(cols.ToList<Collider>(), (Collider col) =>
             // Loop action
@@ -34,9 +34,11 @@ namespace RTS_System
 
                 if (agent && !agent.AgentOwner)
                 {
+                    // Tell all clients that this AIAgent belongs to this NetworkPlayer
                     NetworkHandler.ClientInstance.CmdSetAgentOwner(col.gameObject, gameObject);
 
-                    Helper.ListAdd<GameObject>(ref PlayerSelector.SceneSelectables, agent.gameObject);
+                    // Add the AIAgent to the list of selectables for this player
+                    PlayerSelector.AddSelectable(agent.gameObject);
                 }
             });
         }

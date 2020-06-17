@@ -27,15 +27,6 @@ namespace RTS_System.Selection
         [Space]
 
         /// <summary>
-        /// All the GameObjects that are deemed as 'Selectable' in the scene, all 'Selectable' GameObjects will add themselves to this list
-        /// </summary>
-        public List<GameObject> SceneSelectables = new List<GameObject>();
-        /// <summary>
-        /// All of the currently selected GameObjects
-        /// </summary>
-        public List<GameObject> SelectedObjects = new List<GameObject>();
-
-        /// <summary>
         /// Will be invoked whenever the list of SelectedObjects is updated
         /// </summary>
         public Action OnSelectedChange;
@@ -60,8 +51,16 @@ namespace RTS_System.Selection
             }
         }
 
+        /// <summary>
+        /// All the GameObjects that are deemed as 'Selectable' in the scene, all 'Selectable' GameObjects will add themselves to this list
+        /// </summary>
+        private List<GameObject> SceneSelectables = new List<GameObject>();
+
+        /// <summary>
+        /// All of the currently selected GameObjects
+        /// </summary>
+        [HideInInspector] public List<GameObject> SelectedObjects = new List<GameObject>();
         private List<GameObject> highlightedObjects = new List<GameObject>();
-        /// 
 
         /// The start and end position of a drag, stored in ViewPort space, and screen space
         private Vector3 mStartPos
@@ -114,45 +113,6 @@ namespace RTS_System.Selection
             actionQueueInput.Bind(ActionQueueInput);
         }
 
-        /// <summary>
-        /// Callback for when the 'selectInput' is activated, deals with selecting GameObjects
-        /// </summary>
-        /// <param name="cc"></param>
-        void SelectCallback(InputAction.CallbackContext cc)
-        {
-            isSelecting = cc.ReadValueAsButton();
-
-            // Check whether the player is adding to the current list of SelectedObjects
-            if (multiSelectInput.CurrentBoolVal == false)
-            {
-                ClearSelection();
-            }
-
-            // Get the position of the mouse when the player first presses the selectInput button
-            if (isSelecting)
-            {
-                vpStartPos = SelectorCam.ScreenToViewportPoint(Input.mousePosition);
-            }
-            else
-            {
-                vpEndPos = SelectorCam.ScreenToViewportPoint(Input.mousePosition);
-
-                if (Helper.OutDistance(mStartPos, mEndPos, MinDragDistance))
-                {
-                    SelectMultiple();
-                }
-                else
-                {
-                    SelectSingle();
-                }
-
-                ClearHighlighted();
-
-                // SelectedObjects has changed, update the callbacks
-                OnSelectedChange?.Invoke();
-            }
-        }
-
         private void Update()
         {
             // If this is not the local Selector, don't do anything
@@ -195,6 +155,50 @@ namespace RTS_System.Selection
                         Helper.SendMessageToChain(rayHit.collider.gameObject, ISelectableEnum.SetHover.ToString());
                     }
                 }
+            }
+        }
+
+        public void AddSelectable(GameObject selectable)
+        {
+            Helper.ListAdd<GameObject>(ref SceneSelectables, selectable);
+        }
+
+        /// <summary>
+        /// Callback for when the 'selectInput' is activated, deals with selecting GameObjects
+        /// </summary>
+        /// <param name="cc"></param>
+        void SelectCallback(InputAction.CallbackContext cc)
+        {
+            isSelecting = cc.ReadValueAsButton();
+
+            // Check whether the player is adding to the current list of SelectedObjects
+            if (multiSelectInput.CurrentBoolVal == false)
+            {
+                ClearSelection();
+            }
+
+            // Get the position of the mouse when the player first presses the selectInput button
+            if (isSelecting)
+            {
+                vpStartPos = SelectorCam.ScreenToViewportPoint(Input.mousePosition);
+            }
+            else
+            {
+                vpEndPos = SelectorCam.ScreenToViewportPoint(Input.mousePosition);
+
+                if (Helper.OutDistance(mStartPos, mEndPos, MinDragDistance))
+                {
+                    SelectMultiple();
+                }
+                else
+                {
+                    SelectSingle();
+                }
+
+                ClearHighlighted();
+
+                // SelectedObjects has changed, update the callbacks
+                OnSelectedChange?.Invoke();
             }
         }
 
@@ -255,6 +259,9 @@ namespace RTS_System.Selection
             SelectSingle(false);
         }
 
+        /// <summary>
+        /// Clear the list of highlighted objects appropriately 
+        /// </summary>
         void ClearHighlighted()
         {
             Helper.LoopList_ForEach<GameObject>(highlightedObjects,
