@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Mirror;
+using RTS_System.Utility;
 
 namespace RTS_System.AI
 {

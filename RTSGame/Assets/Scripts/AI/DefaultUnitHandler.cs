@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using RTS_System;
+using RTS_System.Utility;
 
 namespace RTS_System.AI
 {

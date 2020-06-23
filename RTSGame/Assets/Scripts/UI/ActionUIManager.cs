@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RTS_System.Selection;
-using System;
-using UnityEditor;
+using RTS_System.Utility;
+using RTS_System.AI;
 
-namespace RTS_System.AI
+namespace RTS_System.UI
 {
     public class ActionUIManager : MonoBehaviour
     {

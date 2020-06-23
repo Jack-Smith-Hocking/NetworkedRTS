@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Security;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using System;
-using TMPro;
 using Mirror;
+using RTS_System.Utility;
+using RTS_System.UI;
 
 namespace RTS_System.Resource
 {

@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RTS_System.Utility;
+using RTS_System.Resource;
 
-namespace RTS_System.Resource
+namespace RTS_System.UI
 {
     public class Mod_ResourceUI : MonoBehaviour
     {

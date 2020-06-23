@@ -1,14 +1,8 @@
-﻿using RTS_System.Resource;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.InputSystem;
-using UnityEngine.PlayerLoop;
-using UnityEngine.UIElements;
+using RTS_System.Resource;
+using RTS_System.Utility;
 
 namespace RTS_System.AI
 {

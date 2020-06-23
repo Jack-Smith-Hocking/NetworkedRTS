@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
+using RTS_System.Utility;
 using UnityEngine.UI;
 
-namespace RTS_System
+namespace RTS_System.UI
 {
     public class UIDisplay : MonoBehaviour
     {
